@@ -237,6 +237,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:tint="#0d9488"
                 android:src="@drawable/home"/>
 
             <TextView
@@ -244,7 +245,7 @@
                 android:layout_height="wrap_content"
                 android:text="Início"
                 android:textSize="10sp"
-                android:textColor="#3aa89f" />
+                android:textColor="#0d9488" />
         </LinearLayout>
 
         <LinearLayout

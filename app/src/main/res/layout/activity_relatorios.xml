@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f8fafc"
+    tools:context=".Relatorios">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="24dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="16dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Relatórios e Finanças"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:textColor="#0F172A" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@drawable/gap"
+                android:showDividers="middle"
+                android:paddingVertical="8dp">
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="39dp"
+                    android:layout_weight="1"
+                    android:textSize="12sp"
+                    android:textColor="#ffffff"
+                    android:text="Este Mês" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="39dp"
+                    android:layout_weight="1"
+                    android:textSize="12sp"
+                    android:textColor="#ffffff"
+                    android:text="Trimestre" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="39dp"
+                    android:layout_weight="1"
+                    android:textSize="12sp"
+                    android:textColor="#ffffff"
+                    android:text="Este Ano" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="12dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border_rounded_sections"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Gasto por Categoria (R$)"
+                    android:textStyle="bold"
+                    android:textColor="#0F172A" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textSize="12sp"
+                            android:textColor="#0F172A"
+                            android:text="Combustível" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="R$"
+                            android:textSize="12sp"
+                            android:textColor="#0F172A"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <ProgressBar
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:max="100"
+                        android:progress="80"
+                        android:progressTint="#0d9488"
+                        android:progressBackgroundTint="#f8fafc" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textSize="12sp"
+                            android:textColor="#0F172A"
+                            android:text="Revisões" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="R$"
+                            android:textSize="12sp"
+                            android:textColor="#0F172A"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <ProgressBar
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:max="100"
+                        android:progress="55"
+                        android:progressTint="#0d9488"
+                        android:progressBackgroundTint="#f8fafc" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textSize="12sp"
+                            android:textColor="#0F172A"
+                            android:text="Óleo" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="R$"
+                            android:textSize="12sp"
+                            android:textColor="#0F172A"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <ProgressBar
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:max="100"
+                        android:progress="45"
+                        android:progressTint="#0d9488"
+                        android:progressBackgroundTint="#f8fafc" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textSize="12sp"
+                            android:textColor="#0F172A"
+                            android:text="Pneus" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="R$"
+                            android:textSize="12sp"
+                            android:textColor="#0F172A"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <ProgressBar
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:max="100"
+                        android:progress="20"
+                        android:progressTint="#0d9488"
+                        android:progressBackgroundTint="#f8fafc" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textSize="12sp"
+                            android:textColor="#0F172A"
+                            android:text="Outros" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="R$"
+                            android:textSize="12sp"
+                            android:textColor="#0F172A"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <ProgressBar
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:max="100"
+                        android:progress="10"
+                        android:progressTint="#0d9488"
+                        android:progressBackgroundTint="#f8fafc" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:background="@drawable/border_rounded_sections">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tendência de Gastos Mensais"
+                android:textStyle="bold"
+                android:textColor="#0F172A" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#ffffff"
+        android:padding="14dp"
+        android:divider="@drawable/gap"
+        android:showDividers="middle"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <LinearLayout
+            android:id="@+id/llInicio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/home"
+                app:tint="#64748b" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Início"
+                android:textSize="10sp"
+                android:textColor="#64748b" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llVeiculos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:gravity="center" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/menu_car" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Veículos"
+                android:textSize="10sp"
+                android:textColor="#64748b" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llAdicionar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:gravity="center" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/add_circle" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Adicionar"
+                android:textSize="10sp"
+                android:textColor="#64748b"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llAlertas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:gravity="center" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/notifications" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Alertas"
+                android:textSize="10sp"
+                android:textColor="#64748b"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llRelatorios"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:gravity="center" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/trending_up"
+                app:tint="#0d9488" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Relatórios"
+                android:textSize="10sp"
+                android:textColor="#0d9488"/>
+        </LinearLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

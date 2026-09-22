@@ -5,10 +5,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.LinearLayout
 
-class Alertas : AppCompatActivity() {
+class Relatorios : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_alertas)
+        setContentView(R.layout.activity_relatorios)
 
         val llInicio = findViewById<LinearLayout>(R.id.llInicio)
         llInicio.setOnClickListener {
@@ -20,9 +20,9 @@ class Alertas : AppCompatActivity() {
             startActivity(Intent(this, Veiculos::class.java))
         }
 
-        val llRelatorios = findViewById<LinearLayout>(R.id.llRelatorios)
-        llRelatorios.setOnClickListener {
-            startActivity(Intent(this, Relatorios::class.java))
+        val llAlertas = findViewById<LinearLayout>(R.id.llAlertas)
+        llAlertas.setOnClickListener {
+            startActivity(Intent(this, Alertas::class.java))
         }
     }
 }

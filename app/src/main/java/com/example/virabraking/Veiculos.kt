@@ -19,5 +19,10 @@ class Veiculos : AppCompatActivity() {
         llAlertas.setOnClickListener{
             startActivity(Intent(this, Alertas::class.java))
         }
+
+        val llRelatorios = findViewById<LinearLayout>(R.id.llRelatorios)
+        llRelatorios.setOnClickListener {
+            startActivity(Intent(this, Relatorios::class.java))
+        }
     }
 }

@@ -13,6 +13,9 @@
         android:theme="@style/Theme.Virabraking"
         tools:targetApi="31">
         <activity
+            android:name=".Relatorios"
+            android:exported="false" />
+        <activity
             android:name=".Alertas"
             android:exported="false" />
         <activity

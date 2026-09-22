@@ -148,7 +148,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/rouded_border"
+                        android:background="@drawable/bg_verde_arredondado"
                         android:padding="10dp"
                         android:layout_marginRight="16dp"
                         android:src="@drawable/time"

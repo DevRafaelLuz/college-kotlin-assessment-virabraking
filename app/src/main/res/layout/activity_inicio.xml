@@ -28,8 +28,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Olá, Fulano"
-                    android:textColor="#64748d"/>
+                    android:text="Olá, [NOME_USUARIO]"
+                    android:textColor="#64748b"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -64,7 +64,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@drawable/panel_status"
+                    android:background="@drawable/bg_branco_arredondado"
                     android:padding="16dp">
 
                     <LinearLayout
@@ -78,12 +78,13 @@
                             android:layout_height="wrap_content"
                             android:text="Veículos"
                             android:textSize="12sp"
-                            android:textColor="#64748d"/>
+                            android:textStyle="bold"
+                            android:textColor="#64748b"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="3 Ativos"
+                            android:text="[Nº] Ativos"
                             android:textColor="#0f172a"
                             android:textStyle="bold"
                             android:textSize="24sp"/>
@@ -100,7 +101,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@drawable/panel_status"
+                    android:background="@drawable/bg_branco_arredondado"
                     android:padding="16dp">
 
                     <LinearLayout
@@ -113,8 +114,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Gastos / Mês"
+                            android:textStyle="bold"
                             android:textSize="12sp"
-                            android:textColor="#64748d"/>
+                            android:textColor="#64748b"/>
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -138,7 +140,7 @@
                 android:layout_height="wrap_content"
                 android:padding="16dp"
                 android:layout_marginTop="12dp"
-                android:background="@drawable/panel_next_maintenance">
+                android:background="@drawable/bg_verde_claro_arredondado_com_borda">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -170,7 +172,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Troca de óleo"
+                            android:text="[DESCRIÇÃO]"
                             android:textStyle="bold"
                             android:textSize="15sp"
                             android:textColor="#0f172a" />
@@ -178,7 +180,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Em 1.200 km ou dia 15/Out"
+                            android:text="[QUANDO?]"
                             android:textColor="#64748b"
                             android:textSize="13sp"/>
                     </LinearLayout>
@@ -237,8 +239,8 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:tint="#0d9488"
-                android:src="@drawable/home"/>
+                android:src="@drawable/home"
+                app:tint="#0d9488" />
 
             <TextView
                 android:layout_width="wrap_content"

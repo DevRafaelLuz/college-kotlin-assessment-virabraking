@@ -24,5 +24,10 @@ class Veiculos : AppCompatActivity() {
         llRelatorios.setOnClickListener {
             startActivity(Intent(this, Relatorios::class.java))
         }
+
+        val llMeusVeiculos = findViewById<LinearLayout>(R.id.llMeusVeiculos)
+        llMeusVeiculos.setOnClickListener {
+            startActivity(Intent(this, DetalhesVeiculo::class.java))
+        }
     }
 }

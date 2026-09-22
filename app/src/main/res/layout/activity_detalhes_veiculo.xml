@@ -78,8 +78,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="5dp"
-                        android:src="@drawable/circle"
-                        app:tint="#64748b" />
+                        android:src="@drawable/circulo_divisor" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -91,8 +90,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="5dp"
-                        android:src="@drawable/circle"
-                        app:tint="#64748b" />
+                        android:src="@drawable/circulo_divisor" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -116,7 +114,7 @@
                         android:text="[00.000KM]"
                         android:paddingHorizontal="10dp"
                         android:paddingVertical="6dp"
-                        android:background="#f8fafc" />
+                        android:background="@drawable/bg_cinza_claro_arredondado" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -127,7 +125,7 @@
                         android:text="Troca de Óleo [STATUS]"
                         android:paddingHorizontal="10dp"
                         android:paddingVertical="6dp"
-                        android:background="#f0fdf4" />
+                        android:background="@drawable/bg_verde_claro_arredondado" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
@@ -141,26 +139,26 @@
             android:paddingVertical="8dp">
 
             <Button
-                android:layout_width="match_parent"
-                android:layout_height="39dp"
-                android:layout_weight="1"
+                android:layout_width="85dp"
+                android:layout_height="32dp"
                 android:textSize="11sp"
+                android:padding="0dp"
                 android:textColor="#ffffff"
                 android:text="Histórico" />
 
             <Button
-                android:layout_width="match_parent"
-                android:layout_height="39dp"
-                android:layout_weight="1"
+                android:layout_width="85dp"
+                android:layout_height="32dp"
                 android:textSize="11sp"
+                android:padding="0dp"
                 android:textColor="#ffffff"
                 android:text="Combustível" />
 
             <Button
-                android:layout_width="match_parent"
-                android:layout_height="39dp"
-                android:layout_weight="1"
+                android:layout_width="85dp"
+                android:layout_height="32dp"
                 android:textSize="11sp"
+                android:padding="0dp"
                 android:textColor="#ffffff"
                 android:text="Documentos" />
         </LinearLayout>

@@ -53,7 +53,7 @@
                 <ImageView
                     android:layout_width="90dp"
                     android:layout_height="90dp"
-                    android:background="#0000ff" />
+                    android:background="@drawable/bg_imagem_meus_veiculos" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -86,23 +86,29 @@
                         android:showDividers="middle">
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:paddingVertical="4dp"
                             android:paddingHorizontal="8dp"
-                            android:background="#f8fafc"
+                            android:background="@drawable/bg_placa_veiculos"
                             android:textColor="#0F172A"
+                            android:gravity="center"
                             android:textStyle="bold"
+                            android:textSize="11sp"
                             android:text="[PLACA]" />
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:paddingVertical="4dp"
                             android:paddingHorizontal="8dp"
-                            android:background="#f0fdf4"
+                            android:background="@drawable/bg_verde_claro_arredondado"
                             android:textColor="#0d9488"
+                            android:gravity="center"
                             android:textStyle="bold"
+                            android:textSize="11sp"
                             android:text="[KM]" />
                     </LinearLayout>
                 </LinearLayout>

@@ -3,6 +3,7 @@ package com.example.virabraking
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.ImageButton
 import android.widget.LinearLayout
 
 class Veiculos : AppCompatActivity() {
@@ -28,6 +29,11 @@ class Veiculos : AppCompatActivity() {
         val llMeusVeiculos = findViewById<LinearLayout>(R.id.llMeusVeiculos)
         llMeusVeiculos.setOnClickListener {
             startActivity(Intent(this, DetalhesVeiculo::class.java))
+        }
+
+        val iBtnAdicionar = findViewById<ImageButton>(R.id.iBtnAdicionar)
+        iBtnAdicionar.setOnClickListener {
+            startActivity(Intent(this, AdicionarVeiculo::class.java))
         }
     }
 }

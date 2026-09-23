@@ -29,9 +29,10 @@
                 android:textColor="#0F172A"/>
 
             <ImageButton
+                android:id="@+id/iBtnAdicionar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/add"
+                android:src="@drawable/btn_adicionar_veiculo"
                 android:padding="0dp"
                 android:background="#f8fafc" />
         </LinearLayout>
@@ -239,5 +240,4 @@
                 android:textColor="#64748b"/>
         </LinearLayout>
     </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

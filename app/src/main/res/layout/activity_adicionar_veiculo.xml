@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f8fafc"
+    tools:context=".AdicionarVeiculo">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingHorizontal="24dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingVertical="16dp">
+
+            <ImageButton
+                android:id="@+id/iBtnVoltar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrow_back"
+                android:background="#f8fafc"
+                android:layout_marginRight="12dp"
+                android:padding="0dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Adicionar Veículo"
+                android:textStyle="bold"
+                android:textColor="#0F172A"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingVertical="12dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="130dp"
+                android:orientation="vertical"
+                android:layout_marginBottom="20dp"
+                android:gravity="center"
+                android:background="@drawable/bg_adicionar_foto_veiculo_tracejado">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/camera_adicionar_veiculo"
+                    android:layout_marginBottom="8dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#0d9488"
+                    android:textStyle="bold"
+                    android:text="Adicionar foto do veículo"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Tipo de Veículo"
+                    android:textSize="13sp"
+                    android:layout_marginBottom="6dp"
+                    android:textColor="#0f172a"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@drawable/gap"
+                    android:showDividers="middle"
+                    android:layout_marginBottom="20dp"
+                    android:layout_weight="1">
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="42dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/btn_borda_arredondada"
+                        android:padding="0dp"
+                        android:textSize="13sp"
+                        android:textColor="#ffffff"
+                        android:textStyle="bold"
+                        android:text="Carro" />
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="42dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/btn_borda_arredondada"
+                        android:padding="0dp"
+                        android:textSize="13sp"
+                        android:textColor="#ffffff"
+                        android:textStyle="bold"
+                        android:text="Moto" />
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="42dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/btn_borda_arredondada"
+                        android:padding="0dp"
+                        android:textSize="13sp"
+                        android:textColor="#ffffff"
+                        android:textStyle="bold"
+                        android:text="Caminhão" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Apelido / Nome"
+                    android:textStyle="bold"
+                    android:textSize="13sp"
+                    android:layout_marginBottom="6dp"
+                    android:textColor="#0f172a" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="41dp"
+                    android:textSize="14sp"
+                    android:padding="12dp"
+                    android:hint="Ex: Civic de Uso Diário"
+                    android:textColor="#64748b"
+                    android:textColorHint="#64748b"
+                    android:background="@drawable/bg_branco_arredondado_com_borda"
+                    android:layout_marginBottom="12dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@drawable/gap"
+                    android:showDividers="middle"
+                    android:layout_marginBottom="12dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Marca"
+                            android:layout_marginBottom="6dp"
+                            android:textStyle="bold"
+                            android:textSize="13sp"
+                            android:textColor="#0f172a" />
+
+                        <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="41dp"
+                            android:padding="12dp"
+                            android:textSize="14sp"
+                            android:textColor="#64748b"
+                            android:textColorHint="#64748b"
+                            android:hint="Ex: Honda"
+                            android:background="@drawable/bg_branco_arredondado_com_borda" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Modelo"
+                            android:textStyle="bold"
+                            android:layout_marginBottom="6dp"
+                            android:textSize="13sp"
+                            android:textColor="#0f172a" />
+
+                        <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="41dp"
+                            android:padding="12dp"
+                            android:textSize="14sp"
+                            android:hint="Ex: Civic LXR"
+                            android:textColor="#64748b"
+                            android:textColorHint="#64748b"
+                            android:background="@drawable/bg_branco_arredondado_com_borda" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@drawable/gap"
+                    android:showDividers="middle"
+                    android:layout_marginBottom="12dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Ano"
+                            android:textStyle="bold"
+                            android:textSize="13sp"
+                            android:layout_marginBottom="6dp"
+                            android:textColor="#0f172a" />
+
+                        <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="41dp"
+                            android:padding="12dp"
+                            android:textSize="14sp"
+                            android:hint="Ex: 2016"
+                            android:textColor="#64748b"
+                            android:textColorHint="#64748b"
+                            android:background="@drawable/bg_branco_arredondado_com_borda" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Placa"
+                            android:textStyle="bold"
+                            android:textSize="13sp"
+                            android:layout_marginBottom="6dp"
+                            android:textColor="#0f172a" />
+
+                        <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="41dp"
+                            android:padding="12dp"
+                            android:textSize="14sp"
+                            android:hint="Ex: FGH-8902"
+                            android:textColor="#64748b"
+                            android:textColorHint="#64748b"
+                            android:background="@drawable/bg_branco_arredondado_com_borda" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Quilometragem Atual"
+                    android:textStyle="bold"
+                    android:textSize="13sp"
+                    android:layout_marginBottom="6dp"
+                    android:textColor="#0f172a" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="41dp"
+                    android:padding="12dp"
+                    android:textSize="14sp"
+                    android:hint="Ex: 84200"
+                    android:textColor="#64748b"
+                    android:textColorHint="#64748b"
+                    android:background="@drawable/bg_branco_arredondado_com_borda" />
+            </LinearLayout>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="51dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#ffffff"
+                android:background="@drawable/btn_borda_arredondada"
+                android:text="Salvar Veículo" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

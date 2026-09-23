@@ -74,7 +74,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/border_rounded_sections"
+                android:background="@drawable/bg_branco_arredondado_com_borda"
                 android:orientation="vertical"
                 android:padding="16dp">
 
@@ -277,7 +277,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp"
-            android:background="@drawable/border_rounded_sections">
+            android:background="@drawable/bg_branco_arredondado_com_borda">
 
             <TextView
                 android:layout_width="match_parent"
@@ -292,7 +292,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@drawable/top_border_menu"
+        android:background="@drawable/borda_topo_menu_inferior"
         android:padding="14dp"
         android:divider="@drawable/gap"
         android:showDividers="middle"
@@ -309,7 +309,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/home"
+                android:src="@drawable/vetor_menu_inicio"
                 app:tint="#64748b" />
 
             <TextView
@@ -331,7 +331,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/menu_car" />
+                android:src="@drawable/vetor_menu_veiculo" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -352,7 +352,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/add_circle" />
+                android:src="@drawable/vetor_menu_adicionar" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -373,7 +373,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/notifications" />
+                android:src="@drawable/vetor_menu_alertas" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -394,7 +394,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/trending_up"
+                android:src="@drawable/vetor_menu_relatorios"
                 app:tint="#0d9488" />
 
             <TextView

@@ -23,7 +23,7 @@
                 android:id="@+id/iBtnVoltar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/arrow_back"
+                android:src="@drawable/vetor_seta_voltar"
                 android:background="#f8fafc"
                 android:layout_marginRight="12dp"
                 android:padding="0dp" />
@@ -78,7 +78,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="5dp"
-                        android:src="@drawable/circulo_divisor" />
+                        android:src="@drawable/vetor_circulo_divisor" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -90,7 +90,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="5dp"
-                        android:src="@drawable/circulo_divisor" />
+                        android:src="@drawable/vetor_circulo_divisor" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -182,7 +182,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@drawable/top_border_menu"
+        android:background="@drawable/borda_topo_menu_inferior"
         android:padding="14dp"
         android:divider="@drawable/gap"
         android:showDividers="middle"
@@ -199,7 +199,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/home"
+                android:src="@drawable/vetor_menu_inicio"
                 app:tint="#64748b" />
 
             <TextView
@@ -221,7 +221,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/menu_car"
+                android:src="@drawable/vetor_menu_veiculo"
                 app:tint="#0d9488" />
 
             <TextView
@@ -243,7 +243,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/add_circle" />
+                android:src="@drawable/vetor_menu_adicionar" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -264,7 +264,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/notifications" />
+                android:src="@drawable/vetor_menu_alertas" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -285,7 +285,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/trending_up" />
+                android:src="@drawable/vetor_menu_relatorios" />
 
             <TextView
                 android:layout_width="wrap_content"

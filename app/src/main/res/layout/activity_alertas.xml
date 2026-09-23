@@ -27,7 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@drawable/top_border_menu"
+        android:background="@drawable/borda_topo_menu_inferior"
         android:padding="14dp"
         android:divider="@drawable/gap"
         android:showDividers="middle"
@@ -44,7 +44,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/home"
+                android:src="@drawable/vetor_menu_inicio"
                 app:tint="#64748b" />
 
             <TextView
@@ -66,7 +66,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/menu_car" />
+                android:src="@drawable/vetor_menu_veiculo" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -87,7 +87,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/add_circle" />
+                android:src="@drawable/vetor_menu_adicionar" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -108,7 +108,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:tint="#0d9488"
-                android:src="@drawable/notifications" />
+                android:src="@drawable/vetor_menu_alertas" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -129,7 +129,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/trending_up" />
+                android:src="@drawable/vetor_menu_relatorios" />
 
             <TextView
                 android:layout_width="wrap_content"

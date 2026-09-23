@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             android:background="@drawable/bg_verde_arredondado"
-            android:src="@drawable/btn_tela_abertura"
+            android:src="@drawable/vetor_veiculo_tela_abertura"
             tools:context=".MainActivity" />
 
         <TextView
@@ -50,7 +50,7 @@
             android:id="@+id/tvAppVersion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/version_background"
+            android:background="@drawable/bg_versao_aplicativo"
             android:paddingVertical="3dp"
             android:paddingHorizontal="15dp"
             android:textStyle="bold"

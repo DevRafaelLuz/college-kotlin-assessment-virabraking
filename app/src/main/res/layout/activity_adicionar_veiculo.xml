@@ -87,38 +87,80 @@
                     android:layout_marginBottom="20dp"
                     android:layout_weight="1">
 
-                    <Button
+                    <LinearLayout
+                        android:id="@+id/llTipoCarro"
                         android:layout_width="match_parent"
+                        android:gravity="center"
                         android:layout_height="42dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/btn_borda_arredondada"
-                        android:padding="0dp"
-                        android:textSize="13sp"
-                        android:textColor="#ffffff"
-                        android:textStyle="bold"
-                        android:text="Carro" />
+                        android:background="@drawable/bg_branco_arredondado_com_borda"
+                        android:layout_weight="1">
 
-                    <Button
-                        android:layout_width="match_parent"
-                        android:layout_height="42dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/btn_borda_arredondada"
-                        android:padding="0dp"
-                        android:textSize="13sp"
-                        android:textColor="#ffffff"
-                        android:textStyle="bold"
-                        android:text="Moto" />
+                        <ImageView
+                            android:id="@+id/ivCarro"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:layout_marginRight="8dp"
+                            android:src="@drawable/vetor_menu_veiculo" />
 
-                    <Button
+                        <TextView
+                            android:id="@+id/tvCarro"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            android:textColor="#64748b"
+                            android:text="Carro" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/llTipoMoto"
                         android:layout_width="match_parent"
+                        android:gravity="center"
                         android:layout_height="42dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/btn_borda_arredondada"
-                        android:padding="0dp"
-                        android:textSize="13sp"
-                        android:textColor="#ffffff"
-                        android:textStyle="bold"
-                        android:text="Caminhão" />
+                        android:background="@drawable/bg_branco_arredondado_com_borda"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:id="@+id/ivMoto"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:layout_marginRight="8dp"
+                            android:src="@drawable/vetor_moto" />
+
+                        <TextView
+                            android:id="@+id/tvMoto"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            android:textColor="#64748b"
+                            android:text="Moto" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/llTipoCaminhao"
+                        android:layout_width="match_parent"
+                        android:gravity="center"
+                        android:layout_height="42dp"
+                        android:background="@drawable/bg_branco_arredondado_com_borda"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:id="@+id/ivCaminhao"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:layout_marginRight="8dp"
+                            android:src="@drawable/vetor_caminhao" />
+
+                        <TextView
+                            android:id="@+id/tvCaminhao"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            android:textColor="#64748b"
+                            android:text="Caminhão" />
+                    </LinearLayout>
                 </LinearLayout>
 
                 <TextView

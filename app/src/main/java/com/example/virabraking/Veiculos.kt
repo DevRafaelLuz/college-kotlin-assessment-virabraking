@@ -35,5 +35,10 @@ class Veiculos : AppCompatActivity() {
         iBtnAdicionar.setOnClickListener {
             startActivity(Intent(this, AdicionarVeiculo::class.java))
         }
+
+        val llAdicionar = findViewById<LinearLayout>(R.id.llAdicionar)
+        llAdicionar.setOnClickListener {
+            startActivity(Intent(this, RegistrarServico::class.java))
+        }
     }
 }

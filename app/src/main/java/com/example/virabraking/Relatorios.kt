@@ -24,5 +24,10 @@ class Relatorios : AppCompatActivity() {
         llAlertas.setOnClickListener {
             startActivity(Intent(this, Alertas::class.java))
         }
+
+        val llAdicionar = findViewById<LinearLayout>(R.id.llAdicionar)
+        llAdicionar.setOnClickListener {
+            startActivity(Intent(this, RegistrarServico::class.java))
+        }
     }
 }

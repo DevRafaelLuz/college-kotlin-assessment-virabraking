@@ -13,6 +13,9 @@
         android:theme="@style/Theme.Virabraking"
         tools:targetApi="31">
         <activity
+            android:name=".RegistrarServico"
+            android:exported="false" />
+        <activity
             android:name=".AdicionarVeiculo"
             android:exported="false" />
         <activity

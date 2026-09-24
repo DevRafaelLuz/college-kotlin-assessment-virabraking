@@ -15,8 +15,8 @@ android {
         applicationId = "com.example.virabraking"
         minSdk = 24
         targetSdk = 33
-        versionCode = 10902
-        versionName = "1.9.2"
+        versionCode = 10903
+        versionName = "1.9.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

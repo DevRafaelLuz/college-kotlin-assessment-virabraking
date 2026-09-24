@@ -40,29 +40,41 @@
                 android:showDividers="middle"
                 android:paddingVertical="8dp">
 
-                <Button
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnEsteMes"
                     android:layout_width="match_parent"
                     android:layout_height="39dp"
                     android:layout_weight="1"
                     android:textSize="12sp"
-                    android:textColor="#ffffff"
-                    android:text="Este Mês" />
+                    android:textColor="#64748b"
+                    android:text="Este Mês"
+                    app:backgroundTint="#FFFFFF"
+                    app:strokeColor="#e2e8f0"
+                    app:strokeWidth="1dp" />
 
-                <Button
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnTrimestre"
                     android:layout_width="match_parent"
                     android:layout_height="39dp"
                     android:layout_weight="1"
                     android:textSize="12sp"
-                    android:textColor="#ffffff"
-                    android:text="Trimestre" />
+                    android:textColor="#64748b"
+                    android:text="Trimestre"
+                    app:backgroundTint="#FFFFFF"
+                    app:strokeColor="#e2e8f0"
+                    app:strokeWidth="1dp" />
 
-                <Button
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnEsteAno"
                     android:layout_width="match_parent"
                     android:layout_height="39dp"
                     android:layout_weight="1"
                     android:textSize="12sp"
-                    android:textColor="#ffffff"
-                    android:text="Este Ano" />
+                    android:textColor="#64748b"
+                    android:text="Este Ano"
+                    app:backgroundTint="#FFFFFF"
+                    app:strokeColor="#e2e8f0"
+                    app:strokeWidth="1dp" />
             </LinearLayout>
         </LinearLayout>
 

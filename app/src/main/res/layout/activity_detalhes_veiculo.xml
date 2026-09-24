@@ -138,29 +138,41 @@
             android:showDividers="middle"
             android:paddingVertical="8dp">
 
-            <Button
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnHistorico"
                 android:layout_width="85dp"
                 android:layout_height="32dp"
                 android:textSize="11sp"
                 android:padding="0dp"
-                android:textColor="#ffffff"
-                android:text="Histórico" />
+                android:textColor="#64748b"
+                android:text="Histórico"
+                app:backgroundTint="#FFFFFF"
+                app:strokeColor="#e2e8f0"
+                app:strokeWidth="1dp" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCombustivel"
                 android:layout_width="85dp"
                 android:layout_height="32dp"
                 android:textSize="11sp"
                 android:padding="0dp"
-                android:textColor="#ffffff"
-                android:text="Combustível" />
+                android:textColor="#64748b"
+                android:text="Combustível"
+                app:backgroundTint="#FFFFFF"
+                app:strokeColor="#e2e8f0"
+                app:strokeWidth="1dp" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDocumentos"
                 android:layout_width="85dp"
                 android:layout_height="32dp"
                 android:textSize="11sp"
                 android:padding="0dp"
-                android:textColor="#ffffff"
-                android:text="Documentos" />
+                android:textColor="#64748b"
+                android:text="Documentos"
+                app:backgroundTint="#FFFFFF"
+                app:strokeColor="#e2e8f0"
+                app:strokeWidth="1dp" />
         </LinearLayout>
 
         <LinearLayout

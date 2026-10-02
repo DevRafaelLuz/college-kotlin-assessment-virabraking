@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 
 class MainActivity : AppCompatActivity() {
@@ -15,9 +16,15 @@ class MainActivity : AppCompatActivity() {
         val versionName = BuildConfig.VERSION_NAME
         tvAppVersion.text = "V$versionName"
 
-        val iBtnInicio = findViewById<ImageButton>(R.id.iBtnInicio)
-        iBtnInicio.setOnClickListener {
-            startActivity(Intent(this, Inicio::class.java))
-        }
+        val ivLogo = findViewById<ImageView>(R.id.ivLogo)
+        ivLogo.animate()
+            .alpha(1f)
+            .rotation(360f)
+            .setDuration(2500)
+            .withEndAction {
+                startActivity(Intent(this, Inicio::class.java))
+                finish()
+            }
+            .start()
     }
 }

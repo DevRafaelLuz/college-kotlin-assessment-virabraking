@@ -14,14 +14,14 @@
         android:gravity="center"
         android:padding="24dp">
 
-        <ImageButton
-            android:id="@+id/iBtnInicio"
+        <ImageView
+            android:id="@+id/ivLogo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
+            android:alpha="0"
             android:background="@drawable/bg_verde_arredondado"
-            android:src="@drawable/vetor_veiculo_tela_abertura"
-            tools:context=".MainActivity" />
+            android:src="@drawable/vetor_veiculo_tela_abertura" />
 
         <TextView
             android:layout_width="wrap_content"

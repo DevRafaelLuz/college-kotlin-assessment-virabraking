@@ -246,6 +246,7 @@
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="51dp"
+                android:background="@drawable/btn_borda_arredondada"
                 android:text="Salvar Abastecimento"
                 android:textSize="16sp"
                 android:textStyle="bold"

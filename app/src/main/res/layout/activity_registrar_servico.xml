@@ -230,6 +230,7 @@
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="51dp"
+                android:background="@drawable/btn_borda_arredondada"
                 android:text="Salvar Manutenção"
                 android:textSize="16dp"
                 android:layout_marginBottom="16dp"
@@ -239,6 +240,7 @@
             <Button
                 android:id="@+id/btnAbastecer"
                 android:layout_width="match_parent"
+                android:background="@drawable/btn_borda_arredondada"
                 android:layout_height="51dp"
                 android:text="Abastecer"
                 android:textSize="16dp"

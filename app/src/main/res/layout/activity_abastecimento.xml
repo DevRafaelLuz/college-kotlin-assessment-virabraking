@@ -67,7 +67,7 @@
                     <EditText
                         android:layout_width="match_parent"
                         android:background="@drawable/bg_branco_arredondado_com_borda"
-                        android:hint="45L"
+                        android:hint="45 L"
                         android:textColorHint="#64748b"
                         android:textColor="#0F172A"
                         android:padding="12dp"

@@ -1,10 +1,12 @@
 package com.example.virabraking
 
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import com.google.android.material.button.MaterialButton
 
 class DetalhesVeiculo : AppCompatActivity() {
@@ -15,6 +17,11 @@ class DetalhesVeiculo : AppCompatActivity() {
         val iBtnVoltar = findViewById<ImageButton>(R.id.iBtnVoltar)
         iBtnVoltar.setOnClickListener{
             finish()
+        }
+
+        val llDetalhesServico = findViewById<LinearLayout>(R.id.llDetalhesServico)
+        llDetalhesServico.setOnClickListener {
+            startActivity(Intent(this, DetalheRegistro::class.java))
         }
 
         alterarEstiloBotaoSelecionado(obtemListaBotoes())

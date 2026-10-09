@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.Spinner
 
@@ -45,5 +46,10 @@ class RegistrarServico : AppCompatActivity() {
         adapter.setDropDownViewResource(R.layout.item_spinner_tipo_servico)
 
         sTipoServico.adapter = adapter
+
+        val btnAbastecer = findViewById<Button>(R.id.btnAbastecer)
+        btnAbastecer.setOnClickListener {
+            startActivity(Intent(this, Abastecimento::class.java))
+        }
     }
 }

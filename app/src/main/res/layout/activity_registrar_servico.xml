@@ -232,6 +232,17 @@
                 android:layout_height="51dp"
                 android:text="Salvar Manutenção"
                 android:textSize="16dp"
+                android:layout_marginBottom="16dp"
+                android:textStyle="bold"
+                android:textColor="#ffffff" />
+
+            <Button
+                android:id="@+id/btnAbastecer"
+                android:layout_width="match_parent"
+                android:layout_height="51dp"
+                android:text="Abastecer"
+                android:textSize="16dp"
+                android:layout_marginBottom="16dp"
                 android:textStyle="bold"
                 android:textColor="#ffffff" />
         </LinearLayout>

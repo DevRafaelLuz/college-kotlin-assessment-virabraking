@@ -37,10 +37,10 @@ class Relatorios : AppCompatActivity() {
     }
 
     private fun alterarEstiloBotaoSelecionado(listaBotoes: List<MaterialButton>) {
-        listaBotoes.forEach {
-            botao -> botao.setOnClickListener {
-                listaBotoes.forEach {
-                    botoes -> botoes.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#ffffff"))
+        listaBotoes.forEach { botao ->
+            botao.setOnClickListener {
+                listaBotoes.forEach { botoes ->
+                    botoes.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#ffffff"))
                     botoes.strokeColor = ColorStateList.valueOf(Color.parseColor("#e2e8f0"))
                     botoes.setTextColor(Color.parseColor("#64748b"))
                 }

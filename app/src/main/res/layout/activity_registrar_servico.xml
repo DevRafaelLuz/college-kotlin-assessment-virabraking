@@ -51,6 +51,7 @@
                     android:textStyle="bold" />
 
                 <Spinner
+                    android:id="@+id/spVeiculo"
                     android:layout_width="match_parent"
                     android:background="@drawable/bg_branco_arredondado_com_borda"
                     android:layout_height="42dp" />
@@ -104,6 +105,7 @@
                     <EditText
                         android:layout_width="match_parent"
                         android:background="@drawable/bg_branco_arredondado_com_borda"
+                        android:id="@+id/etData"
                         android:hint="12/10/2023"
                         android:textColorHint="#64748b"
                         android:textColor="#0F172A"
@@ -132,6 +134,8 @@
                         android:layout_width="match_parent"
                         android:background="@drawable/bg_branco_arredondado_com_borda"
                         android:textColorHint="#64748b"
+                        android:id="@+id/etQuilometragem"
+                        android:inputType="number"
                         android:hint="84200"
                         android:textSize="14dp"
                         android:textColor="#0F172A"
@@ -165,6 +169,8 @@
                     <EditText
                         android:layout_width="match_parent"
                         android:background="@drawable/bg_branco_arredondado_com_borda"
+                        android:id="@+id/etValor"
+                        android:inputType="numberDecimal"
                         android:hint="R$"
                         android:textColorHint="#64748b"
                         android:textColor="#0F172A"
@@ -192,6 +198,7 @@
                         android:layout_width="match_parent"
                         android:background="@drawable/bg_branco_arredondado_com_borda"
                         android:textColorHint="#64748b"
+                        android:id="@+id/etOficina"
                         android:hint="Bosch Service"
                         android:textSize="14dp"
                         android:textColor="#0F172A"
@@ -218,6 +225,7 @@
                 <EditText
                     android:layout_width="match_parent"
                     android:background="@drawable/bg_branco_arredondado_com_borda"
+                    android:id="@+id/etObservacoes"
                     android:hint="Troca de óleo do motor..."
                     android:textColorHint="#64748b"
                     android:textColor="#0F172A"
@@ -231,6 +239,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="51dp"
                 android:background="@drawable/btn_borda_arredondada"
+                android:id="@+id/btnSalvarManutencao"
                 android:text="Salvar Manutenção"
                 android:textSize="16dp"
                 android:layout_marginBottom="12dp"

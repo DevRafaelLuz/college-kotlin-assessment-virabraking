@@ -173,6 +173,7 @@
                     android:textColor="#0f172a" />
 
                 <EditText
+                    android:id="@+id/etApelido"
                     android:layout_width="match_parent"
                     android:layout_height="41dp"
                     android:textSize="14sp"
@@ -206,6 +207,7 @@
                             android:textColor="#0f172a" />
 
                         <EditText
+                            android:id="@+id/etMarca"
                             android:layout_width="match_parent"
                             android:layout_height="41dp"
                             android:padding="12dp"
@@ -232,6 +234,7 @@
                             android:textColor="#0f172a" />
 
                         <EditText
+                            android:id="@+id/etModelo"
                             android:layout_width="match_parent"
                             android:layout_height="41dp"
                             android:padding="12dp"
@@ -266,6 +269,8 @@
                             android:textColor="#0f172a" />
 
                         <EditText
+                            android:id="@+id/etAno"
+                            android:inputType="number"
                             android:layout_width="match_parent"
                             android:layout_height="41dp"
                             android:padding="12dp"
@@ -292,6 +297,7 @@
                             android:textColor="#0f172a" />
 
                         <EditText
+                            android:id="@+id/etPlaca"
                             android:layout_width="match_parent"
                             android:layout_height="41dp"
                             android:padding="12dp"
@@ -313,6 +319,8 @@
                     android:textColor="#0f172a" />
 
                 <EditText
+                    android:id="@+id/etQuilometragem"
+                    android:inputType="number"
                     android:layout_width="match_parent"
                     android:layout_height="41dp"
                     android:padding="12dp"
@@ -324,6 +332,7 @@
             </LinearLayout>
 
             <Button
+                android:id="@+id/btnSalvarVeiculo"
                 android:layout_width="match_parent"
                 android:layout_height="51dp"
                 android:textSize="16sp"

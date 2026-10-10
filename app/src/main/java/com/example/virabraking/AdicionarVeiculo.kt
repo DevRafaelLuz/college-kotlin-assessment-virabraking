@@ -7,8 +7,13 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Button
+import android.widget.EditText
+import android.widget.Toast
 
 class AdicionarVeiculo : AppCompatActivity() {
+
+    private var tipoSelecionado = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_adicionar_veiculo)
@@ -19,6 +24,11 @@ class AdicionarVeiculo : AppCompatActivity() {
         }
 
         alterarEstiloBotaoSelecionado(obtemIdLinearLayouts(), obtemIdImageViews(), obtemIdTextView())
+
+        val btnSalvarVeiculo = findViewById<Button>(R.id.btnSalvarVeiculo)
+        btnSalvarVeiculo.setOnClickListener {
+            salvarVeiculo()
+        }
     }
 
     private fun alterarEstiloBotaoSelecionado(tipoVeiculo: List<LinearLayout>, ivVeiculos: List<ImageView>, tvVeiculos: List<TextView>) {
@@ -33,6 +43,7 @@ class AdicionarVeiculo : AppCompatActivity() {
                 tipoVeiculo[i].setBackgroundResource(R.drawable.btn_tipo_veiculo)
                 ivVeiculos[i].setColorFilter(Color.parseColor("#0d9488"))
                 tvVeiculos[i].setTextColor(Color.parseColor("#0d9488"))
+                tipoSelecionado = tvVeiculos[i].text.toString()
             }
         }
     }
@@ -59,5 +70,33 @@ class AdicionarVeiculo : AppCompatActivity() {
         val tvCaminhao = findViewById<TextView>(R.id.tvCaminhao)
 
         return listOf(tvCarro, tvMoto, tvCaminhao)
+    }
+
+    private fun salvarVeiculo() {
+        val apelido = findViewById<EditText>(R.id.etApelido).text.toString().trim()
+        val marca = findViewById<EditText>(R.id.etMarca).text.toString().trim()
+        val modelo = findViewById<EditText>(R.id.etModelo).text.toString().trim()
+        val ano = findViewById<EditText>(R.id.etAno).text.toString().toIntOrNull() ?: 0
+        val placa = findViewById<EditText>(R.id.etPlaca).text.toString().trim()
+        val quilometragem = findViewById<EditText>(R.id.etQuilometragem).text.toString().toIntOrNull() ?: 0
+
+        if (tipoSelecionado.isEmpty() || apelido.isEmpty()) {
+            Toast.makeText(this, "Selecione o tipo e informe o nome", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val veiculo = Veiculo(
+            tipo = tipoSelecionado,
+            apelido = apelido,
+            marca = marca,
+            modelo = modelo,
+            ano = ano,
+            placa = placa,
+            quilometragem = quilometragem
+        )
+
+        BancoHelper(this).inserirVeiculo(veiculo)
+        Toast.makeText(this, "Veículo salvo", Toast.LENGTH_SHORT).show()
+        finish()
     }
 }

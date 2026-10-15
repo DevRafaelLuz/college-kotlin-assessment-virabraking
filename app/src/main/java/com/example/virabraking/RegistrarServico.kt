@@ -68,7 +68,11 @@ class RegistrarServico : AppCompatActivity() {
 
         val btnAbastecer = findViewById<Button>(R.id.btnAbastecer)
         btnAbastecer.setOnClickListener {
-            startActivity(Intent(this, Abastecimento::class.java))
+            val intent = Intent(this, Abastecimento::class.java)
+            if (veiculos.isNotEmpty()) {
+                intent.putExtra("veiculo_id", veiculos[spVeiculo.selectedItemPosition].id)
+            }
+            startActivity(intent)
         }
     }
 

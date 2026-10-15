@@ -15,12 +15,12 @@ class Veiculos : AppCompatActivity() {
         setContentView(R.layout.activity_veiculos)
 
         val llInicio = findViewById<LinearLayout>(R.id.llInicio)
-        llInicio.setOnClickListener{
+        llInicio.setOnClickListener {
             startActivity(Intent(this, Inicio::class.java))
         }
 
         val llAlertas = findViewById<LinearLayout>(R.id.llAlertas)
-        llAlertas.setOnClickListener{
+        llAlertas.setOnClickListener {
             startActivity(Intent(this, Alertas::class.java))
         }
 
@@ -51,8 +51,9 @@ class Veiculos : AppCompatActivity() {
         rvVeiculos.adapter = VeiculoAdapter(
             BancoHelper(this).listarVeiculos(),
             { veiculo ->
-                val intent = Intent(this, DetalhesVeiculo::class.java)
-                intent.putExtra("veiculoId", veiculo.id)
+                val intent = Intent(this, DetalhesVeiculo::class.java).apply {
+                    putExtra(Constantes.EXTRA_VEICULO_ID, veiculo.id)
+                }
                 startActivity(intent)
             },
             { veiculo -> confirmarRemocao(veiculo) }

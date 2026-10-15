@@ -6,9 +6,15 @@ import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.LinearLayout
+import android.widget.ProgressBar
+import android.widget.TextView
 import com.google.android.material.button.MaterialButton
 
 class Relatorios : AppCompatActivity() {
+
+    // Filtro escolhido no momento (começa em "Este Mês")
+    private var inicioDoPeriodo: () -> String = ::inicioDoMes
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_relatorios)
@@ -33,30 +39,85 @@ class Relatorios : AppCompatActivity() {
             startActivity(Intent(this, RegistrarServico::class.java))
         }
 
-        alterarEstiloBotaoSelecionado(obtemListaBotoes())
+        configurarFiltros()
     }
 
-    private fun alterarEstiloBotaoSelecionado(listaBotoes: List<MaterialButton>) {
-        listaBotoes.forEach { botao ->
-            botao.setOnClickListener {
-                listaBotoes.forEach { botoes ->
-                    botoes.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#ffffff"))
-                    botoes.strokeColor = ColorStateList.valueOf(Color.parseColor("#e2e8f0"))
-                    botoes.setTextColor(Color.parseColor("#64748b"))
-                }
+    override fun onResume() {
+        super.onResume()
+        carregarRelatorio(inicioDoPeriodo())
+    }
 
-                botao.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#0d9488"))
-                botao.strokeColor = ColorStateList.valueOf(Color.parseColor("#0d9488"))
-                botao.setTextColor(Color.parseColor("#ffffff"))
+    private fun configurarFiltros() {
+        val filtros = listOf<Pair<MaterialButton, () -> String>>(
+            findViewById<MaterialButton>(R.id.btnEsteMes) to ::inicioDoMes,
+            findViewById<MaterialButton>(R.id.btnTrimestre) to ::inicioDosUltimosTresMeses,
+            findViewById<MaterialButton>(R.id.btnEsteAno) to ::inicioDoAno
+        )
+        val botoes = filtros.map { it.first }
+
+        filtros.forEach { (botao, inicio) ->
+            botao.setOnClickListener {
+                destacarBotao(botoes, botao)
+                inicioDoPeriodo = inicio
+                carregarRelatorio(inicio())
             }
+        }
+
+        destacarBotao(botoes, botoes[0])
+    }
+
+    private fun destacarBotao(listaBotoes: List<MaterialButton>, selecionado: MaterialButton) {
+        listaBotoes.forEach { botoes ->
+            botoes.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#ffffff"))
+            botoes.strokeColor = ColorStateList.valueOf(Color.parseColor("#e2e8f0"))
+            botoes.setTextColor(Color.parseColor("#64748b"))
+        }
+
+        selecionado.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#0d9488"))
+        selecionado.strokeColor = ColorStateList.valueOf(Color.parseColor("#0d9488"))
+        selecionado.setTextColor(Color.parseColor("#ffffff"))
+    }
+
+    private fun carregarRelatorio(inicio: String) {
+        val banco = BancoHelper(this)
+
+        val totais = linkedMapOf(
+            "Combustível" to banco.totalCombustivelDesde(inicio),
+            "Revisões" to 0.0,
+            "Óleo" to 0.0,
+            "Pneus" to 0.0,
+            "Outros" to 0.0
+        )
+        banco.totalServicosPorTipoDesde(inicio).forEach { (tipo, valor) ->
+            val categoria = categoriaDoServico(tipo)
+            totais[categoria] = (totais[categoria] ?: 0.0) + valor
+        }
+
+        val linhas = listOf(
+            Triple("Combustível", R.id.tvValorCombustivel, R.id.pbCombustivel),
+            Triple("Revisões", R.id.tvValorRevisoes, R.id.pbRevisoes),
+            Triple("Óleo", R.id.tvValorOleo, R.id.pbOleo),
+            Triple("Pneus", R.id.tvValorPneus, R.id.pbPneus),
+            Triple("Outros", R.id.tvValorOutros, R.id.pbOutros)
+        )
+
+        val maior = totais.values.maxOrNull() ?: 0.0
+        linhas.forEach { (nome, idTexto, idBarra) ->
+            val valor = totais[nome] ?: 0.0
+            findViewById<TextView>(idTexto).text = valor.emReais()
+            findViewById<ProgressBar>(idBarra).progress =
+                if (maior > 0) (valor / maior * 100).toInt() else 0
         }
     }
 
-    private fun obtemListaBotoes(): List<MaterialButton> {
-        val btnEsteMes = findViewById<MaterialButton>(R.id.btnEsteMes)
-        val btnTrimestre = findViewById<MaterialButton>(R.id.btnTrimestre)
-        val btnEsteAno = findViewById<MaterialButton>(R.id.btnEsteAno)
-
-        return listOf(btnEsteMes, btnTrimestre, btnEsteAno)
+    // Agrupa o tipo de serviço (texto livre) nas categorias da tela
+    private fun categoriaDoServico(tipo: String): String {
+        val t = tipo.lowercase(LOCALE_BR)
+        return when {
+            t.contains("óleo") || t.contains("oleo") -> "Óleo"
+            t.contains("pneu") -> "Pneus"
+            t.contains("revis") -> "Revisões"
+            else -> "Outros"
+        }
     }
 }

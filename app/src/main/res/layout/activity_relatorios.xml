@@ -7,300 +7,325 @@
     android:background="#f8fafc"
     tools:context=".Relatorios">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="24dp"
-        android:orientation="vertical">
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/menuInferior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingHorizontal="24dp"
+            android:paddingBottom="16dp"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingVertical="16dp"
-                android:gravity="center_vertical">
+                android:orientation="vertical">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Relatórios e Finanças"
-                    android:textStyle="bold"
-                    android:textSize="20sp"
-                    android:textColor="#0F172A" />
+                    android:paddingVertical="16dp"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Relatórios e Finanças"
+                        android:textStyle="bold"
+                        android:textSize="20sp"
+                        android:textColor="#0F172A" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@drawable/gap"
+                    android:showDividers="middle"
+                    android:paddingVertical="8dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnEsteMes"
+                        android:layout_width="0dp"
+                        android:layout_height="39dp"
+                        android:layout_weight="1"
+                        android:textSize="12sp"
+                        android:textColor="#64748b"
+                        android:text="Este Mês"
+                        app:backgroundTint="#FFFFFF"
+                        app:strokeColor="#e2e8f0"
+                        app:strokeWidth="1dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnTrimestre"
+                        android:layout_width="0dp"
+                        android:layout_height="39dp"
+                        android:layout_weight="1"
+                        android:textSize="12sp"
+                        android:textColor="#64748b"
+                        android:text="Trimestre"
+                        app:backgroundTint="#FFFFFF"
+                        app:strokeColor="#e2e8f0"
+                        app:strokeWidth="1dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnEsteAno"
+                        android:layout_width="0dp"
+                        android:layout_height="39dp"
+                        android:layout_weight="1"
+                        android:textSize="12sp"
+                        android:textColor="#64748b"
+                        android:text="Este Ano"
+                        app:backgroundTint="#FFFFFF"
+                        app:strokeColor="#e2e8f0"
+                        app:strokeWidth="1dp" />
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:divider="@drawable/gap"
-                android:showDividers="middle"
-                android:paddingVertical="8dp">
+                android:paddingVertical="12dp">
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnEsteMes"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="39dp"
-                    android:layout_weight="1"
-                    android:textSize="12sp"
-                    android:textColor="#64748b"
-                    android:text="Este Mês"
-                    app:backgroundTint="#FFFFFF"
-                    app:strokeColor="#e2e8f0"
-                    app:strokeWidth="1dp" />
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_branco_arredondado_com_borda"
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnTrimestre"
-                    android:layout_width="match_parent"
-                    android:layout_height="39dp"
-                    android:layout_weight="1"
-                    android:textSize="12sp"
-                    android:textColor="#64748b"
-                    android:text="Trimestre"
-                    app:backgroundTint="#FFFFFF"
-                    app:strokeColor="#e2e8f0"
-                    app:strokeWidth="1dp" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Gasto por Categoria"
+                        android:textStyle="bold"
+                        android:textColor="#0F172A" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnEsteAno"
-                    android:layout_width="match_parent"
-                    android:layout_height="39dp"
-                    android:layout_weight="1"
-                    android:textSize="12sp"
-                    android:textColor="#64748b"
-                    android:text="Este Ano"
-                    app:backgroundTint="#FFFFFF"
-                    app:strokeColor="#e2e8f0"
-                    app:strokeWidth="1dp" />
+                    <!-- Combustível -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginBottom="10dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:textSize="12sp"
+                                android:textColor="#0F172A"
+                                android:text="Combustível" />
+
+                            <TextView
+                                android:id="@+id/tvValorCombustivel"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="R$ 0,00"
+                                android:textSize="12sp"
+                                android:textColor="#0F172A"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <ProgressBar
+                            android:id="@+id/pbCombustivel"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:max="100"
+                            android:progress="0"
+                            android:progressTint="#0d9488"
+                            android:progressBackgroundTint="#f8fafc" />
+                    </LinearLayout>
+
+                    <!-- Revisões -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginBottom="10dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:textSize="12sp"
+                                android:textColor="#0F172A"
+                                android:text="Revisões" />
+
+                            <TextView
+                                android:id="@+id/tvValorRevisoes"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="R$ 0,00"
+                                android:textSize="12sp"
+                                android:textColor="#0F172A"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <ProgressBar
+                            android:id="@+id/pbRevisoes"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:max="100"
+                            android:progress="0"
+                            android:progressTint="#0d9488"
+                            android:progressBackgroundTint="#f8fafc" />
+                    </LinearLayout>
+
+                    <!-- Óleo -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginBottom="10dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:textSize="12sp"
+                                android:textColor="#0F172A"
+                                android:text="Óleo" />
+
+                            <TextView
+                                android:id="@+id/tvValorOleo"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="R$ 0,00"
+                                android:textSize="12sp"
+                                android:textColor="#0F172A"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <ProgressBar
+                            android:id="@+id/pbOleo"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:max="100"
+                            android:progress="0"
+                            android:progressTint="#0d9488"
+                            android:progressBackgroundTint="#f8fafc" />
+                    </LinearLayout>
+
+                    <!-- Pneus -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginBottom="10dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:textSize="12sp"
+                                android:textColor="#0F172A"
+                                android:text="Pneus" />
+
+                            <TextView
+                                android:id="@+id/tvValorPneus"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="R$ 0,00"
+                                android:textSize="12sp"
+                                android:textColor="#0F172A"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <ProgressBar
+                            android:id="@+id/pbPneus"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:max="100"
+                            android:progress="0"
+                            android:progressTint="#0d9488"
+                            android:progressBackgroundTint="#f8fafc" />
+                    </LinearLayout>
+
+                    <!-- Outros -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginBottom="10dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:textSize="12sp"
+                                android:textColor="#0F172A"
+                                android:text="Outros" />
+
+                            <TextView
+                                android:id="@+id/tvValorOutros"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="R$ 0,00"
+                                android:textSize="12sp"
+                                android:textColor="#0F172A"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <ProgressBar
+                            android:id="@+id/pbOutros"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:max="100"
+                            android:progress="0"
+                            android:progressTint="#0d9488"
+                            android:progressBackgroundTint="#f8fafc" />
+                    </LinearLayout>
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingVertical="12dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_branco_arredondado_com_borda"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="16dp"
+                android:background="@drawable/bg_branco_arredondado_com_borda">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Gasto por Categoria (R$)"
+                    android:text="Tendência de Gastos Mensais"
                     android:textStyle="bold"
                     android:textColor="#0F172A" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginBottom="10dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:textSize="12sp"
-                            android:textColor="#0F172A"
-                            android:text="Combustível" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="R$"
-                            android:textSize="12sp"
-                            android:textColor="#0F172A"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <ProgressBar
-                        style="?android:attr/progressBarStyleHorizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:max="100"
-                        android:progress="80"
-                        android:progressTint="#0d9488"
-                        android:progressBackgroundTint="#f8fafc" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginBottom="10dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:textSize="12sp"
-                            android:textColor="#0F172A"
-                            android:text="Revisões" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="R$"
-                            android:textSize="12sp"
-                            android:textColor="#0F172A"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <ProgressBar
-                        style="?android:attr/progressBarStyleHorizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:max="100"
-                        android:progress="55"
-                        android:progressTint="#0d9488"
-                        android:progressBackgroundTint="#f8fafc" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginBottom="10dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:textSize="12sp"
-                            android:textColor="#0F172A"
-                            android:text="Óleo" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="R$"
-                            android:textSize="12sp"
-                            android:textColor="#0F172A"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <ProgressBar
-                        style="?android:attr/progressBarStyleHorizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:max="100"
-                        android:progress="45"
-                        android:progressTint="#0d9488"
-                        android:progressBackgroundTint="#f8fafc" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginBottom="10dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:textSize="12sp"
-                            android:textColor="#0F172A"
-                            android:text="Pneus" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="R$"
-                            android:textSize="12sp"
-                            android:textColor="#0F172A"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <ProgressBar
-                        style="?android:attr/progressBarStyleHorizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:max="100"
-                        android:progress="20"
-                        android:progressTint="#0d9488"
-                        android:progressBackgroundTint="#f8fafc" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginBottom="10dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:textSize="12sp"
-                            android:textColor="#0F172A"
-                            android:text="Outros" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="R$"
-                            android:textSize="12sp"
-                            android:textColor="#0F172A"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <ProgressBar
-                        style="?android:attr/progressBarStyleHorizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:max="100"
-                        android:progress="10"
-                        android:progressTint="#0d9488"
-                        android:progressBackgroundTint="#f8fafc" />
-                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
+    </ScrollView>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:background="@drawable/bg_branco_arredondado_com_borda">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Tendência de Gastos Mensais"
-                android:textStyle="bold"
-                android:textColor="#0F172A" />
-        </LinearLayout>
-    </LinearLayout>
-
+    <!-- Menu Inferior -->
     <LinearLayout
+        android:id="@+id/menuInferior"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -312,7 +337,7 @@
 
         <LinearLayout
             android:id="@+id/llInicio"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_weight="1"
@@ -334,11 +359,11 @@
 
         <LinearLayout
             android:id="@+id/llVeiculos"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_weight="1"
-            android:gravity="center" >
+            android:gravity="center">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -355,11 +380,11 @@
 
         <LinearLayout
             android:id="@+id/llAdicionar"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_weight="1"
-            android:gravity="center" >
+            android:gravity="center">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -376,11 +401,11 @@
 
         <LinearLayout
             android:id="@+id/llAlertas"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_weight="1"
-            android:gravity="center" >
+            android:gravity="center">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -397,11 +422,11 @@
 
         <LinearLayout
             android:id="@+id/llRelatorios"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_weight="1"
-            android:gravity="center" >
+            android:gravity="center">
 
             <ImageView
                 android:layout_width="wrap_content"

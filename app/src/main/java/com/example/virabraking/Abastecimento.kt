@@ -78,7 +78,7 @@ class Abastecimento : AppCompatActivity() {
         spVeiculo.adapter = adapter
 
         // Se a tela foi aberta já com um veículo escolhido, deixa ele selecionado
-        val idInicial = intent.getIntExtra("veiculo_id", -1)
+        val idInicial = intent.getIntExtra(Constantes.EXTRA_VEICULO_ID, Constantes.ID_INVALIDO)
         val posicaoInicial = veiculos.indexOfFirst { it.id == idInicial }
         if (posicaoInicial >= 0) {
             spVeiculo.setSelection(posicaoInicial)

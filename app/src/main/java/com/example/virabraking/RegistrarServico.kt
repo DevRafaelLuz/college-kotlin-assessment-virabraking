@@ -1,5 +1,6 @@
 package com.example.virabraking
 
+import android.app.DatePickerDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -10,11 +11,13 @@ import android.widget.Spinner
 import android.widget.EditText
 import android.widget.Toast
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Locale
 
 class RegistrarServico : AppCompatActivity() {
 
     private var veiculos = listOf<Veiculo>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registrar_servico)
@@ -42,7 +45,6 @@ class RegistrarServico : AppCompatActivity() {
         val sTipoServico = findViewById<Spinner>(R.id.sTipoServico)
 
         val itensTipoServico = mutableListOf<TipoServico>()
-
         TipoServico.entries.forEach(itensTipoServico::add)
 
         val tipoServico = mutableListOf("Selecione")
@@ -50,7 +52,6 @@ class RegistrarServico : AppCompatActivity() {
 
         val adapter = ArrayAdapter(this, R.layout.item_spinner_tipo_servico, tipoServico)
         adapter.setDropDownViewResource(R.layout.item_spinner_tipo_servico)
-
         sTipoServico.adapter = adapter
 
         val spVeiculo = findViewById<Spinner>(R.id.spVeiculo)
@@ -61,6 +62,28 @@ class RegistrarServico : AppCompatActivity() {
         adapterVeiculo.setDropDownViewResource(R.layout.item_spinner_tipo_servico)
         spVeiculo.adapter = adapterVeiculo
 
+        // Se a tela for iniciada com um veículo já definido, seleciona-o no Spinner
+        val idInicial = intent.getIntExtra(Constantes.EXTRA_VEICULO_ID, Constantes.ID_INVALIDO)
+        val posicaoInicial = veiculos.indexOfFirst { it.id == idInicial }
+        if (posicaoInicial >= 0) {
+            spVeiculo.setSelection(posicaoInicial)
+        }
+
+        // Seletor de data: evita problemas com o teclado e garante o formato dd/MM/yyyy
+        val etData = findViewById<EditText>(R.id.etData)
+        etData.setOnClickListener {
+            val cal = Calendar.getInstance()
+            DatePickerDialog(
+                this,
+                { _, ano, mes, dia ->
+                    etData.setText(String.format(Locale.US, "%02d/%02d/%04d", dia, mes + 1, ano))
+                },
+                cal.get(Calendar.YEAR),
+                cal.get(Calendar.MONTH),
+                cal.get(Calendar.DAY_OF_MONTH)
+            ).show()
+        }
+
         val btnSalvarManutencao = findViewById<Button>(R.id.btnSalvarManutencao)
         btnSalvarManutencao.setOnClickListener {
             salvarServico()
@@ -70,7 +93,7 @@ class RegistrarServico : AppCompatActivity() {
         btnAbastecer.setOnClickListener {
             val intent = Intent(this, Abastecimento::class.java)
             if (veiculos.isNotEmpty()) {
-                intent.putExtra("veiculo_id", veiculos[spVeiculo.selectedItemPosition].id)
+                intent.putExtra(Constantes.EXTRA_VEICULO_ID, veiculos[spVeiculo.selectedItemPosition].id)
             }
             startActivity(intent)
         }
@@ -103,16 +126,14 @@ class RegistrarServico : AppCompatActivity() {
 
         val dataFormatada = try {
             SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(
-                formatoEntrada.parse(
-                    dataTexto
-                )!!
+                formatoEntrada.parse(dataTexto)!!
             )
         } catch (e: Exception) {
             null
         }
 
         if (dataFormatada == null) {
-            Toast.makeText(this, "Data inválida (dd/mm/aaaa)", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Selecione a data do serviço", Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -126,7 +147,12 @@ class RegistrarServico : AppCompatActivity() {
             observacoes = observacoes
         )
 
-        BancoHelper(this).inserirServico(servico)
+        val resultado = BancoHelper(this).inserirServico(servico)
+        if (resultado == -1L) {
+            Toast.makeText(this, "Erro ao salvar o serviço", Toast.LENGTH_LONG).show()
+            return
+        }
+
         Toast.makeText(this, "Serviço salvo", Toast.LENGTH_SHORT).show()
         finish()
     }

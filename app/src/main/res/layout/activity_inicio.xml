@@ -7,230 +7,258 @@
     android:background="#f8fafc"
     tools:context=".Inicio">
 
-    <LinearLayout
+    <!-- Área de Conteúdo com Rolagem -->
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/menuInferior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="24dp"
-            android:paddingTop="16dp"
-            android:paddingBottom="8dp">
+            android:orientation="vertical">
 
+            <!-- Cabeçalho de Boas-Vindas -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:paddingHorizontal="24dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Olá, "
+                            android:textColor="#64748b"/>
+
+                        <TextView
+                            android:id="@+id/tvNomeUsuario"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Usuário"
+                            android:textColor="#64748b" />
+                    </LinearLayout>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Olá, "
-                        android:textColor="#64748b"/>
-
-                    <TextView
-                        android:id="@+id/tvNomeUsuario"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="[NOME_USUARIO]"
-                        android:textColor="#64748b" />
+                        android:text="Seu Painel"
+                        android:textColor="#0f172a"
+                        android:textStyle="bold"
+                        android:textSize="22sp"/>
                 </LinearLayout>
 
-                <TextView
+                <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Seu Painel"
-                    android:textColor="#0f172a"
-                    android:textStyle="bold"
-                    android:textSize="22sp"/>
+                    android:src="@drawable/vetor_foto_conta"
+                    android:layout_gravity="center" />
             </LinearLayout>
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/vetor_foto_conta"
-                android:layout_gravity="center" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="24dp"
-            android:paddingVertical="16dp">
-
+            <!-- Cards Resumo (Veículos e Gastos) -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:divider="@drawable/gap"
-                android:showDividers="middle">
+                android:orientation="vertical"
+                android:paddingHorizontal="24dp"
+                android:paddingVertical="16dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_branco_arredondado"
-                    android:padding="16dp">
+                    android:divider="@drawable/gap"
+                    android:showDividers="middle">
 
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:background="@drawable/bg_branco_arredondado"
+                        android:padding="16dp">
 
-                        <TextView
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Veículos"
+                                android:textSize="12sp"
+                                android:textStyle="bold"
+                                android:textColor="#64748b"/>
+
+                            <TextView
+                                android:id="@+id/tvQtdVeiculos"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="0 Ativos"
+                                android:textColor="#0f172a"
+                                android:textStyle="bold"
+                                android:textSize="20sp"/>
+                        </LinearLayout>
+
+                        <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Veículos"
-                            android:textSize="12sp"
-                            android:textStyle="bold"
-                            android:textColor="#64748b"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="[Nº] Ativos"
-                            android:textColor="#0f172a"
-                            android:textStyle="bold"
-                            android:textSize="24sp"/>
+                            android:src="@drawable/vetor_veiculos_ativos"
+                            app:tint="#0d9488" />
                     </LinearLayout>
 
-                    <ImageView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/vetor_veiculos_ativos"
-                        app:tint="#0d9488" />
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_branco_arredondado"
+                        android:padding="16dp">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Gastos / Mês"
+                                android:textStyle="bold"
+                                android:textSize="12sp"
+                                android:textColor="#64748b"/>
+
+                            <TextView
+                                android:id="@+id/tvGastosMes"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="R$ 0,00"
+                                android:textColor="#0f172a"
+                                android:textStyle="bold"
+                                android:textSize="20sp"/>
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/vetor_cifrao_gastos"
+                            app:tint="#0d9488" />
+                    </LinearLayout>
                 </LinearLayout>
 
+                <!-- Card Próxima Manutenção -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_branco_arredondado"
-                    android:padding="16dp">
+                    android:padding="16dp"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/bg_verde_claro_arredondado_com_borda">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:gravity="center_vertical">
 
-                        <TextView
+                        <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/bg_verde_arredondado"
+                            android:padding="10dp"
+                            android:layout_marginEnd="16dp"
+                            android:src="@drawable/vetor_relogio_proxima_manutencao"
+                            app:tint="#ffffff" />
+
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Gastos / Mês"
-                            android:textStyle="bold"
-                            android:textSize="12sp"
-                            android:textColor="#64748b"/>
+                            android:orientation="vertical">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="R$"
-                            android:textColor="#0f172a"
-                            android:textStyle="bold"
-                            android:textSize="24sp"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="PRÓXIMA MANUTENÇÃO"
+                                android:textColor="#0d9488"
+                                android:textSize="11sp"
+                                android:textStyle="bold"/>
+
+                            <TextView
+                                android:id="@+id/tvDescricaoManutencao"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Nenhuma pendente"
+                                android:textStyle="bold"
+                                android:textSize="15sp"
+                                android:textColor="#0f172a" />
+
+                            <TextView
+                                android:id="@+id/tvQuandoManutencao"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Tudo em dia"
+                                android:textColor="#64748b"
+                                android:textSize="13sp"/>
+                        </LinearLayout>
                     </LinearLayout>
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/vetor_cifrao_gastos"
-                        app:tint="#0d9488" />
                 </LinearLayout>
             </LinearLayout>
 
+            <!-- Seção Últimas Atividades -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/bg_verde_claro_arredondado_com_borda">
+                android:paddingHorizontal="24dp"
+                android:paddingVertical="8dp"
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical">
 
-                    <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:background="@drawable/bg_verde_arredondado"
-                        android:padding="10dp"
-                        android:layout_marginRight="16dp"
-                        android:src="@drawable/vetor_relogio_proxima_manutencao"
-                        app:tint="#ffffff" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Últimas Atividades"
+                        android:textSize="16sp"
+                        android:textColor="#0f172a"
+                        android:textStyle="bold" />
 
-                    <LinearLayout
+                    <TextView
+                        android:id="@+id/tvVerTudo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="PRÓXIMA MANUTENÇÃO"
-                            android:textColor="#0d9488"
-                            android:textSize="11sp"
-                            android:textStyle="bold"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="[DESCRIÇÃO]"
-                            android:textStyle="bold"
-                            android:textSize="15sp"
-                            android:textColor="#0f172a" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="[QUANDO?]"
-                            android:textColor="#64748b"
-                            android:textSize="13sp"/>
-                    </LinearLayout>
+                        android:text="Ver tudo"
+                        android:textColor="#0d9488"
+                        android:textSize="13sp" />
                 </LinearLayout>
-            </LinearLayout>
-        </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="24dp"
-            android:paddingVertical="8dp"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
+                <!-- Container onde a lista dinâmica de atividades é inserida -->
+                <LinearLayout
+                    android:id="@+id/llListaAtividades"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Últimas Atividades"
-                    android:textSize="16sp"
-                    android:textColor="#0f172a"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Ver tudo"
-                    android:textColor="#0d9488"
-                    android:textSize="13sp" />
+                    android:orientation="vertical"
+                    android:layout_marginTop="8dp" />
             </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
+    <!-- Menu de Navegação Inferior -->
     <LinearLayout
+        android:id="@+id/menuInferior"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -242,7 +270,7 @@
 
         <LinearLayout
             android:id="@+id/llInicio"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_weight="1"
@@ -264,11 +292,11 @@
 
         <LinearLayout
             android:id="@+id/llVeiculos"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_weight="1"
-            android:gravity="center" >
+            android:gravity="center">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -285,11 +313,11 @@
 
         <LinearLayout
             android:id="@+id/llAdicionar"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_weight="1"
-            android:gravity="center" >
+            android:gravity="center">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -301,16 +329,16 @@
                 android:layout_height="wrap_content"
                 android:text="Adicionar"
                 android:textSize="10sp"
-                android:textColor="#64748b"/>
+                android:textColor="#64748b" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/llAlertas"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_weight="1"
-            android:gravity="center" >
+            android:gravity="center">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -322,28 +350,30 @@
                 android:layout_height="wrap_content"
                 android:text="Alertas"
                 android:textSize="10sp"
-                android:textColor="#64748b"/>
+                android:textColor="#64748b" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/llRelatorios"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_weight="1"
-            android:gravity="center" >
+            android:gravity="center">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/vetor_menu_relatorios" />
+                android:src="@drawable/vetor_menu_relatorios"
+                app:tint="#64748b" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Relatórios"
                 android:textSize="10sp"
-                android:textColor="#64748b"/>
+                android:textColor="#64748b" />
         </LinearLayout>
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

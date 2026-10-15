@@ -7,265 +7,277 @@
     android:background="#f8fafc"
     tools:context=".RegistrarServico">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/llMenu">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="24dp"
-            android:paddingVertical="16dp"
-            android:gravity="center_vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Registrar Serviço"
-                android:textStyle="bold"
-                android:textSize="20sp"
-                android:textColor="#0F172A" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="24dp"
-            android:paddingVertical="12dp"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:orientation="vertical">
+                android:paddingHorizontal="24dp"
+                android:paddingVertical="16dp"
+                android:gravity="center_vertical">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="6dp"
-                    android:text="Selecionar Veículo"
-                    android:textColor="#0F172A"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
-
-                <Spinner
-                    android:id="@+id/spVeiculo"
-                    android:layout_width="match_parent"
-                    android:background="@drawable/bg_branco_arredondado_com_borda"
-                    android:layout_height="42dp" />
+                    android:text="Registrar Serviço"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:textColor="#0F172A" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:paddingHorizontal="24dp"
+                android:paddingVertical="12dp"
                 android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="6dp"
-                    android:text="Tipo de Serviço"
-                    android:textColor="#0F172A"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
-
-                <Spinner
-                    android:id="@+id/sTipoServico"
-                    android:layout_width="match_parent"
-                    android:background="@drawable/bg_branco_arredondado_com_borda"
-                    android:popupBackground="#ffffff"
-                    android:layout_height="42dp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:divider="@drawable/gap"
-                android:layout_marginBottom="16dp"
-                android:showDividers="middle">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_weight="1" >
+                    android:layout_marginBottom="16dp"
+                    android:orientation="vertical">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="6dp"
-                        android:text="Data"
+                        android:text="Selecionar Veículo"
+                        android:textColor="#0F172A"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+
+                    <Spinner
+                        android:id="@+id/spVeiculo"
+                        android:layout_width="match_parent"
+                        android:background="@drawable/bg_branco_arredondado_com_borda"
+                        android:layout_height="42dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="6dp"
+                        android:text="Tipo de Serviço"
+                        android:textColor="#0F172A"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+
+                    <Spinner
+                        android:id="@+id/sTipoServico"
+                        android:layout_width="match_parent"
+                        android:background="@drawable/bg_branco_arredondado_com_borda"
+                        android:popupBackground="#ffffff"
+                        android:layout_height="42dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@drawable/gap"
+                    android:layout_marginBottom="16dp"
+                    android:showDividers="middle">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="6dp"
+                            android:text="Data"
+                            android:textColor="#0F172A"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+
+                        <EditText
+                            android:id="@+id/etData"
+                            android:layout_width="match_parent"
+                            android:layout_height="42dp"
+                            android:background="@drawable/bg_branco_arredondado_com_borda"
+                            android:hint="Escolher data"
+                            android:textColorHint="#64748b"
+                            android:textColor="#0F172A"
+                            android:padding="12dp"
+                            android:textSize="14sp"
+                            android:focusable="false"
+                            android:clickable="true"
+                            android:cursorVisible="false"
+                            android:importantForAutofill="no" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="6dp"
+                            android:text="Quilometragem (KM)"
+                            android:textColor="#0F172A"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+
+                        <EditText
+                            android:id="@+id/etQuilometragem"
+                            android:layout_width="match_parent"
+                            android:layout_height="42dp"
+                            android:background="@drawable/bg_branco_arredondado_com_borda"
+                            android:textColorHint="#64748b"
+                            android:inputType="number"
+                            android:hint="84200"
+                            android:textSize="14sp"
+                            android:textColor="#0F172A"
+                            android:padding="12dp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@drawable/gap"
+                    android:layout_marginBottom="16dp"
+                    android:showDividers="middle">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="6dp"
+                            android:text="Valor R$"
+                            android:textColor="#0F172A"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+
+                        <EditText
+                            android:id="@+id/etValor"
+                            android:layout_width="match_parent"
+                            android:layout_height="42dp"
+                            android:background="@drawable/bg_branco_arredondado_com_borda"
+                            android:inputType="numberDecimal"
+                            android:hint="R$"
+                            android:textColorHint="#64748b"
+                            android:textColor="#0F172A"
+                            android:padding="12dp"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="6dp"
+                            android:text="Oficina"
+                            android:textColor="#0F172A"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+
+                        <EditText
+                            android:id="@+id/etOficina"
+                            android:layout_width="match_parent"
+                            android:layout_height="42dp"
+                            android:background="@drawable/bg_branco_arredondado_com_borda"
+                            android:textColorHint="#64748b"
+                            android:hint="Bosch Service"
+                            android:textSize="14sp"
+                            android:textColor="#0F172A"
+                            android:padding="12dp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="6dp"
+                        android:text="Observações"
                         android:textColor="#0F172A"
                         android:textSize="13sp"
                         android:textStyle="bold" />
 
                     <EditText
+                        android:id="@+id/etObservacoes"
                         android:layout_width="match_parent"
+                        android:layout_height="80dp"
                         android:background="@drawable/bg_branco_arredondado_com_borda"
-                        android:id="@+id/etData"
-                        android:hint="12/10/2023"
+                        android:hint="Troca de óleo do motor..."
                         android:textColorHint="#64748b"
                         android:textColor="#0F172A"
                         android:padding="12dp"
                         android:textSize="14sp"
-                        android:inputType="date"
-                        android:layout_height="42dp" />
+                        android:gravity="start" />
                 </LinearLayout>
 
-                <LinearLayout
+                <Button
+                    android:id="@+id/btnSalvarManutencao"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_weight="1" >
+                    android:layout_height="51dp"
+                    android:background="@drawable/btn_borda_arredondada"
+                    android:text="Salvar Manutenção"
+                    android:textSize="16sp"
+                    android:layout_marginBottom="12dp"
+                    android:textStyle="bold"
+                    android:textColor="#ffffff" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="6dp"
-                        android:text="Quilometragem (KM)"
-                        android:textColor="#0F172A"
-                        android:textSize="13sp"
-                        android:textStyle="bold" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:background="#e2e8f0"
+                    android:layout_marginBottom="16dp" />
 
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:background="@drawable/bg_branco_arredondado_com_borda"
-                        android:textColorHint="#64748b"
-                        android:id="@+id/etQuilometragem"
-                        android:inputType="number"
-                        android:hint="84200"
-                        android:textSize="14dp"
-                        android:textColor="#0F172A"
-                        android:padding="12dp"
-                        android:layout_height="42dp" />
-                </LinearLayout>
+                <Button
+                    android:id="@+id/btnAbastecer"
+                    android:layout_width="match_parent"
+                    android:layout_height="51dp"
+                    android:background="@drawable/btn_borda_arredondada"
+                    android:text="Abastecer"
+                    android:textSize="16sp"
+                    android:layout_marginBottom="16dp"
+                    android:textStyle="bold"
+                    android:textColor="#ffffff" />
             </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:divider="@drawable/gap"
-                android:layout_marginBottom="16dp"
-                android:showDividers="middle">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_weight="1" >
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="6dp"
-                        android:text="Valor R$"
-                        android:textColor="#0F172A"
-                        android:textSize="13sp"
-                        android:textStyle="bold" />
-
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:background="@drawable/bg_branco_arredondado_com_borda"
-                        android:id="@+id/etValor"
-                        android:inputType="numberDecimal"
-                        android:hint="R$"
-                        android:textColorHint="#64748b"
-                        android:textColor="#0F172A"
-                        android:padding="12dp"
-                        android:textSize="14sp"
-                        android:layout_height="42dp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_weight="1" >
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="6dp"
-                        android:text="Oficina"
-                        android:textColor="#0F172A"
-                        android:textSize="13sp"
-                        android:textStyle="bold" />
-
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:background="@drawable/bg_branco_arredondado_com_borda"
-                        android:textColorHint="#64748b"
-                        android:id="@+id/etOficina"
-                        android:hint="Bosch Service"
-                        android:textSize="14dp"
-                        android:textColor="#0F172A"
-                        android:padding="12dp"
-                        android:layout_height="42dp" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="6dp"
-                    android:text="Observações"
-                    android:textColor="#0F172A"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
-
-                <EditText
-                    android:layout_width="match_parent"
-                    android:background="@drawable/bg_branco_arredondado_com_borda"
-                    android:id="@+id/etObservacoes"
-                    android:hint="Troca de óleo do motor..."
-                    android:textColorHint="#64748b"
-                    android:textColor="#0F172A"
-                    android:padding="12dp"
-                    android:textSize="14sp"
-                    android:gravity="start"
-                    android:layout_height="80dp" />
-            </LinearLayout>
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="51dp"
-                android:background="@drawable/btn_borda_arredondada"
-                android:id="@+id/btnSalvarManutencao"
-                android:text="Salvar Manutenção"
-                android:textSize="16dp"
-                android:layout_marginBottom="12dp"
-                android:textStyle="bold"
-                android:textColor="#ffffff" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:background="#e2e8f0"
-                android:layout_marginBottom="16dp"/>
-
-            <Button
-                android:id="@+id/btnAbastecer"
-                android:layout_width="match_parent"
-                android:background="@drawable/btn_borda_arredondada"
-                android:layout_height="51dp"
-                android:text="Abastecer"
-                android:textSize="16dp"
-                android:layout_marginBottom="16dp"
-                android:textStyle="bold"
-                android:textColor="#ffffff" />
         </LinearLayout>
-    </LinearLayout>
+    </ScrollView>
 
     <LinearLayout
+        android:id="@+id/llMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -277,7 +289,7 @@
 
         <LinearLayout
             android:id="@+id/llInicio"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_weight="1"
@@ -299,11 +311,11 @@
 
         <LinearLayout
             android:id="@+id/llVeiculos"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_weight="1"
-            android:gravity="center" >
+            android:gravity="center">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -320,11 +332,11 @@
 
         <LinearLayout
             android:id="@+id/llAdicionar"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_weight="1"
-            android:gravity="center" >
+            android:gravity="center">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -342,11 +354,11 @@
 
         <LinearLayout
             android:id="@+id/llAlertas"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_weight="1"
-            android:gravity="center" >
+            android:gravity="center">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -358,16 +370,16 @@
                 android:layout_height="wrap_content"
                 android:text="Alertas"
                 android:textSize="10sp"
-                android:textColor="#64748b"/>
+                android:textColor="#64748b" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/llRelatorios"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_weight="1"
-            android:gravity="center" >
+            android:gravity="center">
 
             <ImageView
                 android:layout_width="wrap_content"

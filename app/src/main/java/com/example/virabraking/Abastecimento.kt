@@ -27,8 +27,8 @@ class Abastecimento : AppCompatActivity() {
     private lateinit var etData: EditText
 
     private var veiculos = listOf<Veiculo>()
-    private var ultimoPreco: EditText? = null   // qual preço o usuário digitou por último
-    private var atualizando = false             // evita loop entre os TextWatchers
+    private var ultimoPreco: EditText? = null
+    private var atualizando = false
 
     private val dataSelecionada: Calendar = Calendar.getInstance()
     private val localeBr: Locale = Locale.forLanguageTag("pt-BR")
@@ -44,20 +44,9 @@ class Abastecimento : AppCompatActivity() {
             finish()
         }
 
-        veiculos = BancoHelper(this).listarVeiculos()
-        if (veiculos.isEmpty()) {
-            Toast.makeText(this, "Cadastre um veículo primeiro", Toast.LENGTH_SHORT).show()
-            finish()
-            return
-        }
+        verificaSeHaVeiculosCadastrados()
 
-        spVeiculo = findViewById(R.id.spVeiculo)
-        etLitros = findViewById(R.id.etLitros)
-        etValorLitro = findViewById(R.id.etValorLitro)
-        etValorTotal = findViewById(R.id.etValorTotal)
-        etKm = findViewById(R.id.etKm)
-        etPosto = findViewById(R.id.etPosto)
-        etData = findViewById(R.id.etData)
+        atribuiIDs()
 
         configurarSeletorVeiculo()
 
@@ -72,19 +61,36 @@ class Abastecimento : AppCompatActivity() {
         }
     }
 
+    private fun verificaSeHaVeiculosCadastrados() {
+        veiculos = BancoHelper(this).listarVeiculos()
+        if (veiculos.isEmpty()) {
+            Toast.makeText(this, "Cadastre um veículo primeiro", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
+    }
+
+    private fun atribuiIDs() {
+        spVeiculo = findViewById(R.id.spVeiculo)
+        etLitros = findViewById(R.id.etLitros)
+        etValorLitro = findViewById(R.id.etValorLitro)
+        etValorTotal = findViewById(R.id.etValorTotal)
+        etKm = findViewById(R.id.etKm)
+        etPosto = findViewById(R.id.etPosto)
+        etData = findViewById(R.id.etData)
+    }
+
     private fun configurarSeletorVeiculo() {
         val adapter = ArrayAdapter(this, R.layout.item_spinner_tipo_servico, veiculos.map { it.apelido })
         adapter.setDropDownViewResource(R.layout.item_spinner_tipo_servico)
         spVeiculo.adapter = adapter
 
-        // Se a tela foi aberta já com um veículo escolhido, deixa ele selecionado
         val idInicial = intent.getIntExtra(Constantes.EXTRA_VEICULO_ID, Constantes.ID_INVALIDO)
         val posicaoInicial = veiculos.indexOfFirst { it.id == idInicial }
         if (posicaoInicial >= 0) {
             spVeiculo.setSelection(posicaoInicial)
         }
 
-        // O hint de KM mostra o mínimo do veículo escolhido
         spVeiculo.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 etKm.hint = "Mín. ${veiculos[position].quilometragem}"
@@ -109,8 +115,6 @@ class Abastecimento : AppCompatActivity() {
         dialog.show()
     }
 
-    // Litros é a âncora. O preço digitado por último define o que é calculado:
-    // valor/litro digitado -> calcula o total; total digitado -> calcula o valor/litro
     private fun configurarCalculo() {
         etLitros.doAfterTextChanged {
             if (!atualizando) recalcular()

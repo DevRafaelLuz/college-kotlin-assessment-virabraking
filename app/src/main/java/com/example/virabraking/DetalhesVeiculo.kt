@@ -22,10 +22,8 @@ class DetalhesVeiculo : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detalhes_veiculo)
 
-        // Leitura com a constante centralizada e valor padrão de segurança
         veiculoId = intent.getIntExtra(Constantes.EXTRA_VEICULO_ID, Constantes.ID_INVALIDO)
 
-        // Proteção extra: impede tela vazia/inconsistente caso o ID venha inválido
         if (veiculoId == Constantes.ID_INVALIDO) {
             Toast.makeText(this, "Erro: Veículo não encontrado.", Toast.LENGTH_SHORT).show()
             finish()
@@ -54,7 +52,6 @@ class DetalhesVeiculo : AppCompatActivity() {
         destacarBotao(botoes, botoes[0])
     }
 
-    // Recarrega ao voltar da tela de abastecimento/serviço
     override fun onResume() {
         super.onResume()
         preencherCabecalho()

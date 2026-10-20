@@ -11,19 +11,17 @@ import java.util.Locale
 
 val LOCALE_BR: Locale = Locale.forLanguageTag("pt-BR")
 
-// Item unificado para listar serviços e abastecimentos juntos
 data class Atividade(
-    val origem: String,          // "servico" ou "abastecimento"
+    val origem: String,
     val id: Int,
     val veiculoId: Int,
     val titulo: String,
     val data: String,
     val quilometragem: Int,
-    val detalhe: String,         // oficina (serviço) ou litros + posto (abastecimento)
+    val detalhe: String,
     val valor: Double
 )
 
-// ---------- Consultas ----------
 
 private fun Cursor.paraAbastecimento() = RegistroAbastecimento(
     id = getInt(0),
@@ -48,14 +46,12 @@ fun BancoHelper.listarAbastecimentos(veiculoId: Int): List<RegistroAbastecimento
     return lista
 }
 
-// Serviços e/ou abastecimentos, do mais recente para o mais antigo.
-// veiculoId = null traz de todos os veículos.
 fun BancoHelper.listarAtividades(
     veiculoId: Int? = null,
     limite: Int = 50,
     servicos: Boolean = true,
     abastecimentos: Boolean = true
-): List<Atividade> {
+    ): List<Atividade> {
     val filtro = if (veiculoId != null) " WHERE veiculo_id = ?" else ""
     val partes = mutableListOf<String>()
     val args = mutableListOf<String>()
@@ -130,7 +126,6 @@ fun BancoHelper.contarVeiculos(): Int {
     return total
 }
 
-// Consumo médio em km/l. Precisa de pelo menos 2 abastecimentos.
 fun BancoHelper.consumoMedio(veiculoId: Int): Double? {
     val cursor = readableDatabase.rawQuery(
         "SELECT quilometragem, litros FROM abastecimentos WHERE veiculo_id = ? ORDER BY quilometragem ASC",
@@ -149,7 +144,6 @@ fun BancoHelper.consumoMedio(veiculoId: Int): Double? {
     return if (contador >= 2 && litros > 0) (kmFinal - kmInicial) / litros else null
 }
 
-// ---------- Períodos dos filtros do relatório ----------
 
 private fun primeiroDia(mesesAtras: Int, ateJaneiro: Boolean = false): String {
     val c = Calendar.getInstance()
@@ -161,8 +155,6 @@ private fun primeiroDia(mesesAtras: Int, ateJaneiro: Boolean = false): String {
 fun inicioDoMes(): String = primeiroDia(0)
 fun inicioDosUltimosTresMeses(): String = primeiroDia(2)
 fun inicioDoAno(): String = primeiroDia(0, ateJaneiro = true)
-
-// ---------- Formatação e item de lista ----------
 
 fun Double.emReais(): String = NumberFormat.getCurrencyInstance(LOCALE_BR).format(this)
 

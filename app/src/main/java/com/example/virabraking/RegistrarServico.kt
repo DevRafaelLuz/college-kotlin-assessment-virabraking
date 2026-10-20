@@ -62,14 +62,12 @@ class RegistrarServico : AppCompatActivity() {
         adapterVeiculo.setDropDownViewResource(R.layout.item_spinner_tipo_servico)
         spVeiculo.adapter = adapterVeiculo
 
-        // Se a tela for iniciada com um veículo já definido, seleciona-o no Spinner
         val idInicial = intent.getIntExtra(Constantes.EXTRA_VEICULO_ID, Constantes.ID_INVALIDO)
         val posicaoInicial = veiculos.indexOfFirst { it.id == idInicial }
         if (posicaoInicial >= 0) {
             spVeiculo.setSelection(posicaoInicial)
         }
 
-        // Seletor de data: evita problemas com o teclado e garante o formato dd/MM/yyyy
         val etData = findViewById<EditText>(R.id.etData)
         etData.setOnClickListener {
             val cal = Calendar.getInstance()

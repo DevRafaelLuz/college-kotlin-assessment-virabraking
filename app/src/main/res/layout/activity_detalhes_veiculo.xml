@@ -7,7 +7,6 @@
     android:background="#f8fafc"
     tools:context=".DetalhesVeiculo">
 
-    <!-- Barra Superior -->
     <LinearLayout
         android:id="@+id/llBarraSuperior"
         android:layout_width="match_parent"
@@ -36,7 +35,6 @@
             android:textSize="20sp" />
     </LinearLayout>
 
-    <!-- Área com Rolagem -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -48,7 +46,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Banner / Foto do Veículo -->
             <ImageView
                 android:id="@+id/ivFotoVeiculo"
                 android:layout_width="match_parent"
@@ -56,7 +53,6 @@
                 android:scaleType="centerCrop"
                 android:background="#0d9488" />
 
-            <!-- Card de Informações Principais -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -146,7 +142,6 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- Abas de Navegação -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -195,7 +190,6 @@
                     app:strokeWidth="1dp" />
             </LinearLayout>
 
-            <!-- Seção da Lista Dinâmica -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -212,7 +206,6 @@
                     android:textStyle="bold"
                     android:layout_marginBottom="12dp" />
 
-                <!-- Container onde o carregarLista() insere os itens via addView() -->
                 <LinearLayout
                     android:id="@+id/llLista"
                     android:layout_width="match_parent"
@@ -221,5 +214,4 @@
             </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

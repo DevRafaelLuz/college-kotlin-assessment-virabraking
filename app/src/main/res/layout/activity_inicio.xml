@@ -7,7 +7,6 @@
     android:background="#f8fafc"
     tools:context=".Inicio">
 
-    <!-- Área de Conteúdo com Rolagem -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -19,7 +18,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Cabeçalho de Boas-Vindas -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -67,7 +65,6 @@
                     android:layout_gravity="center" />
             </LinearLayout>
 
-            <!-- Cards Resumo (Veículos e Gastos) -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -158,7 +155,6 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <!-- Card Próxima Manutenção -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -214,7 +210,6 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- Seção Últimas Atividades -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -245,7 +240,6 @@
                         android:textSize="13sp" />
                 </LinearLayout>
 
-                <!-- Container onde a lista dinâmica de atividades é inserida -->
                 <LinearLayout
                     android:id="@+id/llListaAtividades"
                     android:layout_width="match_parent"
@@ -256,7 +250,6 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- Menu de Navegação Inferior -->
     <LinearLayout
         android:id="@+id/menuInferior"
         android:layout_width="match_parent"
@@ -375,5 +368,4 @@
                 android:textColor="#64748b" />
         </LinearLayout>
     </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

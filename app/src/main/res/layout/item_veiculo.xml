@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/llVeiculoItem"
     android:layout_width="match_parent"
     android:layout_height="114dp"
@@ -14,8 +15,8 @@
         android:layout_width="90dp"
         android:layout_height="90dp"
         android:padding="28dp"
-        android:tint="#0d9488"
-        android:background="@drawable/bg_verde_claro_arredondado" />
+        android:background="@drawable/bg_verde_claro_arredondado"
+        app:tint="#0d9488" />
 
     <LinearLayout
         android:layout_width="match_parent"

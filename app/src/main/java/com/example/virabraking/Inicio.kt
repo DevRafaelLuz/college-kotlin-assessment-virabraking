@@ -32,7 +32,6 @@ class Inicio : AppCompatActivity() {
         }
     }
 
-    // Recarrega toda vez que a tela volta, para mostrar o que acabou de ser salvo
     override fun onResume() {
         super.onResume()
         carregarDados()

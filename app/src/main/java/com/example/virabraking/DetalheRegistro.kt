@@ -14,11 +14,9 @@ class DetalheRegistro : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detalhe_registro)
 
-        // Leitura com constantes centralizadas
         servicoId = intent.getIntExtra(Constantes.EXTRA_SERVICO_ID, Constantes.ID_INVALIDO)
         veiculoId = intent.getIntExtra(Constantes.EXTRA_VEICULO_ID, Constantes.ID_INVALIDO)
 
-        // Proteção contra parâmetros ausentes ou corrompidos
         if (servicoId == Constantes.ID_INVALIDO) {
             Toast.makeText(this, "Erro: Registro não encontrado.", Toast.LENGTH_SHORT).show()
             finish()
@@ -29,11 +27,5 @@ class DetalheRegistro : AppCompatActivity() {
         iBtnVoltar.setOnClickListener {
             finish()
         }
-
-        carregarDetalhesServico()
-    }
-
-    private fun carregarDetalhesServico() {
-        // Consultar BancoHelper(this) usando servicoId/veiculoId e preencher as views
     }
 }

@@ -1,12 +1,24 @@
 package com.example.virabraking
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import java.io.File
+import java.io.FileOutputStream
 
 class Inicio : AppCompatActivity() {
+
+    private lateinit var ivPerfil: ImageView
+
+    private val nomeArquivo = "foto_perfil.jpg"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_inicio)
@@ -29,6 +41,57 @@ class Inicio : AppCompatActivity() {
         val llAdicionar = findViewById<LinearLayout>(R.id.llAdicionar)
         llAdicionar.setOnClickListener {
             startActivity(Intent(this, RegistrarServico::class.java))
+        }
+
+        ivPerfil = findViewById(R.id.ivPerfil)
+
+        carregarFotoSalva()
+
+        ivPerfil.setOnClickListener {
+            selecionarFoto.launch(
+                PickVisualMediaRequest(
+                    ActivityResultContracts.PickVisualMedia.ImageOnly
+                )
+            )
+        }
+    }
+
+    private val selecionarFoto = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) {
+        uri: Uri? ->
+        if (uri != null) {
+            salvarFoto(uri)
+        }
+    }
+
+    private fun salvarFoto(uri: Uri) {
+        try {
+            val arquivo = File(filesDir, nomeArquivo)
+
+            contentResolver.openInputStream(uri).use { entrada ->
+                if (entrada == null) {
+                    Toast.makeText(this, "Não foi possível abrir a imagem.", Toast.LENGTH_SHORT).show()
+                    return
+                }
+
+                FileOutputStream(arquivo).use { saida ->
+                    entrada.copyTo(saida)
+                }
+            }
+
+            ivPerfil.setImageURI(Uri.fromFile(arquivo))
+
+            Toast.makeText(this, "Foto de perfil salva!", Toast.LENGTH_SHORT).show()
+
+        } catch (e: Exception) {
+            Toast.makeText(this, "Erro ao salvar a foto: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun carregarFotoSalva() {
+        val arquivo = File(filesDir, nomeArquivo)
+
+        if (arquivo.exists()) {
+            ivPerfil.setImageURI(Uri.fromFile(arquivo))
         }
     }
 

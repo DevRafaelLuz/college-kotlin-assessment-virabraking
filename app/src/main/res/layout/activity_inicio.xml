@@ -31,23 +31,11 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Olá, "
-                            android:textColor="#64748b"/>
-
-                        <TextView
-                            android:id="@+id/tvNomeUsuario"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Usuário"
-                            android:textColor="#64748b" />
-                    </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Virabraking"
+                        android:textColor="#64748b"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -55,14 +43,19 @@
                         android:text="Seu Painel"
                         android:textColor="#0f172a"
                         android:textStyle="bold"
-                        android:textSize="22sp"/>
+                        android:textSize="22sp"
+                        app:shapeAppearanceOverlay="@style/CircularImage" />
                 </LinearLayout>
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/ivPerfil"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:src="@drawable/vetor_foto_conta"
-                    android:layout_gravity="center" />
+                    android:clickable="true"
+                    android:scaleType="centerCrop"
+                    android:layout_gravity="center"
+                    app:shapeAppearanceOverlay="@style/CircularImage" />
             </LinearLayout>
 
             <LinearLayout

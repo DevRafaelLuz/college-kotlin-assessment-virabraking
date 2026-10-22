@@ -5,7 +5,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
-class BancoHelper(context: Context) : SQLiteOpenHelper(context, "virabraking.db", null, 3) {
+class BancoHelper(context: Context) : SQLiteOpenHelper(context, "virabraking.db", null, 4) {
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(
             "CREATE TABLE veiculos (" +
@@ -16,7 +16,8 @@ class BancoHelper(context: Context) : SQLiteOpenHelper(context, "virabraking.db"
                     "modelo TEXT, " +
                     "ano INTEGER, " +
                     "placa TEXT, " +
-                    "quilometragem INTEGER)"
+                    "quilometragem INTEGER, " +
+                    "favorito INTEGER NOT NULL DEFAULT 0)"
         )
         criarTabelaServicos(db)
         criarTabelaAbastecimentos(db)
@@ -28,6 +29,9 @@ class BancoHelper(context: Context) : SQLiteOpenHelper(context, "virabraking.db"
         }
         if (oldVersion < 3) {
             criarTabelaAbastecimentos(db)
+        }
+        if (oldVersion < 4) {
+            db.execSQL("ALTER TABLE veiculos ADD COLUMN favorito INTEGER NOT NULL DEFAULT 0")
         }
     }
 
@@ -77,7 +81,7 @@ class BancoHelper(context: Context) : SQLiteOpenHelper(context, "virabraking.db"
     fun listarVeiculos(): List<Veiculo> {
         val lista = mutableListOf<Veiculo>()
         val cursor = readableDatabase.rawQuery(
-            "SELECT id, tipo, apelido, marca, modelo, ano, placa, quilometragem FROM veiculos ORDER BY id DESC",
+            "SELECT id, tipo, apelido, marca, modelo, ano, placa, quilometragem, favorito FROM veiculos ORDER BY favorito DESC, id DESC",
             null
         )
 
@@ -91,7 +95,8 @@ class BancoHelper(context: Context) : SQLiteOpenHelper(context, "virabraking.db"
                     modelo = cursor.getString(4) ?: "",
                     ano = cursor.getInt(5),
                     placa = cursor.getString(6) ?: "",
-                    quilometragem = cursor.getInt(7)
+                    quilometragem = cursor.getInt(7),
+                    favorito = cursor.getInt(8) == 1
                 )
             )
         }
@@ -115,7 +120,8 @@ class BancoHelper(context: Context) : SQLiteOpenHelper(context, "virabraking.db"
                 modelo = cursor.getString(4) ?: "",
                 ano = cursor.getInt(5),
                 placa = cursor.getString(6) ?: "",
-                quilometragem = cursor.getInt(7)
+                quilometragem = cursor.getInt(7),
+                favorito = cursor.getInt(8) == 1
             )
         }
         cursor.close()
@@ -133,6 +139,12 @@ class BancoHelper(context: Context) : SQLiteOpenHelper(context, "virabraking.db"
         } finally {
             db.endTransaction()
         }
+    }
+
+    fun definirFavorito(id: Int, favorito: Boolean) {
+        val valores = ContentValues()
+        valores.put("favorito", if (favorito) 1 else 0)
+        writableDatabase.update("veiculos", valores, "id = ?", arrayOf(id.toString()))
     }
 
     fun inserirServico(servico: Servico): Long {

@@ -8,5 +8,6 @@ data class Veiculo(
     val modelo: String,
     val ano: Int,
     val placa: String,
-    val quilometragem: Int
+    val quilometragem: Int,
+    val favorito: Boolean = false
 )

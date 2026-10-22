@@ -56,7 +56,11 @@ class Veiculos : AppCompatActivity() {
                 }
                 startActivity(intent)
             },
-            { veiculo -> confirmarRemocao(veiculo) }
+            { veiculo -> confirmarRemocao(veiculo) },
+            { veiculo ->
+                BancoHelper(this).definirFavorito(veiculo.id, !veiculo.favorito)
+                carregarVeiculos()
+            }
         )
     }
 

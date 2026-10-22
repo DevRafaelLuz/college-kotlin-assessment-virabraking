@@ -12,10 +12,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val tvAppVersion = findViewById<TextView>(R.id.tvAppVersion)
-        val versionName = BuildConfig.VERSION_NAME
-        tvAppVersion.text = "V$versionName"
-
         val ivLogo = findViewById<ImageView>(R.id.ivLogo)
         ivLogo.animate()
             .alpha(1f)

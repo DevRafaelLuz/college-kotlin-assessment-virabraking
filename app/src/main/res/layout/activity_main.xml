@@ -38,23 +38,4 @@
             android:textColor="#64748b"
             android:text="GESTÃO INTELIGENTE DE VEÍCULOS" />
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_marginBottom="32dp"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-        <TextView
-            android:id="@+id/tvAppVersion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bg_versao_aplicativo"
-            android:paddingVertical="3dp"
-            android:paddingHorizontal="15dp"
-            android:textStyle="bold"
-            android:textSize="12sp"
-            android:textColor="#0d9488" />
-    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

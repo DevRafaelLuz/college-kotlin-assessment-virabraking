@@ -49,7 +49,7 @@ class Veiculos : AppCompatActivity() {
         val rvVeiculos = findViewById<RecyclerView>(R.id.rvVeiculos)
         rvVeiculos.layoutManager = LinearLayoutManager(this)
         rvVeiculos.adapter = VeiculoAdapter(
-            BancoHelper(this).listarVeiculos(),
+            BancoHelper.getInstance(this).listarVeiculos(),
             { veiculo ->
                 val intent = Intent(this, DetalhesVeiculo::class.java).apply {
                     putExtra(Constantes.EXTRA_VEICULO_ID, veiculo.id)
@@ -58,7 +58,7 @@ class Veiculos : AppCompatActivity() {
             },
             { veiculo -> confirmarRemocao(veiculo) },
             { veiculo ->
-                BancoHelper(this).definirFavorito(veiculo.id, !veiculo.favorito)
+                BancoHelper.getInstance(this).definirFavorito(veiculo.id, !veiculo.favorito)
                 carregarVeiculos()
             }
         )
@@ -69,7 +69,7 @@ class Veiculos : AppCompatActivity() {
             .setTitle("Remover veículo")
             .setMessage("Remover ${veiculo.apelido} e todos os serviços dele?")
             .setPositiveButton("Remover") { _, _ ->
-                BancoHelper(this).removerVeiculo(veiculo.id)
+                BancoHelper.getInstance(this).removerVeiculo(veiculo.id)
                 carregarVeiculos()
             }
             .setNegativeButton("Cancelar", null)

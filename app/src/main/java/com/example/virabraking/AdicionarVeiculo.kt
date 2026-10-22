@@ -95,7 +95,7 @@ class AdicionarVeiculo : AppCompatActivity() {
             quilometragem = quilometragem
         )
 
-        BancoHelper(this).inserirVeiculo(veiculo)
+        BancoHelper.getInstance(this).inserirVeiculo(veiculo)
         Toast.makeText(this, "Veículo salvo", Toast.LENGTH_SHORT).show()
         finish()
     }

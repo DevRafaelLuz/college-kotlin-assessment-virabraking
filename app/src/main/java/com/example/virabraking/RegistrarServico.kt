@@ -55,7 +55,7 @@ class RegistrarServico : AppCompatActivity() {
         sTipoServico.adapter = adapter
 
         val spVeiculo = findViewById<Spinner>(R.id.spVeiculo)
-        veiculos = BancoHelper(this).listarVeiculos()
+        veiculos = BancoHelper.getInstance(this).listarVeiculos()
 
         val adapterVeiculo =
             ArrayAdapter(this, R.layout.item_spinner_tipo_servico, veiculos.map { it.apelido })
@@ -145,7 +145,7 @@ class RegistrarServico : AppCompatActivity() {
             observacoes = observacoes
         )
 
-        val resultado = BancoHelper(this).inserirServico(servico)
+        val resultado = BancoHelper.getInstance(this).inserirServico(servico)
         if (resultado == -1L) {
             Toast.makeText(this, "Erro ao salvar o serviço", Toast.LENGTH_LONG).show()
             return

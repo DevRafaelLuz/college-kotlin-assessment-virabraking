@@ -361,4 +361,20 @@
                 android:textColor="#64748b" />
         </LinearLayout>
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvSobre"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/bg_circulo_amarelo"
+        android:gravity="center"
+        android:text="\?"
+        android:textColor="#b45309"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/menuInferior"
+        app:layout_constraintEnd_toEndOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

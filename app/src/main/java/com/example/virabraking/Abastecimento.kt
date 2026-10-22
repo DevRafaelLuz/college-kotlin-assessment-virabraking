@@ -62,7 +62,7 @@ class Abastecimento : AppCompatActivity() {
     }
 
     private fun verificaSeHaVeiculosCadastrados() {
-        veiculos = BancoHelper(this).listarVeiculos()
+        veiculos = BancoHelper.getInstance(this).listarVeiculos()
         if (veiculos.isEmpty()) {
             Toast.makeText(this, "Cadastre um veículo primeiro", Toast.LENGTH_SHORT).show()
             finish()
@@ -199,7 +199,7 @@ class Abastecimento : AppCompatActivity() {
             data = formatoBanco.format(dataSelecionada.time)
         )
 
-        BancoHelper(this).registrarAbastecimento(abastecimento)
+        BancoHelper.getInstance(this).registrarAbastecimento(abastecimento)
         Toast.makeText(this, "Abastecimento salvo", Toast.LENGTH_SHORT).show()
         finish()
     }

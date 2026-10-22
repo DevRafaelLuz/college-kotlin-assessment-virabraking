@@ -78,7 +78,7 @@ class Relatorios : AppCompatActivity() {
     }
 
     private fun carregarRelatorio(inicio: String) {
-        val banco = BancoHelper(this)
+        val banco = BancoHelper.getInstance(this)
 
         val totais = linkedMapOf(
             "Combustível" to banco.totalCombustivelDesde(inicio),

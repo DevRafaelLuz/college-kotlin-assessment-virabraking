@@ -5,7 +5,18 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
-class BancoHelper(context: Context) : SQLiteOpenHelper(context, "virabraking.db", null, 4) {
+class BancoHelper private constructor(context: Context) :
+    SQLiteOpenHelper(context, "virabraking.db", null, 4) {
+
+    companion object {
+        @Volatile
+        private var instancia: BancoHelper? = null
+
+        fun getInstance(context: Context): BancoHelper =
+            instancia ?: synchronized(this) {
+                instancia ?: BancoHelper(context.applicationContext).also { instancia = it }
+            }
+    }
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(
             "CREATE TABLE veiculos (" +
@@ -107,7 +118,7 @@ class BancoHelper(context: Context) : SQLiteOpenHelper(context, "virabraking.db"
 
     fun buscarVeiculo(id: Int): Veiculo? {
         val cursor = readableDatabase.rawQuery(
-            "SELECT id, tipo, apelido, marca, modelo, ano, placa, quilometragem FROM veiculos WHERE id = ?",
+            "SELECT id, tipo, apelido, marca, modelo, ano, placa, quilometragem, favorito FROM veiculos WHERE id = ?",
             arrayOf(id.toString())
         )
         var veiculo: Veiculo? = null

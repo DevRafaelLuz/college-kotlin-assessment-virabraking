@@ -59,7 +59,7 @@ class DetalhesVeiculo : AppCompatActivity() {
     }
 
     private fun preencherCabecalho() {
-        val veiculo = BancoHelper(this).buscarVeiculo(veiculoId) ?: return
+        val veiculo = BancoHelper.getInstance(this).buscarVeiculo(veiculoId) ?: return
 
         findViewById<TextView>(R.id.tvNomeVeiculo).text = veiculo.apelido
         findViewById<TextView>(R.id.tvModelo).text = "${veiculo.marca} ${veiculo.modelo}".trim()
@@ -70,7 +70,7 @@ class DetalhesVeiculo : AppCompatActivity() {
     }
 
     private fun carregarLista() {
-        val banco = BancoHelper(this)
+        val banco = BancoHelper.getInstance(this)
         val container = findViewById<LinearLayout>(R.id.llLista)
         val tvTitulo = findViewById<TextView>(R.id.tvTituloLista)
         container.removeAllViews()

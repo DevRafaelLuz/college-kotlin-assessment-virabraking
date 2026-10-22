@@ -43,6 +43,11 @@ class Inicio : AppCompatActivity() {
             startActivity(Intent(this, RegistrarServico::class.java))
         }
 
+        findViewById<TextView>(R.id.tvSobre).setOnClickListener {
+            mostrarSobre()
+        }
+
+
         ivPerfil = findViewById(R.id.ivPerfil)
 
         carregarFotoSalva()
@@ -101,7 +106,7 @@ class Inicio : AppCompatActivity() {
     }
 
     private fun carregarDados() {
-        val banco = BancoHelper(this)
+        val banco = BancoHelper.getInstance(this)
 
         findViewById<TextView>(R.id.tvQtdVeiculos).text = "${banco.contarVeiculos()} Ativos"
 

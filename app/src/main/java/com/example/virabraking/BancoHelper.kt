@@ -148,7 +148,6 @@ class BancoHelper(context: Context) : SQLiteOpenHelper(context, "virabraking.db"
         return writableDatabase.insert("servicos", null, valores)
     }
 
-    // Insere o abastecimento e atualiza o KM do veículo na mesma transação
     fun registrarAbastecimento(abastecimento: RegistroAbastecimento): Long {
         val db = writableDatabase
         db.beginTransaction()

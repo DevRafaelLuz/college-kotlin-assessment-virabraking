@@ -12,7 +12,6 @@ import com.google.android.material.button.MaterialButton
 
 class Relatorios : AppCompatActivity() {
 
-    // Filtro escolhido no momento (começa em "Este Mês")
     private var inicioDoPeriodo: () -> String = ::inicioDoMes
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -110,7 +109,6 @@ class Relatorios : AppCompatActivity() {
         }
     }
 
-    // Agrupa o tipo de serviço (texto livre) nas categorias da tela
     private fun categoriaDoServico(tipo: String): String {
         val t = tipo.lowercase(LOCALE_BR)
         return when {

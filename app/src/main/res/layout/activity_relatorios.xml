@@ -104,7 +104,6 @@
                         android:textStyle="bold"
                         android:textColor="#0F172A" />
 
-                    <!-- Combustível -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -185,7 +184,6 @@
                             android:progressBackgroundTint="#f8fafc" />
                     </LinearLayout>
 
-                    <!-- Óleo -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -225,7 +223,6 @@
                             android:progressBackgroundTint="#f8fafc" />
                     </LinearLayout>
 
-                    <!-- Pneus -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -265,7 +262,6 @@
                             android:progressBackgroundTint="#f8fafc" />
                     </LinearLayout>
 
-                    <!-- Outros -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -323,7 +319,6 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- Menu Inferior -->
     <LinearLayout
         android:id="@+id/menuInferior"
         android:layout_width="match_parent"

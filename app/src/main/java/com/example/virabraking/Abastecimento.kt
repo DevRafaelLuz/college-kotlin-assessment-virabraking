@@ -26,51 +26,47 @@ class Abastecimento : AppCompatActivity() {
     private lateinit var etPosto: EditText
     private lateinit var etData: EditText
 
-    private var veiculos = listOf<Veiculo>()
-    private var ultimoPreco: EditText? = null
-    private var atualizando = false
-
-    private val dataSelecionada: Calendar = Calendar.getInstance()
-    private val localeBr: Locale = Locale.forLanguageTag("pt-BR")
-    private val formatoExibicao = SimpleDateFormat("dd/MM/yyyy", localeBr)
-    private val formatoBanco = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+    private var veiculos: List<Veiculo> = emptyList()
+    private var ultimoCampoPrecoAlterado: EditText? = null
+    private var atualizandoValores = false
+    private val dataSelecionada = Calendar.getInstance()
+    private val localeBrasil = Locale.forLanguageTag("pt-BR")
+    private val formatoDataExibicao = SimpleDateFormat("dd/MM/yyyy", localeBrasil)
+    private val formatoDataBanco = SimpleDateFormat("yyyy-MM-dd", Locale.US)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_abastecimento)
 
-        val iBtnVoltar = findViewById<ImageButton>(R.id.iBtnVoltar)
-        iBtnVoltar.setOnClickListener {
-            finish()
-        }
-
-        verificaSeHaVeiculosCadastrados()
-
-        atribuiIDs()
-
-        configurarSeletorVeiculo()
-
-        etData.setText(formatoExibicao.format(dataSelecionada.time))
-        etData.setOnClickListener { abrirCalendario() }
-
-        configurarCalculo()
-
-        val btnSalvar = findViewById<Button>(R.id.btnSalvarAbastecimento)
-        btnSalvar.setOnClickListener {
-            salvarAbastecimento()
-        }
-    }
-
-    private fun verificaSeHaVeiculosCadastrados() {
-        veiculos = BancoHelper.getInstance(this).listarVeiculos()
-        if (veiculos.isEmpty()) {
-            Toast.makeText(this, "Cadastre um veículo primeiro", Toast.LENGTH_SHORT).show()
-            finish()
+        if (!carregarVeiculos()) {
             return
         }
+
+        inicializarViews()
+        configurarBotaoVoltar()
+        configurarSeletorVeiculo()
+        configurarCampoData()
+        configurarCalculoValores()
+        configurarBotaoSalvar()
     }
 
-    private fun atribuiIDs() {
+    private fun carregarVeiculos(): Boolean {
+        veiculos = BancoHelper.getInstance(this).listarVeiculos()
+
+        if (veiculos.isNotEmpty()) {
+            return true
+        }
+
+        exibirMensagem("Cadastre um veículo primeiro")
+        finish()
+        return false
+    }
+
+    private fun exibirMensagem(mensagem: String) {
+        Toast.makeText(this, mensagem, Toast.LENGTH_SHORT ).show()
+    }
+
+    private fun inicializarViews() {
         spVeiculo = findViewById(R.id.spVeiculo)
         etLitros = findViewById(R.id.etLitros)
         etValorLitro = findViewById(R.id.etValorLitro)
@@ -80,127 +76,223 @@ class Abastecimento : AppCompatActivity() {
         etData = findViewById(R.id.etData)
     }
 
+    private fun configurarBotaoVoltar() {
+        findViewById<ImageButton>(R.id.iBtnVoltar).setOnClickListener {
+            finish()
+        }
+    }
     private fun configurarSeletorVeiculo() {
-        val adapter = ArrayAdapter(this, R.layout.item_spinner_tipo_servico, veiculos.map { it.apelido })
-        adapter.setDropDownViewResource(R.layout.item_spinner_tipo_servico)
-        spVeiculo.adapter = adapter
+        val nomesVeiculos = veiculos.map { it.apelido }
 
-        val idInicial = intent.getIntExtra(Constantes.EXTRA_VEICULO_ID, Constantes.ID_INVALIDO)
-        val posicaoInicial = veiculos.indexOfFirst { it.id == idInicial }
-        if (posicaoInicial >= 0) {
-            spVeiculo.setSelection(posicaoInicial)
+        val adapter = ArrayAdapter(this, R.layout.item_spinner_tipo_servico, nomesVeiculos)
+
+        adapter.setDropDownViewResource(R.layout.item_spinner_dropdown)
+
+        spVeiculo.adapter = adapter
+        selecionarVeiculoInicial()
+        configurarAtualizacaoQuilometragem()
+    }
+
+    private fun selecionarVeiculoInicial() {
+        val idVeiculo = intent.getIntExtra(Constantes.EXTRA_VEICULO_ID, Constantes.ID_INVALIDO)
+
+        val posicao = veiculos.indexOfFirst {
+            it.id == idVeiculo
         }
 
-        spVeiculo.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                etKm.hint = "Mín. ${veiculos[position].quilometragem}"
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        if (posicao >= 0) {
+            spVeiculo.setSelection(posicao)
         }
     }
 
+    private fun configurarAtualizacaoQuilometragem() {
+        spVeiculo.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                val quilometragem = veiculos[position].quilometragem
+
+                etKm.hint = "Mín. $quilometragem"
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) = Unit
+        }
+    }
+
+    private fun configurarCampoData() {
+        atualizarDataExibida()
+
+        etData.setOnClickListener {
+            abrirCalendario()
+        }
+    }
+
+    private fun atualizarDataExibida() {
+        etData.setText(formatoDataExibicao.format(dataSelecionada.time))
+    }
+
     private fun abrirCalendario() {
-        val dialog = DatePickerDialog(
-            this,
-            { _, ano, mes, dia ->
-                dataSelecionada.set(ano, mes, dia)
-                etData.setText(formatoExibicao.format(dataSelecionada.time))
+        val calendario = DatePickerDialog(this, {
+                _, ano, mes, dia -> dataSelecionada.set(ano, mes, dia, 0, 0, 0)
+                dataSelecionada.set(Calendar.MILLISECOND, 0)
+
+                atualizarDataExibida()
             },
             dataSelecionada.get(Calendar.YEAR),
             dataSelecionada.get(Calendar.MONTH),
             dataSelecionada.get(Calendar.DAY_OF_MONTH)
         )
-        dialog.datePicker.maxDate = System.currentTimeMillis()
-        dialog.show()
+
+        calendario.datePicker.maxDate = System.currentTimeMillis()
+
+        calendario.show()
     }
 
-    private fun configurarCalculo() {
+    private fun configurarCalculoValores() {
         etLitros.doAfterTextChanged {
-            if (!atualizando) recalcular()
-        }
-        etValorLitro.doAfterTextChanged {
-            if (!atualizando) {
-                ultimoPreco = etValorLitro
-                recalcular()
+            if (!atualizandoValores) {
+                recalcularValores()
             }
         }
+
+        etValorLitro.doAfterTextChanged {
+            if (!atualizandoValores) {
+                ultimoCampoPrecoAlterado = etValorLitro
+                recalcularValores()
+            }
+        }
+
         etValorTotal.doAfterTextChanged {
-            if (!atualizando) {
-                ultimoPreco = etValorTotal
-                recalcular()
+            if (!atualizandoValores) {
+                ultimoCampoPrecoAlterado = etValorTotal
+                recalcularValores()
             }
         }
     }
 
-    private fun recalcular() {
-        val litros = lerNumero(etLitros)
-        atualizando = true
+    private fun recalcularValores() {
+        atualizandoValores = true
 
-        if (ultimoPreco == etValorLitro) {
-            val valorLitro = lerNumero(etValorLitro)
-            if (litros != null && valorLitro != null) {
-                etValorTotal.setText(formatar(litros * valorLitro))
-            } else {
-                etValorTotal.setText("")
+        try {
+            val litros = lerNumero(etLitros)
+
+            when (ultimoCampoPrecoAlterado) {
+                etValorLitro -> calcularValorTotal(litros)
+                etValorTotal -> calcularValorPorLitro(litros)
             }
-        } else if (ultimoPreco == etValorTotal) {
-            val total = lerNumero(etValorTotal)
-            if (litros != null && litros > 0 && total != null) {
-                etValorLitro.setText(formatar(total / litros))
-            } else {
-                etValorLitro.setText("")
-            }
+        } finally {
+            atualizandoValores = false
         }
-
-        atualizando = false
     }
 
     private fun lerNumero(campo: EditText): Double? {
-        return campo.text.toString().trim().replace(',', '.').toDoubleOrNull()
+        return campo.text
+            .toString()
+            .trim()
+            .replace(',', '.')
+            .toDoubleOrNull()
     }
 
-    private fun formatar(valor: Double): String {
-        return String.format(localeBr, "%.2f", valor)
+    private fun calcularValorTotal(litros: Double?) {
+        val valorLitro = lerNumero(etValorLitro)
+
+        val total = if (
+            litros != null &&
+            valorLitro != null
+        ) {
+            litros * valorLitro
+        } else {
+            null
+        }
+
+        atualizarCampoNumerico(etValorTotal, total)
+    }
+
+    private fun atualizarCampoNumerico(campo: EditText, valor: Double?) {
+        campo.setText(valor?.let { formatarNumero(it) } ?: "")
+    }
+
+    private fun formatarNumero(valor: Double): String {
+        return String.format(localeBrasil, "%.2f", valor)
+    }
+
+    private fun calcularValorPorLitro(litros: Double?) {
+        val total = lerNumero(etValorTotal)
+
+        val valorLitro = if (
+            litros != null &&
+            litros > 0 &&
+            total != null
+        ) {
+            total / litros
+        } else {
+            null
+        }
+
+        atualizarCampoNumerico(etValorLitro, valorLitro)
+    }
+
+    private fun configurarBotaoSalvar() {
+        findViewById<Button>(R.id.btnSalvarAbastecimento).setOnClickListener {
+            salvarAbastecimento()
+        }
     }
 
     private fun salvarAbastecimento() {
-        val veiculo = veiculos[spVeiculo.selectedItemPosition]
+        val abastecimento = validarAbastecimento() ?: return
+
+        BancoHelper.getInstance(this).registrarAbastecimento(abastecimento)
+
+        exibirMensagem("Abastecimento salvo")
+        finish()
+    }
+
+    private fun validarAbastecimento(): RegistroAbastecimento? {
+        val veiculo = veiculos.getOrNull(spVeiculo.selectedItemPosition) ?: return null
+
         val litros = lerNumero(etLitros)
         val valorLitro = lerNumero(etValorLitro)
         val valorTotal = lerNumero(etValorTotal)
-        val km = etKm.text.toString().trim().toIntOrNull()
+        val quilometragem = etKm.text.toString().trim().toIntOrNull()
+
         val posto = etPosto.text.toString().trim()
 
         if (litros == null || litros <= 0) {
             etLitros.error = "Informe os litros"
-            return
-        }
-        if (valorLitro == null || valorLitro <= 0 || valorTotal == null || valorTotal <= 0) {
-            Toast.makeText(this, "Informe o valor por litro ou o valor total", Toast.LENGTH_SHORT).show()
-            return
-        }
-        if (km == null) {
-            etKm.error = "Informe o KM atual"
-            return
-        }
-        if (km < veiculo.quilometragem) {
-            etKm.error = "O KM não pode ser menor que ${veiculo.quilometragem}"
-            return
+            return null
         }
 
-        val abastecimento = RegistroAbastecimento(
+        if (valorLitro == null || valorLitro <= 0) {
+            etValorLitro.error = "Informe um valor por litro válido"
+            return null
+        }
+
+        if (valorTotal == null || valorTotal <= 0) {
+            etValorTotal.error = "Informe um valor total válido"
+            return null
+        }
+
+        if (quilometragem == null || quilometragem < 0) {
+            etKm.error = "Informe um KM válido"
+            return null
+        }
+
+        if (quilometragem < veiculo.quilometragem) {
+            etKm.error = "O KM não pode ser menor que ${veiculo.quilometragem}"
+            return null
+        }
+
+        return RegistroAbastecimento(
             veiculoId = veiculo.id,
             litros = litros,
             valorLitro = valorLitro,
             valorTotal = valorTotal,
-            quilometragem = km,
+            quilometragem = quilometragem,
             posto = posto,
-            data = formatoBanco.format(dataSelecionada.time)
+            data = formatoDataBanco.format(dataSelecionada.time)
         )
-
-        BancoHelper.getInstance(this).registrarAbastecimento(abastecimento)
-        Toast.makeText(this, "Abastecimento salvo", Toast.LENGTH_SHORT).show()
-        finish()
     }
 }

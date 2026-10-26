@@ -376,5 +376,4 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/menuInferior"
         app:layout_constraintEnd_toEndOf="parent" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

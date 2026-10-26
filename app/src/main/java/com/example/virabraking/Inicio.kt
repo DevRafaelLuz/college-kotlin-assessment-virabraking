@@ -1,8 +1,10 @@
 package com.example.virabraking
 
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -15,44 +17,53 @@ import java.io.FileOutputStream
 
 class Inicio : AppCompatActivity() {
 
-    private lateinit var ivPerfil: ImageView
+    private lateinit var imagemPerfil: ImageView
 
-    private val nomeArquivo = "foto_perfil.jpg"
+    private val selecionarFoto = registerForActivityResult(
+        ActivityResultContracts.PickVisualMedia()
+    ) { uri ->
+        uri?.let(::salvarFotoPerfil)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_inicio)
 
-        val llVeiculos = findViewById<LinearLayout>(R.id.llVeiculos)
-        llVeiculos.setOnClickListener {
-            startActivity(Intent(this, Veiculos::class.java))
-        }
+        inicializarComponente()
+        configurarNavegacao()
+        configurarFotoPerfil()
+    }
 
-        val llAlertas = findViewById<LinearLayout>(R.id.llAlertas)
-        llAlertas.setOnClickListener {
-            startActivity(Intent(this, Alertas::class.java))
-        }
+    override fun onResume() {
+        super.onResume()
+        carregarResumo()
+    }
 
-        val llRelatorios = findViewById<LinearLayout>(R.id.llRelatorios)
-        llRelatorios.setOnClickListener {
-            startActivity(Intent(this, Relatorios::class.java))
-        }
+    private fun inicializarComponente() {
+        imagemPerfil = findViewById(R.id.ivPerfil)
+    }
 
-        val llAdicionar = findViewById<LinearLayout>(R.id.llAdicionar)
-        llAdicionar.setOnClickListener {
-            startActivity(Intent(this, RegistrarServico::class.java))
-        }
+    private fun configurarNavegacao() {
+        configurarDestino(R.id.llVeiculos, Veiculos::class.java)
+        configurarDestino(R.id.llAlertas, Alertas::class.java)
+        configurarDestino(R.id.llRelatorios, Relatorios::class.java)
+        configurarDestino(R.id.llAdicionar, RegistrarServico::class.java)
 
         findViewById<TextView>(R.id.tvSobre).setOnClickListener {
             mostrarSobre()
         }
+    }
 
+    private fun configurarDestino(idView: Int, destino: Class<out Activity>) {
+        findViewById<View>(idView).setOnClickListener {
+            startActivity(Intent(this, destino))
+        }
+    }
 
-        ivPerfil = findViewById(R.id.ivPerfil)
+    private fun configurarFotoPerfil() {
+        carregarFotoPerfil()
 
-        carregarFotoSalva()
-
-        ivPerfil.setOnClickListener {
+        imagemPerfil.setOnClickListener {
             selecionarFoto.launch(
                 PickVisualMediaRequest(
                     ActivityResultContracts.PickVisualMedia.ImageOnly
@@ -61,70 +72,97 @@ class Inicio : AppCompatActivity() {
         }
     }
 
-    private val selecionarFoto = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) {
-        uri: Uri? ->
-        if (uri != null) {
-            salvarFoto(uri)
+    private fun carregarFotoPerfil() {
+        val arquivo = File(filesDir, NOME_ARQUIVO_FOTO)
+
+        if (arquivo.isFile) {
+            imagemPerfil.setImageURI(Uri.fromFile(arquivo))
         }
     }
 
-    private fun salvarFoto(uri: Uri) {
-        try {
-            val arquivo = File(filesDir, nomeArquivo)
+    private fun salvarFotoPerfil(uri: Uri) {
+        imagemPerfil.setImageURI(uri)
 
-            contentResolver.openInputStream(uri).use { entrada ->
-                if (entrada == null) {
-                    Toast.makeText(this, "Não foi possível abrir a imagem.", Toast.LENGTH_SHORT).show()
+        try {
+            val arquivo = File(filesDir, NOME_ARQUIVO_FOTO)
+
+            val entrada = contentResolver.openInputStream(uri)
+                ?: run {
+                    mostrarMensagem("Não foi possível abrir a imagem.")
                     return
                 }
 
-                FileOutputStream(arquivo).use { saida ->
-                    entrada.copyTo(saida)
+            entrada.use { fluxoEntrada ->
+                FileOutputStream(arquivo).use { fluxoSaida ->
+                    fluxoEntrada.copyTo(fluxoSaida)
                 }
             }
 
-            ivPerfil.setImageURI(Uri.fromFile(arquivo))
+            imagemPerfil.setImageURI(Uri.fromFile(arquivo))
 
-            Toast.makeText(this, "Foto de perfil salva!", Toast.LENGTH_SHORT).show()
+            mostrarMensagem("Foto de perfil atualizada!")
 
         } catch (e: Exception) {
-            Toast.makeText(this, "Erro ao salvar a foto: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+            mostrarMensagem("Não foi possível salvar a foto.")
         }
     }
 
-    private fun carregarFotoSalva() {
-        val arquivo = File(filesDir, nomeArquivo)
-
-        if (arquivo.exists()) {
-            ivPerfil.setImageURI(Uri.fromFile(arquivo))
-        }
+    private fun mostrarMensagem(mensagem: String) {
+        Toast.makeText(this, mensagem, Toast.LENGTH_SHORT).show()
     }
 
-    override fun onResume() {
-        super.onResume()
-        carregarDados()
-    }
-
-    private fun carregarDados() {
+    private fun carregarResumo() {
         val banco = BancoHelper.getInstance(this)
 
-        findViewById<TextView>(R.id.tvQtdVeiculos).text = "${banco.contarVeiculos()} Ativos"
+        atualizarQuantidadeVeiculos(banco)
+        atualizarGastosMensais(banco)
+        atualizarListaAtividades(banco)
+    }
 
+    private fun atualizarQuantidadeVeiculos(banco: BancoHelper) {
+        val quantidade = banco.contarVeiculos()
+
+        findViewById<TextView>(R.id.tvQtdVeiculos).text = "$quantidade Ativos"
+    }
+
+    private fun atualizarGastosMensais(banco: BancoHelper) {
         val inicioMes = inicioDoMes()
-        val gastoMes = banco.totalServicosDesde(inicioMes) + banco.totalCombustivelDesde(inicioMes)
-        findViewById<TextView>(R.id.tvGastosMes).text = gastoMes.emReais()
 
+        val totalGastos = banco.totalServicosDesde(inicioMes) + banco.totalCombustivelDesde(inicioMes)
+
+        findViewById<TextView>(R.id.tvGastosMes).text = totalGastos.emReais()
+    }
+
+    private fun atualizarListaAtividades(banco: BancoHelper) {
         val container = findViewById<LinearLayout>(R.id.llListaAtividades)
+
         container.removeAllViews()
 
-        val atividades = banco.listarAtividades(limite = 3)
+        val atividades = banco.listarAtividades(limite = LIMITE_ATIVIDADES)
+
         if (atividades.isEmpty()) {
-            val vazio = TextView(this)
-            vazio.text = "Nenhuma atividade registrada ainda"
-            vazio.setTextColor(0xFF64748B.toInt())
-            container.addView(vazio)
-        } else {
-            atividades.forEach { container.addView(it.paraView(layoutInflater, container)) }
+            exibirMensagemListaVazia(container)
+            return
         }
+
+        atividades.forEach { atividade ->
+            container.addView(atividade.paraView(layoutInflater, container))
+        }
+    }
+
+    private fun exibirMensagemListaVazia(container: LinearLayout) {
+        val mensagem = TextView(this).apply {
+            text = MENSAGEM_LISTA_VAZIA
+            setTextColor(COR_TEXTO_SECUNDARIO)
+        }
+
+        container.addView(mensagem)
+    }
+
+    private companion object {
+        const val NOME_ARQUIVO_FOTO = "foto_perfil.jpg"
+        const val LIMITE_ATIVIDADES = 3
+        const val MENSAGEM_LISTA_VAZIA = "Nenhuma atividade registrada ainda"
+        const val COR_TEXTO_SECUNDARIO = 0xFF64748B.toInt()
     }
 }

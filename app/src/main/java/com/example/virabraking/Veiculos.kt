@@ -1,43 +1,25 @@
 package com.example.virabraking
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.ImageButton
-import android.widget.LinearLayout
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.appcompat.app.AlertDialog
 
 class Veiculos : AppCompatActivity() {
+
+    private lateinit var rvVeiculos: RecyclerView
+    private lateinit var bancoHelper: BancoHelper
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_veiculos)
 
-        val llInicio = findViewById<LinearLayout>(R.id.llInicio)
-        llInicio.setOnClickListener {
-            startActivity(Intent(this, Inicio::class.java))
-        }
-
-        val llAlertas = findViewById<LinearLayout>(R.id.llAlertas)
-        llAlertas.setOnClickListener {
-            startActivity(Intent(this, Alertas::class.java))
-        }
-
-        val llRelatorios = findViewById<LinearLayout>(R.id.llRelatorios)
-        llRelatorios.setOnClickListener {
-            startActivity(Intent(this, Relatorios::class.java))
-        }
-
-        val iBtnAdicionar = findViewById<ImageButton>(R.id.iBtnAdicionar)
-        iBtnAdicionar.setOnClickListener {
-            startActivity(Intent(this, AdicionarVeiculo::class.java))
-        }
-
-        val llAdicionar = findViewById<LinearLayout>(R.id.llAdicionar)
-        llAdicionar.setOnClickListener {
-            startActivity(Intent(this, RegistrarServico::class.java))
-        }
+        inicializarDependencias()
+        inicializarViews()
+        configurarNavegacao()
+        configurarListaVeiculos()
     }
 
     override fun onResume() {
@@ -45,34 +27,72 @@ class Veiculos : AppCompatActivity() {
         carregarVeiculos()
     }
 
-    private fun carregarVeiculos() {
-        val rvVeiculos = findViewById<RecyclerView>(R.id.rvVeiculos)
+    private fun inicializarDependencias() {
+        bancoHelper = BancoHelper.getInstance(this)
+    }
+
+    private fun inicializarViews() {
+        rvVeiculos = findViewById(R.id.rvVeiculos)
+    }
+
+    private fun configurarNavegacao() {
+        configurarClique(R.id.llInicio, Inicio::class.java)
+        configurarClique(R.id.llAlertas, Alertas::class.java)
+        configurarClique(R.id.llRelatorios, Relatorios::class.java)
+        configurarClique(R.id.iBtnAdicionar, AdicionarVeiculo::class.java)
+        configurarClique(R.id.llAdicionar, RegistrarServico::class.java)
+    }
+
+    private fun configurarClique(viewId: Int, destino: Class<out AppCompatActivity>) {
+        findViewById<android.view.View>(viewId).setOnClickListener {
+            navegarPara(destino)
+        }
+    }
+
+    private fun navegarPara(destino: Class<out AppCompatActivity>) {
+        startActivity(Intent(this, destino))
+    }
+
+    private fun configurarListaVeiculos() {
         rvVeiculos.layoutManager = LinearLayoutManager(this)
+    }
+
+    private fun carregarVeiculos() {
+        val veiculos = bancoHelper.listarVeiculos()
+
         rvVeiculos.adapter = VeiculoAdapter(
-            BancoHelper.getInstance(this).listarVeiculos(),
-            { veiculo ->
-                val intent = Intent(this, DetalhesVeiculo::class.java).apply {
-                    putExtra(Constantes.EXTRA_VEICULO_ID, veiculo.id)
-                }
-                startActivity(intent)
-            },
-            { veiculo -> confirmarRemocao(veiculo) },
-            { veiculo ->
-                BancoHelper.getInstance(this).definirFavorito(veiculo.id, !veiculo.favorito)
-                carregarVeiculos()
-            }
+            veiculos,
+            ::abrirDetalhesVeiculo,
+            ::confirmarRemocao,
+            ::alternarFavorito
         )
+    }
+
+    private fun abrirDetalhesVeiculo(veiculo: Veiculo) {
+        val intent = Intent(this, DetalhesVeiculo::class.java).apply {
+            putExtra(Constantes.EXTRA_VEICULO_ID, veiculo.id)
+        }
+
+        startActivity(intent)
     }
 
     private fun confirmarRemocao(veiculo: Veiculo) {
         AlertDialog.Builder(this)
             .setTitle("Remover veículo")
             .setMessage("Remover ${veiculo.apelido} e todos os serviços dele?")
-            .setPositiveButton("Remover") { _, _ ->
-                BancoHelper.getInstance(this).removerVeiculo(veiculo.id)
-                carregarVeiculos()
-            }
+            .setPositiveButton("Remover") { _, _ -> removerVeiculo(veiculo)}
             .setNegativeButton("Cancelar", null)
             .show()
+    }
+
+    private fun removerVeiculo(veiculo: Veiculo) {
+        bancoHelper.removerVeiculo(veiculo.id)
+        carregarVeiculos()
+    }
+
+    private fun alternarFavorito(veiculo: Veiculo) {
+        bancoHelper.definirFavorito(veiculo.id, !veiculo.favorito)
+
+        carregarVeiculos()
     }
 }

@@ -1,33 +1,29 @@
 package com.example.virabraking
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.LinearLayout
+import androidx.appcompat.app.AppCompatActivity
 
 class Alertas : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_alertas)
 
-        val llInicio = findViewById<LinearLayout>(R.id.llInicio)
-        llInicio.setOnClickListener {
-            startActivity(Intent(this, Inicio::class.java))
-        }
+        configurarNavegacao()
+    }
 
-        val llVeiculos = findViewById<LinearLayout>(R.id.llVeiculos)
-        llVeiculos.setOnClickListener {
-            startActivity(Intent(this, Veiculos::class.java))
-        }
+    private fun configurarNavegacao() {
+        configurarDestino(R.id.llInicio, Inicio::class.java)
+        configurarDestino(R.id.llVeiculos, Veiculos::class.java)
+        configurarDestino(R.id.llAdicionar, RegistrarServico::class.java)
+        configurarDestino(R.id.llRelatorios, Relatorios::class.java)
+    }
 
-        val llRelatorios = findViewById<LinearLayout>(R.id.llRelatorios)
-        llRelatorios.setOnClickListener {
-            startActivity(Intent(this, Relatorios::class.java))
-        }
-
-        val llAdicionar = findViewById<LinearLayout>(R.id.llAdicionar)
-        llAdicionar.setOnClickListener {
-            startActivity(Intent(this, RegistrarServico::class.java))
+    private fun configurarDestino(idView: Int, destino: Class<out AppCompatActivity>) {
+        findViewById<LinearLayout>(idView).setOnClickListener {
+            startActivity(Intent(this, destino))
         }
     }
 }

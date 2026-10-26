@@ -38,7 +38,7 @@ class Relatorios : AppCompatActivity() {
         configurarDestino(R.id.llInicio, Inicio::class.java)
         configurarDestino(R.id.llVeiculos, Veiculos::class.java)
         configurarDestino(R.id.llAdicionar, RegistrarServico::class.java)
-        configurarDestino(R.id.llRelatorios, Relatorios::class.java)
+        configurarDestino(R.id.llAlertas, Alertas::class.java)
     }
 
     private fun configurarDestino(idView: Int, destino: Class<out AppCompatActivity>) {

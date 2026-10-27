@@ -15,8 +15,8 @@ android {
         applicationId = "com.example.virabraking"
         minSdk = 24
         targetSdk = 33
-        versionCode = 11503
-        versionName = "1.15.3"
+        versionCode = 11504
+        versionName = "1.15.4"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -37,6 +37,14 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+        applicationVariants.all {
+            val variant = this
+            variant.outputs.map { it as com.android.build.gradle.internal.api.ApkVariantOutputImpl }.forEach { output ->
+                output.outputFileName = "ViraBraking-${variant.versionName}.apk"
+            }
+        }
+
 }
 
 dependencies {

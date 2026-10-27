@@ -10,9 +10,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val ivLogo = findViewById<ImageView>(R.id.ivLogo)
-        ivLogo.animate()
-            .alpha(1f)
+        val ivEngrenagem = findViewById<ImageView>(R.id.ivEngrenagem)
+        val ivPistoes = findViewById<ImageView>(R.id.ivPistoes)
+
+        ivEngrenagem.alpha = 1f
+        ivPistoes.alpha = 1f
+
+        ivEngrenagem.animate()
             .rotation(360f)
             .setDuration(2500)
             .withEndAction {

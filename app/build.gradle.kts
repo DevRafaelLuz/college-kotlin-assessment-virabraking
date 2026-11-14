@@ -15,8 +15,8 @@ android {
         applicationId = "com.example.virabraking"
         minSdk = 24
         targetSdk = 33
-        versionCode = 11506
-        versionName = "1.15.6"
+        versionCode = 11507
+        versionName = "1.15.7"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -41,7 +41,7 @@ android {
         applicationVariants.all {
             val variant = this
             variant.outputs.map { it as com.android.build.gradle.internal.api.ApkVariantOutputImpl }.forEach { output ->
-                output.outputFileName = "ViraBraking-${variant.versionName}.apk"
+                output.outputFileName = "Virabraking-${variant.versionName}.apk"
             }
         }
 

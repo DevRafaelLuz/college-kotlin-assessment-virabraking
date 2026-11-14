@@ -26,6 +26,7 @@ class DetalheRegistro : AppCompatActivity() {
         val iBtnVoltar = findViewById<ImageButton>(R.id.iBtnVoltar)
         iBtnVoltar.setOnClickListener {
             finish()
+            overridePendingTransition(0, 0);
         }
     }
 }

@@ -95,6 +95,7 @@ class DetalhesVeiculo : AppCompatActivity() {
     private fun configurarBotaoVoltar() {
         findViewById<ImageButton>(R.id.iBtnVoltar).setOnClickListener {
             finish()
+            overridePendingTransition(0, 0);
         }
     }
 

@@ -276,6 +276,7 @@
                             android:padding="12dp"
                             android:textSize="14sp"
                             android:hint="Ex: 2016"
+                            android:maxLength="4"
                             android:textColor="#64748b"
                             android:textColorHint="#64748b"
                             android:background="@drawable/bg_branco_arredondado_com_borda" />
@@ -303,6 +304,7 @@
                             android:padding="12dp"
                             android:textSize="14sp"
                             android:hint="Ex: FGH-8902"
+                            android:inputType="textCapCharacters"
                             android:textColor="#64748b"
                             android:textColorHint="#64748b"
                             android:background="@drawable/bg_branco_arredondado_com_borda" />

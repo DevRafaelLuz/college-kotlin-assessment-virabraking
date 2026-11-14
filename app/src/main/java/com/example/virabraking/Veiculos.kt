@@ -51,6 +51,7 @@ class Veiculos : AppCompatActivity() {
 
     private fun navegarPara(destino: Class<out AppCompatActivity>) {
         startActivity(Intent(this, destino))
+        overridePendingTransition(0, 0);
     }
 
     private fun configurarListaVeiculos() {
@@ -74,6 +75,7 @@ class Veiculos : AppCompatActivity() {
         }
 
         startActivity(intent)
+        overridePendingTransition(0, 0);
     }
 
     private fun confirmarRemocao(veiculo: Veiculo) {

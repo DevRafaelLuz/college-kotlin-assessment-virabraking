@@ -79,6 +79,7 @@ class Abastecimento : AppCompatActivity() {
     private fun configurarBotaoVoltar() {
         findViewById<ImageButton>(R.id.iBtnVoltar).setOnClickListener {
             finish()
+            overridePendingTransition(0, 0);
         }
     }
     private fun configurarSeletorVeiculo() {

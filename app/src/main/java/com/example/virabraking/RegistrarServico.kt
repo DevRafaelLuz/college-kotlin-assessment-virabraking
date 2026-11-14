@@ -59,6 +59,7 @@ class RegistrarServico : AppCompatActivity() {
     private fun configurarDestino(idView: Int, destino: Class<out AppCompatActivity>) {
         findViewById<LinearLayout>(idView).setOnClickListener {
             startActivity(Intent(this, destino))
+            overridePendingTransition(0, 0);
         }
     }
 
@@ -134,6 +135,7 @@ class RegistrarServico : AppCompatActivity() {
         }
 
         startActivity(intent)
+        overridePendingTransition(0, 0);
     }
 
     private fun salvarServico() {

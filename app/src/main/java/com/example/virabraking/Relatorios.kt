@@ -44,6 +44,7 @@ class Relatorios : AppCompatActivity() {
     private fun configurarDestino(idView: Int, destino: Class<out AppCompatActivity>) {
         findViewById<LinearLayout>(idView).setOnClickListener {
             startActivity(Intent(this, destino))
+            overridePendingTransition(0, 0);
         }
     }
 

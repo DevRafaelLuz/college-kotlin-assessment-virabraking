@@ -106,6 +106,7 @@ class AdicionarVeiculo : AppCompatActivity() {
     private fun configurarBotoes() {
         findViewById<ImageButton>(R.id.iBtnVoltar).setOnClickListener {
             finish()
+            overridePendingTransition(0, 0);
         }
 
         findViewById<Button>(R.id.btnSalvarVeiculo).setOnClickListener {

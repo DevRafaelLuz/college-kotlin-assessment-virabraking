@@ -57,6 +57,7 @@ class Inicio : AppCompatActivity() {
     private fun configurarDestino(idView: Int, destino: Class<out Activity>) {
         findViewById<View>(idView).setOnClickListener {
             startActivity(Intent(this, destino))
+            overridePendingTransition(0, 0);
         }
     }
 

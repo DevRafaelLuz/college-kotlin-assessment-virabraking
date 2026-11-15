@@ -49,6 +49,11 @@ class Inicio : AppCompatActivity() {
         configurarDestino(R.id.llRelatorios, Relatorios::class.java)
         configurarDestino(R.id.llAdicionar, RegistrarServico::class.java)
 
+        findViewById<TextView>(R.id.tvVerTudo).setOnClickListener {
+            startActivity(Intent(this, Atividades::class.java))
+            overridePendingTransition(0, 0)
+        }
+
         findViewById<TextView>(R.id.tvSobre).setOnClickListener {
             mostrarSobre()
         }

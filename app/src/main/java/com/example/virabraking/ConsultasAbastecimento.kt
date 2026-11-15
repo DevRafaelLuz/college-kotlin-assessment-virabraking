@@ -48,7 +48,7 @@ fun BancoHelper.listarAbastecimentos(veiculoId: Int): List<RegistroAbastecimento
 
 fun BancoHelper.listarAtividades(
     veiculoId: Int? = null,
-    limite: Int = 50,
+    limite: Int? = 50,
     servicos: Boolean = true,
     abastecimentos: Boolean = true
     ): List<Atividade> {
@@ -74,7 +74,7 @@ fun BancoHelper.listarAtividades(
     }
     if (partes.isEmpty()) return emptyList()
 
-    val sql = partes.joinToString(" UNION ALL ") + " ORDER BY data DESC, id DESC LIMIT $limite"
+    val sql = partes.joinToString(" UNION ALL ") + " ORDER BY data DESC, id DESC" + (limite?.let { " LIMIT $it" } ?: "")
     val lista = mutableListOf<Atividade>()
     val cursor = readableDatabase.rawQuery(sql, args.toTypedArray())
     while (cursor.moveToNext()) {

@@ -92,6 +92,9 @@ class Relatorios : AppCompatActivity() {
 
         val totais = calcularTotais(banco, inicio)
         atualizarRelatorio(totais)
+
+        atualizarGraficoVeiculos(banco.totalGastosPorVeiculoDesde(inicio))
+        atualizarGraficoMensal(banco.tendenciaGastosUltimosMeses(5))
     }
 
     private fun calcularTotais(banco: BancoHelper, inicio: String): Map<String, Double> {
@@ -145,6 +148,121 @@ class Relatorios : AppCompatActivity() {
         }
 
         findViewById<ProgressBar>(idBarra).progress = progresso
+    }
+
+    private fun atualizarGraficoVeiculos(gastos: List<GastoVeiculo>) {
+        val grafico = findViewById<GraficoRoscaView>(R.id.graficoVeiculos)
+        val containerLegenda = findViewById<LinearLayout>(R.id.llLegendaVeiculos)
+        containerLegenda.removeAllViews()
+
+        val cores = listOf(
+            Color.parseColor("#0D9488"),
+            Color.parseColor("#10B981"),
+            Color.parseColor("#34D399"),
+            Color.parseColor("#0F766E")
+        )
+
+        val somaTotal = gastos.sumOf { it.total }
+        if (somaTotal <= 0.0) {
+            grafico.definirDados(emptyList())
+            val vazio = TextView(this).apply {
+                text = "Sem gastos no período"
+                textSize = 12f
+                setTextColor(Color.parseColor("#64748B"))
+            }
+            containerLegenda.addView(vazio)
+            return
+        }
+
+        val fatias = mutableListOf<Pair<Float, Int>>()
+
+        gastos.forEachIndexed { index, item ->
+            val cor = cores[index % cores.size]
+            val percentual = ((item.total / somaTotal) * 100).toFloat()
+            fatias.add(percentual to cor)
+
+            val linha = LinearLayout(this).apply {
+                orientation = LinearLayout.HORIZONTAL
+                gravity = android.view.Gravity.CENTER_VERTICAL
+                setPadding(0, 6, 0, 6)
+            }
+
+            val bolinha = android.view.View(this).apply {
+                val tam = (8 * resources.displayMetrics.density).toInt()
+                layoutParams = LinearLayout.LayoutParams(tam, tam).apply {
+                    marginEnd = (8 * resources.displayMetrics.density).toInt()
+                }
+                setBackgroundResource(R.drawable.bolinha_legenda)
+                backgroundTintList = ColorStateList.valueOf(cor)
+            }
+
+            val texto = TextView(this).apply {
+                text = "${item.apelido} (${percentual.toInt()}%)"
+                textSize = 12f
+                setTextColor(Color.parseColor("#0F172A"))
+            }
+
+            linha.addView(bolinha)
+            linha.addView(texto)
+            containerLegenda.addView(linha)
+        }
+
+        grafico.definirDados(fatias)
+    }
+
+    private fun atualizarGraficoMensal(meses: List<GastoMensal>) {
+        val container = findViewById<LinearLayout>(R.id.llBarrasMensais)
+        container.removeAllViews()
+
+        val maiorGasto = meses.maxOfOrNull { it.total } ?: 0.0
+        val density = resources.displayMetrics.density
+        val alturaMaxPx = (65 * density).toInt()
+        val alturaMinPx = (14 * density).toInt()
+        val larguraBarraPx = (12 * density).toInt()
+
+        meses.forEach { mes ->
+            val coluna = LinearLayout(this).apply {
+                orientation = LinearLayout.VERTICAL
+                gravity = android.view.Gravity.CENTER_HORIZONTAL or android.view.Gravity.BOTTOM
+                layoutParams = LinearLayout.LayoutParams(
+                    0,
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    1f
+                )
+            }
+
+            val alturaCalculada = if (maiorGasto > 0.0 && mes.total > 0.0) {
+                ((mes.total / maiorGasto) * alturaMaxPx).toInt().coerceAtLeast(alturaMinPx)
+            } else {
+                alturaMinPx
+            }
+
+            val barra = android.view.View(this).apply {
+                layoutParams = LinearLayout.LayoutParams(larguraBarraPx, alturaCalculada).apply {
+                    gravity = android.view.Gravity.CENTER_HORIZONTAL
+                    bottomMargin = (8 * density).toInt()
+                }
+                setBackgroundResource(R.drawable.barra_mensal_arredondada)
+                alpha = if (mes.total > 0.0) 1.0f else 0.25f
+            }
+
+            val rotulo = TextView(this).apply {
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                ).apply {
+                    gravity = android.view.Gravity.CENTER_HORIZONTAL
+                }
+                text = mes.rotulo
+                textSize = 11f
+                textAlignment = android.view.View.TEXT_ALIGNMENT_CENTER
+                setTextColor(Color.parseColor("#64748B"))
+            }
+
+            coluna.addView(barra)
+            coluna.addView(rotulo)
+            container.addView(coluna)
+        }
     }
 
     private fun categoriaDoServico(tipo: String): String {

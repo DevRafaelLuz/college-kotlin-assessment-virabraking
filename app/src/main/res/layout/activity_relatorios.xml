@@ -88,7 +88,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingVertical="12dp">
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="20dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -144,7 +145,6 @@
                             android:progressBackgroundTint="#f8fafc" />
                     </LinearLayout>
 
-                    <!-- Revisões -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -306,6 +306,35 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_branco_arredondado_com_borda"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+                    <com.example.virabraking.GraficoRoscaView
+                        android:id="@+id/graficoVeiculos"
+                        android:layout_width="110dp"
+                        android:layout_height="110dp" />
+
+                    <LinearLayout
+                        android:id="@+id/llLegendaVeiculos"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:padding="16dp"
                 android:background="@drawable/bg_branco_arredondado_com_borda">
 
@@ -315,6 +344,15 @@
                     android:text="Tendência de Gastos Mensais"
                     android:textStyle="bold"
                     android:textColor="#0F172A" />
+
+                <LinearLayout
+                    android:id="@+id/llBarrasMensais"
+                    android:layout_width="match_parent"
+                    android:layout_height="110dp"
+                    android:layout_marginTop="12dp"
+                    android:baselineAligned="false"
+                    android:gravity="bottom"
+                    android:orientation="horizontal" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

@@ -22,6 +22,16 @@ data class Atividade(
     val valor: Double
 )
 
+data class GastoVeiculo(
+    val apelido: String,
+    val total: Double
+)
+
+data class GastoMensal(
+    val mesAno: String,
+    val rotulo: String,
+    val total: Double
+)
 
 private fun Cursor.paraAbastecimento() = RegistroAbastecimento(
     id = getInt(0),
@@ -144,6 +154,64 @@ fun BancoHelper.consumoMedio(veiculoId: Int): Double? {
     return if (contador >= 2 && litros > 0) (kmFinal - kmInicial) / litros else null
 }
 
+fun BancoHelper.totalGastosPorVeiculoDesde(dataInicial: String): List<GastoVeiculo> {
+    val sql = """
+        SELECT v.apelido, COALESCE(SUM(g.valor), 0) AS total
+        FROM veiculos v
+        LEFT JOIN (
+            SELECT veiculo_id, valor_total AS valor FROM abastecimentos WHERE data >= ?
+            UNION ALL
+            SELECT veiculo_id, valor AS valor FROM servicos WHERE data >= ?
+        ) g ON v.id = g.veiculo_id
+        GROUP BY v.id, v.apelido
+        HAVING total > 0
+        ORDER BY total DESC
+    """.trimIndent()
+
+    val lista = mutableListOf<GastoVeiculo>()
+    val cursor = readableDatabase.rawQuery(sql, arrayOf(dataInicial, dataInicial))
+    while (cursor.moveToNext()) {
+        lista.add(GastoVeiculo(cursor.getString(0), cursor.getDouble(1)))
+    }
+    cursor.close()
+    return lista
+}
+
+fun BancoHelper.tendenciaGastosUltimosMeses(quantidadeMeses: Int = 5): List<GastoMensal> {
+    val mesesNomes = arrayOf("Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez")
+    val resultado = mutableListOf<GastoMensal>()
+    val cal = Calendar.getInstance()
+    cal.set(Calendar.DAY_OF_MONTH, 1)
+    cal.add(Calendar.MONTH, -(quantidadeMeses - 1))
+
+    val dataCorte = String.format(Locale.US, "%04d-%02d-01", cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1)
+
+    val sql = """
+        SELECT strftime('%Y-%m', data) AS mes, COALESCE(SUM(valor), 0)
+        FROM (
+            SELECT data, valor_total AS valor FROM abastecimentos WHERE data >= ?
+            UNION ALL
+            SELECT data, valor AS valor FROM servicos WHERE data >= ?
+        )
+        GROUP BY mes
+    """.trimIndent()
+
+    val mapaValores = mutableMapOf<String, Double>()
+    val cursor = readableDatabase.rawQuery(sql, arrayOf(dataCorte, dataCorte))
+    while (cursor.moveToNext()) {
+        mapaValores[cursor.getString(0)] = cursor.getDouble(1)
+    }
+    cursor.close()
+
+    for (i in 0 until quantidadeMeses) {
+        val chave = String.format(Locale.US, "%04d-%02d", cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1)
+        val rotulo = mesesNomes[cal.get(Calendar.MONTH)]
+        resultado.add(GastoMensal(chave, rotulo, mapaValores[chave] ?: 0.0))
+        cal.add(Calendar.MONTH, 1)
+    }
+
+    return resultado
+}
 
 private fun primeiroDia(mesesAtras: Int, ateJaneiro: Boolean = false): String {
     val c = Calendar.getInstance()

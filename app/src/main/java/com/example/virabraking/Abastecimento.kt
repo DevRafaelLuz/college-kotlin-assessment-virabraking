@@ -1,6 +1,7 @@
 package com.example.virabraking
 
 import android.app.DatePickerDialog
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
@@ -116,9 +117,14 @@ class Abastecimento : AppCompatActivity() {
             ) {
                 val quilometragem = veiculos[position].quilometragem
 
-                etKm.hint = "Mín. $quilometragem"
+                if (quilometragem > 0) {
+                    etKm.hint = "$quilometragem"
+                    etKm.setHintTextColor(Color.parseColor("#0F172A"))
+                } else {
+                    etKm.hint = "$quilometragem"
+                    etKm.setHintTextColor(Color.parseColor("#64748B"))
+                }
             }
-
             override fun onNothingSelected(parent: AdapterView<*>?) = Unit
         }
     }

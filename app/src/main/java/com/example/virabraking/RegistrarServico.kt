@@ -2,7 +2,10 @@ package com.example.virabraking
 
 import android.app.DatePickerDialog
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
+import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
@@ -70,6 +73,7 @@ class RegistrarServico : AppCompatActivity() {
         spVeiculo.adapter = adapter
 
         selecionarVeiculoInicial()
+        configurarAtualizacaoQuilometragem()
     }
 
     private fun criarAdapter(itens: List<String>): ArrayAdapter<String> {
@@ -90,6 +94,28 @@ class RegistrarServico : AppCompatActivity() {
 
         if (posicaoInicial >= 0) {
             spVeiculo.setSelection(posicaoInicial)
+        }
+    }
+
+    private fun configurarAtualizacaoQuilometragem() {
+        spVeiculo.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                val quilometragem = veiculos[position].quilometragem
+
+                if (quilometragem > 0) {
+                    etQuilometragem.hint = "$quilometragem"
+                    etQuilometragem.setHintTextColor(Color.parseColor("#0F172A"))
+                } else {
+                    etQuilometragem.hint = "$quilometragem"
+                    etQuilometragem.setHintTextColor(Color.parseColor("#64748B"))
+                }
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) = Unit
         }
     }
 

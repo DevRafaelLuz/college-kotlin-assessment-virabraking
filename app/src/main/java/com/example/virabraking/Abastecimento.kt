@@ -9,7 +9,9 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.Spinner
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
@@ -26,6 +28,8 @@ class Abastecimento : AppCompatActivity() {
     private lateinit var etKm: EditText
     private lateinit var etPosto: EditText
     private lateinit var etData: EditText
+    private lateinit var llBarrasConsumo: LinearLayout
+    private lateinit var tvSemHistoricoConsumo: TextView
 
     private var veiculos: List<Veiculo> = emptyList()
     private var ultimoCampoPrecoAlterado: EditText? = null
@@ -75,6 +79,8 @@ class Abastecimento : AppCompatActivity() {
         etKm = findViewById(R.id.etKm)
         etPosto = findViewById(R.id.etPosto)
         etData = findViewById(R.id.etData)
+        llBarrasConsumo = findViewById(R.id.llBarrasConsumo)
+        tvSemHistoricoConsumo = findViewById(R.id.tvSemHistoricoConsumo)
     }
 
     private fun configurarBotaoVoltar() {
@@ -108,24 +114,70 @@ class Abastecimento : AppCompatActivity() {
     }
 
     private fun configurarAtualizacaoQuilometragem() {
-        spVeiculo.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                val quilometragem = veiculos[position].quilometragem
+        val quilometragem = veiculos[spVeiculo.selectedItemPosition].quilometragem
 
-                if (quilometragem > 0) {
-                    etKm.hint = "$quilometragem"
-                    etKm.setHintTextColor(Color.parseColor("#0F172A"))
-                } else {
-                    etKm.hint = "$quilometragem"
-                    etKm.setHintTextColor(Color.parseColor("#64748B"))
-                }
+        etKm.hint = "$quilometragem"
+        etKm.setHintTextColor(Color.parseColor("#64748B"))
+
+        atualizarGraficoConsumo(veiculos[spVeiculo.selectedItemPosition].id)
+    }
+
+    private fun atualizarGraficoConsumo(veiculoId: Int) {
+        val consumos = BancoHelper.getInstance(this).historicoConsumo(veiculoId, 6)
+        llBarrasConsumo.removeAllViews()
+
+        if (consumos.isEmpty()) {
+            tvSemHistoricoConsumo.visibility = View.VISIBLE
+            llBarrasConsumo.visibility = View.GONE
+            return
+        }
+
+        tvSemHistoricoConsumo.visibility = View.GONE
+        llBarrasConsumo.visibility = View.VISIBLE
+
+        val maiorConsumo = consumos.maxOrNull() ?: 0.0
+        val density = resources.displayMetrics.density
+        val alturaMaxPx = (44 * density).toInt()
+        val alturaMinPx = (14 * density).toInt()
+        val larguraBarraPx = (22 * density).toInt()
+
+        consumos.forEach { valor ->
+            val coluna = LinearLayout(this).apply {
+                orientation = LinearLayout.VERTICAL
+                gravity = android.view.Gravity.CENTER_HORIZONTAL or android.view.Gravity.BOTTOM
+                layoutParams = LinearLayout.LayoutParams(
+                    0,
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    1f
+                )
             }
-            override fun onNothingSelected(parent: AdapterView<*>?) = Unit
+
+            val alturaCalculada = if (maiorConsumo > 0.0) {
+                ((valor / maiorConsumo) * alturaMaxPx).toInt().coerceAtLeast(alturaMinPx)
+            } else {
+                alturaMinPx
+            }
+
+            val barra = View(this).apply {
+                layoutParams = LinearLayout.LayoutParams(larguraBarraPx, alturaCalculada).apply {
+                    bottomMargin = (6 * density).toInt()
+                }
+                setBackgroundResource(R.drawable.barra_mensal_arredondada)
+            }
+
+            val rotulo = TextView(this).apply {
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+                text = String.format(Locale.US, "%.1f", valor)
+                textSize = 11f
+                setTextColor(Color.parseColor("#64748B"))
+            }
+
+            coluna.addView(barra)
+            coluna.addView(rotulo)
+            llBarrasConsumo.addView(coluna)
         }
     }
 
@@ -255,16 +307,15 @@ class Abastecimento : AppCompatActivity() {
 
         exibirMensagem("Abastecimento salvo")
         finish()
+        overridePendingTransition(0, 0);
     }
 
     private fun validarAbastecimento(): RegistroAbastecimento? {
         val veiculo = veiculos.getOrNull(spVeiculo.selectedItemPosition) ?: return null
-
         val litros = lerNumero(etLitros)
         val valorLitro = lerNumero(etValorLitro)
         val valorTotal = lerNumero(etValorTotal)
         val quilometragem = etKm.text.toString().trim().toIntOrNull()
-
         val posto = etPosto.text.toString().trim()
 
         if (litros == null || litros <= 0) {
@@ -288,7 +339,7 @@ class Abastecimento : AppCompatActivity() {
         }
 
         if (quilometragem < veiculo.quilometragem) {
-            etKm.error = "O KM não pode ser menor que ${veiculo.quilometragem}"
+            etKm.error = "KM menor do que no último registro: ${veiculo.quilometragem}"
             return null
         }
 

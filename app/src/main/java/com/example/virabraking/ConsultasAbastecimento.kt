@@ -213,6 +213,34 @@ fun BancoHelper.tendenciaGastosUltimosMeses(quantidadeMeses: Int = 5): List<Gast
     return resultado
 }
 
+fun BancoHelper.historicoConsumo(veiculoId: Int, limite: Int = 6): List<Double> {
+    val cursor = readableDatabase.rawQuery(
+        "SELECT quilometragem, litros FROM abastecimentos WHERE veiculo_id = ? ORDER BY quilometragem ASC, id ASC",
+        arrayOf(veiculoId.toString())
+    )
+
+    val registros = mutableListOf<Pair<Int, Double>>()
+    while (cursor.moveToNext()) {
+        registros.add(cursor.getInt(0) to cursor.getDouble(1))
+    }
+    cursor.close()
+
+    if (registros.size < 2) return emptyList()
+
+    val consumos = mutableListOf<Double>()
+    for (i in 1 until registros.size) {
+        val kmAnterior = registros[i - 1].first
+        val (kmAtual, litros) = registros[i]
+        val distancia = kmAtual - kmAnterior
+
+        if (distancia > 0 && litros > 0.0) {
+            consumos.add(distancia / litros)
+        }
+    }
+
+    return consumos.takeLast(limite)
+}
+
 private fun primeiroDia(mesesAtras: Int, ateJaneiro: Boolean = false): String {
     val c = Calendar.getInstance()
     c.set(Calendar.DAY_OF_MONTH, 1)

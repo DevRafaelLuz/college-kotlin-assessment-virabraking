@@ -98,24 +98,14 @@ class RegistrarServico : AppCompatActivity() {
     }
 
     private fun configurarAtualizacaoQuilometragem() {
-        spVeiculo.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                val quilometragem = veiculos[position].quilometragem
+        val quilometragem = veiculos[spVeiculo.selectedItemPosition].quilometragem
 
-                if (quilometragem > 0) {
-                    etQuilometragem.hint = "$quilometragem"
-                    etQuilometragem.setHintTextColor(Color.parseColor("#0F172A"))
-                } else {
-                    etQuilometragem.hint = "$quilometragem"
-                    etQuilometragem.setHintTextColor(Color.parseColor("#64748B"))
-                }
-            }
-            override fun onNothingSelected(parent: AdapterView<*>?) = Unit
+        if (quilometragem > 0) {
+            etQuilometragem.hint = "$quilometragem"
+            etQuilometragem.setHintTextColor(Color.parseColor("#0F172A"))
+        } else {
+            etQuilometragem.hint = "$quilometragem"
+            etQuilometragem.setHintTextColor(Color.parseColor("#64748B"))
         }
     }
 

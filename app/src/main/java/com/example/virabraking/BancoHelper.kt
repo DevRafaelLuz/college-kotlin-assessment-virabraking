@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
 class BancoHelper private constructor(context: Context) :
-    SQLiteOpenHelper(context, "virabraking.db", null, 4) {
+    SQLiteOpenHelper(context, "virabraking.db", null, 5) {
 
     companion object {
         @Volatile
@@ -28,7 +28,8 @@ class BancoHelper private constructor(context: Context) :
                     "ano INTEGER, " +
                     "placa TEXT, " +
                     "quilometragem INTEGER, " +
-                    "favorito INTEGER NOT NULL DEFAULT 0)"
+                    "favorito INTEGER NOT NULL DEFAULT 0, " +
+                    "caminho_foto TEXT)"
         )
         criarTabelaServicos(db)
         criarTabelaAbastecimentos(db)
@@ -43,6 +44,9 @@ class BancoHelper private constructor(context: Context) :
         }
         if (oldVersion < 4) {
             db.execSQL("ALTER TABLE veiculos ADD COLUMN favorito INTEGER NOT NULL DEFAULT 0")
+        }
+        if (oldVersion < 5) {
+            db.execSQL("ALTER TABLE veiculos ADD COLUMN caminho_foto TEXT")
         }
     }
 
@@ -85,6 +89,7 @@ class BancoHelper private constructor(context: Context) :
         valores.put("ano", veiculo.ano)
         valores.put("placa", veiculo.placa)
         valores.put("quilometragem", veiculo.quilometragem)
+        valores.put("caminho_foto", veiculo.caminhoFoto)
 
         return writableDatabase.insert("veiculos", null, valores)
     }
@@ -92,7 +97,7 @@ class BancoHelper private constructor(context: Context) :
     fun listarVeiculos(): List<Veiculo> {
         val lista = mutableListOf<Veiculo>()
         val cursor = readableDatabase.rawQuery(
-            "SELECT id, tipo, apelido, marca, modelo, ano, placa, quilometragem, favorito FROM veiculos ORDER BY favorito DESC, id DESC",
+            "SELECT id, tipo, apelido, marca, modelo, ano, placa, quilometragem, favorito, caminho_foto FROM veiculos ORDER BY favorito DESC, id DESC",
             null
         )
 
@@ -107,7 +112,8 @@ class BancoHelper private constructor(context: Context) :
                     ano = cursor.getInt(5),
                     placa = cursor.getString(6) ?: "",
                     quilometragem = cursor.getInt(7),
-                    favorito = cursor.getInt(8) == 1
+                    favorito = cursor.getInt(8) == 1,
+                    caminhoFoto = cursor.getString(9)
                 )
             )
         }
@@ -118,7 +124,7 @@ class BancoHelper private constructor(context: Context) :
 
     fun buscarVeiculo(id: Int): Veiculo? {
         val cursor = readableDatabase.rawQuery(
-            "SELECT id, tipo, apelido, marca, modelo, ano, placa, quilometragem, favorito FROM veiculos WHERE id = ?",
+            "SELECT id, tipo, apelido, marca, modelo, ano, placa, quilometragem, favorito, caminho_foto FROM veiculos WHERE id = ?",
             arrayOf(id.toString())
         )
         var veiculo: Veiculo? = null
@@ -132,7 +138,8 @@ class BancoHelper private constructor(context: Context) :
                 ano = cursor.getInt(5),
                 placa = cursor.getString(6) ?: "",
                 quilometragem = cursor.getInt(7),
-                favorito = cursor.getInt(8) == 1
+                favorito = cursor.getInt(8) == 1,
+                caminhoFoto = cursor.getString(9)
             )
         }
         cursor.close()

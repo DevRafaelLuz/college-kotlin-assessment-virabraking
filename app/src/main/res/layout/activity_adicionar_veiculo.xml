@@ -42,27 +42,41 @@
             android:orientation="vertical"
             android:paddingVertical="12dp">
 
-            <LinearLayout
+            <FrameLayout
+                android:id="@+id/flAdicionarFoto"
                 android:layout_width="match_parent"
                 android:layout_height="130dp"
-                android:orientation="vertical"
                 android:layout_marginBottom="20dp"
-                android:gravity="center"
                 android:background="@drawable/bg_adicionar_foto_veiculo_tracejado">
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/vetor_camera_adicionar_veiculo"
-                    android:layout_marginBottom="8dp" />
+                <LinearLayout
+                    android:id="@+id/llPlaceholderFoto"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#0d9488"
-                    android:textStyle="bold"
-                    android:text="Adicionar foto do veículo"/>
-            </LinearLayout>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/vetor_camera_adicionar_veiculo"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#0d9488"
+                        android:textStyle="bold"
+                        android:text="Adicionar foto do veículo"/>
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/ivPreviewVeiculo"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:visibility="gone" />
+            </FrameLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

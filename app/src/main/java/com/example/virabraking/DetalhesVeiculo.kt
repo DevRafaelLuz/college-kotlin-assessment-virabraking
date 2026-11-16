@@ -5,6 +5,7 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -28,6 +29,7 @@ class DetalhesVeiculo : AppCompatActivity() {
     private var veiculoId = Constantes.ID_INVALIDO
     private var abaAtual = Aba.HISTORICO
 
+    private lateinit var ivFotoVeiculo: ImageView
     private lateinit var tvNomeVeiculo: TextView
     private lateinit var tvModelo: TextView
     private lateinit var tvAno: TextView
@@ -90,6 +92,7 @@ class DetalhesVeiculo : AppCompatActivity() {
         tvKmVeiculo = findViewById(R.id.tvKmVeiculo)
         tvTituloLista = findViewById(R.id.tvTituloLista)
         llLista = findViewById(R.id.llLista)
+        ivFotoVeiculo = findViewById(R.id.ivFotoVeiculo)
     }
 
     private fun configurarBotaoVoltar() {
@@ -247,5 +250,12 @@ class DetalhesVeiculo : AppCompatActivity() {
         tvAno.text = veiculo.ano.toString()
         tvPlaca.text = veiculo.placa
         tvKmVeiculo.text = String.format(LOCALE_BR, "%,d km", veiculo.quilometragem)
+
+        val arquivoFoto = veiculo.caminhoFoto?.let { java.io.File(it) }
+        if (arquivoFoto != null && arquivoFoto.exists()) {
+            ivFotoVeiculo.setImageURI(android.net.Uri.fromFile(arquivoFoto))
+        } else {
+            ivFotoVeiculo.setImageDrawable(null)
+        }
     }
 }

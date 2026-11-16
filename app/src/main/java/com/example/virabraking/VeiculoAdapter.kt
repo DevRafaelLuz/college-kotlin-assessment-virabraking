@@ -56,12 +56,27 @@ class VeiculoAdapter(
             aoFavoritar(veiculo)
         }
 
-        val icone = when (veiculo.tipo) {
-            "Moto" -> R.drawable.vetor_moto
-            "Caminhão" -> R.drawable.vetor_caminhao
-            else -> R.drawable.vetor_menu_veiculo
+        val arquivoFoto = veiculo.caminhoFoto?.let { java.io.File(it) }
+
+        if (arquivoFoto != null && arquivoFoto.exists()) {
+            holder.ivVeiculo.clearColorFilter()
+            holder.ivVeiculo.imageTintList = null
+            holder.ivVeiculo.setPadding(0, 0, 0, 0)
+            holder.ivVeiculo.scaleType = ImageView.ScaleType.CENTER_CROP
+            holder.ivVeiculo.clipToOutline = true
+            holder.ivVeiculo.setImageURI(android.net.Uri.fromFile(arquivoFoto))
+        } else {
+            val paddingPx = (16 * holder.itemView.context.resources.displayMetrics.density).toInt()
+            holder.ivVeiculo.setPadding(paddingPx, paddingPx, paddingPx, paddingPx)
+            holder.ivVeiculo.scaleType = ImageView.ScaleType.CENTER_INSIDE
+            holder.ivVeiculo.setColorFilter(Color.parseColor("#0d9488"))
+            val icone = when (veiculo.tipo) {
+                "Moto" -> R.drawable.vetor_moto
+                "Caminhão" -> R.drawable.vetor_caminhao
+                else -> R.drawable.vetor_menu_veiculo
+            }
+            holder.ivVeiculo.setImageResource(icone)
         }
-        holder.ivVeiculo.setImageResource(icone)
     }
 
     override fun getItemCount(): Int = veiculos.size

@@ -1,5 +1,6 @@
 package com.example.virabraking
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageButton
 import android.widget.LinearLayout
@@ -39,9 +40,7 @@ class Atividades : AppCompatActivity() {
 
         container.removeAllViews()
 
-        val atividades = banco.listarAtividades(
-            limite = null
-        )
+        val atividades = banco.listarAtividades(limite = null)
 
         if (atividades.isEmpty()) {
             exibirListaVazia()
@@ -49,9 +48,15 @@ class Atividades : AppCompatActivity() {
         }
 
         atividades.forEach { atividade ->
-            container.addView(
-                atividade.paraView(layoutInflater, container)
-            )
+            val atividadeView = atividade.paraView(layoutInflater, container)
+
+            if (atividade.origem == "servico") {
+                atividadeView.setOnClickListener {
+                    abrirDetalhesServico(atividade)
+                }
+            }
+
+            container.addView(atividadeView)
         }
     }
 
@@ -64,5 +69,13 @@ class Atividades : AppCompatActivity() {
         }
 
         container.addView(mensagem)
+    }
+
+    private fun abrirDetalhesServico(atividade: Atividade) {
+        val intent = Intent(this, DetalheRegistro::class.java).apply {
+            putExtra(Constantes.EXTRA_SERVICO_ID, atividade.id)
+            putExtra(Constantes.EXTRA_VEICULO_ID, atividade.veiculoId)
+        }
+        startActivity(intent)
     }
 }

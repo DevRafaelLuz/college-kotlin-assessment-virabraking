@@ -152,7 +152,15 @@ class Inicio : AppCompatActivity() {
         }
 
         atividades.forEach { atividade ->
-            container.addView(atividade.paraView(layoutInflater, container))
+            val atividadeView = atividade.paraView(layoutInflater, container)
+
+            if (atividade.origem == "servico") {
+                atividadeView.setOnClickListener {
+                    abrirDetalhesServico(atividade)
+                }
+            }
+
+            container.addView(atividadeView)
         }
     }
 
@@ -163,6 +171,14 @@ class Inicio : AppCompatActivity() {
         }
 
         container.addView(mensagem)
+    }
+
+    private fun abrirDetalhesServico(atividade: Atividade) {
+        val intent = Intent(this, DetalheRegistro::class.java).apply {
+            putExtra(Constantes.EXTRA_SERVICO_ID, atividade.id)
+            putExtra(Constantes.EXTRA_VEICULO_ID, atividade.veiculoId)
+        }
+        startActivity(intent)
     }
 
     private companion object {

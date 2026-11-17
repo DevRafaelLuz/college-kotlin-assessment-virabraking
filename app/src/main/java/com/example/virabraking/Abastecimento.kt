@@ -97,8 +97,15 @@ class Abastecimento : AppCompatActivity() {
         adapter.setDropDownViewResource(R.layout.item_spinner_dropdown)
 
         spVeiculo.adapter = adapter
+
+        spVeiculo.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                configurarAtualizacaoQuilometragem(position)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) { }
+        }
         selecionarVeiculoInicial()
-        configurarAtualizacaoQuilometragem()
     }
 
     private fun selecionarVeiculoInicial() {
@@ -110,16 +117,19 @@ class Abastecimento : AppCompatActivity() {
 
         if (posicao >= 0) {
             spVeiculo.setSelection(posicao)
+        } else if (veiculos.isNotEmpty()) {
+            spVeiculo.setSelection(0)
+            configurarAtualizacaoQuilometragem(0)
         }
     }
 
-    private fun configurarAtualizacaoQuilometragem() {
-        val quilometragem = veiculos[spVeiculo.selectedItemPosition].quilometragem
+    private fun configurarAtualizacaoQuilometragem(posicao: Int) {
+        val veiculoSelecionado = veiculos.getOrNull(posicao) ?: return
 
-        etKm.hint = "$quilometragem"
-        etKm.setHintTextColor(Color.parseColor("#64748B"))
+        etKm.setText("${veiculoSelecionado.quilometragem}")
+        etKm.error = null
 
-        atualizarGraficoConsumo(veiculos[spVeiculo.selectedItemPosition].id)
+        atualizarGraficoConsumo(veiculoSelecionado.id)
     }
 
     private fun atualizarGraficoConsumo(veiculoId: Int) {

@@ -194,7 +194,7 @@
                     android:textSize="14sp"
                     android:padding="12dp"
                     android:hint="Ex: Civic de Uso Diário"
-                    android:textColor="#64748b"
+                    android:textColor="#0f172a"
                     android:textColorHint="#64748b"
                     android:background="@drawable/bg_branco_arredondado_com_borda"
                     android:layout_marginBottom="12dp" />
@@ -227,7 +227,7 @@
                             android:layout_height="41dp"
                             android:padding="12dp"
                             android:textSize="14sp"
-                            android:textColor="#64748b"
+                            android:textColor="#0f172a"
                             android:textColorHint="#64748b"
                             android:hint="Ex: Honda"
                             android:background="@drawable/bg_branco_arredondado_com_borda" />
@@ -255,7 +255,7 @@
                             android:padding="12dp"
                             android:textSize="14sp"
                             android:hint="Ex: Civic LXR"
-                            android:textColor="#64748b"
+                            android:textColor="#0f172a"
                             android:textColorHint="#64748b"
                             android:background="@drawable/bg_branco_arredondado_com_borda" />
                     </LinearLayout>
@@ -292,7 +292,7 @@
                             android:textSize="14sp"
                             android:hint="Ex: 2016"
                             android:maxLength="4"
-                            android:textColor="#64748b"
+                            android:textColor="#0f172a"
                             android:textColorHint="#64748b"
                             android:background="@drawable/bg_branco_arredondado_com_borda" />
                     </LinearLayout>
@@ -320,7 +320,7 @@
                             android:textSize="14sp"
                             android:hint="Ex: FGH-8902"
                             android:inputType="textCapCharacters"
-                            android:textColor="#64748b"
+                            android:textColor="#0f172a"
                             android:textColorHint="#64748b"
                             android:background="@drawable/bg_branco_arredondado_com_borda" />
                     </LinearLayout>
@@ -343,7 +343,7 @@
                     android:padding="12dp"
                     android:textSize="14sp"
                     android:hint="Ex: 84200"
-                    android:textColor="#64748b"
+                    android:textColor="#0f172a"
                     android:textColorHint="#64748b"
                     android:background="@drawable/bg_branco_arredondado_com_borda" />
             </LinearLayout>

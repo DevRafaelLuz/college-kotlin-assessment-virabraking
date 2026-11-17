@@ -146,7 +146,7 @@
                             android:layout_height="42dp"
                             android:background="@drawable/bg_branco_arredondado_com_borda"
                             android:inputType="number"
-                            android:enabled="false"
+                            android:textColor="#0F172A"
                             android:textSize="14sp"
                             android:padding="12dp" />
                     </LinearLayout>

@@ -121,21 +121,20 @@ class RegistrarServico : AppCompatActivity() {
 
         spVeiculo.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                atualizarHintQuilometragem(position)
+                atualizarQuilometragemVeiculoSelecionado(position)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
-        atualizarHintQuilometragem(spVeiculo.selectedItemPosition)
+        atualizarQuilometragemVeiculoSelecionado(spVeiculo.selectedItemPosition)
     }
 
-    private fun atualizarHintQuilometragem(posicao: Int) {
-        val quilometragem = veiculos.getOrNull(posicao)?.quilometragem ?: 0
-        etQuilometragem.hint = "$quilometragem"
+    private fun atualizarQuilometragemVeiculoSelecionado(posicao: Int) {
+        val veiculoSelecionado = veiculos.getOrNull(posicao) ?: return
 
-        val corHint = if (quilometragem > 0) "#0F172A" else "#64748B"
-        etQuilometragem.setHintTextColor(Color.parseColor(corHint))
+        etQuilometragem.setText("${veiculoSelecionado.quilometragem}")
+        etQuilometragem.error = null
     }
 
     private fun configurarTiposServico() {

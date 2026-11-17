@@ -186,7 +186,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="42dp"
                         android:background="@drawable/bg_branco_arredondado_com_borda"
-                        android:hint="84200"
                         android:textColor="#0f172a"
                         android:inputType="number"
                         android:padding="12dp"

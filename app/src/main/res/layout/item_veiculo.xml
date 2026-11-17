@@ -83,10 +83,11 @@
         android:padding="4dp"
         android:src="@android:drawable/btn_star_big_off" />
 
-    <ImageButton
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/vetor_seta_direita"
         android:clickable="false"
+        android:focusable="false"
         android:background="#ffffff" />
 </LinearLayout>

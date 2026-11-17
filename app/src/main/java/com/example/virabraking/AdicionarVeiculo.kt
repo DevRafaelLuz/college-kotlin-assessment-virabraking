@@ -199,16 +199,4 @@ class AdicionarVeiculo : AppCompatActivity() {
             null
         }
     }
-
-    private fun criarVeiculo(apelido: String): Veiculo {
-        return Veiculo(
-            tipo = tipoSelecionado,
-            apelido = apelido,
-            marca = etMarca.text.toString().trim(),
-            modelo = etModelo.text.toString().trim(),
-            ano = etAno.text.toString().toIntOrNull() ?: 0,
-            placa = etPlaca.text.toString().trim(),
-            quilometragem = etQuilometragem.text.toString().toIntOrNull() ?: 0
-        )
-    }
 }

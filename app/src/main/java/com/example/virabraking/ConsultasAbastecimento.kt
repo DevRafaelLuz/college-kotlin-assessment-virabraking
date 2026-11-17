@@ -33,6 +33,39 @@ data class GastoMensal(
     val total: Double
 )
 
+data class ManutencaoAgendada(
+    val servicoId: Int,
+    val veiculoId: Int,
+    val tipo: String,
+    val data: String,
+    val veiculoApelido: String
+)
+
+fun BancoHelper.buscarProximaManutencao(dataHoje: String): ManutencaoAgendada? {
+    val sql = """
+        SELECT s.id, s.veiculo_id, s.tipo, s.data, v.apelido
+        FROM servicos s
+        JOIN veiculos v ON s.veiculo_id = v.id
+        WHERE s.data >= ?
+        ORDER BY s.data ASC, s.id ASC
+        LIMIT 1
+    """.trimIndent()
+
+    val cursor = readableDatabase.rawQuery(sql, arrayOf(dataHoje))
+    var resultado: ManutencaoAgendada? = null
+    if (cursor.moveToFirst()) {
+        resultado = ManutencaoAgendada(
+            servicoId = cursor.getInt(0),
+            veiculoId = cursor.getInt(1),
+            tipo = cursor.getString(2) ?: "",
+            data = cursor.getString(3) ?: "",
+            veiculoApelido = cursor.getString(4) ?: ""
+        )
+    }
+    cursor.close()
+    return resultado
+}
+
 private fun Cursor.paraAbastecimento() = RegistroAbastecimento(
     id = getInt(0),
     veiculoId = getInt(1),
@@ -90,7 +123,7 @@ fun BancoHelper.listarAtividades(
     while (cursor.moveToNext()) {
         lista.add(
             Atividade(
-                origem = cursor.getString(0),
+                origem = cursor.getString(0) ?: "",
                 id = cursor.getInt(1),
                 veiculoId = cursor.getInt(2),
                 titulo = cursor.getString(3) ?: "",
@@ -171,7 +204,7 @@ fun BancoHelper.totalGastosPorVeiculoDesde(dataInicial: String): List<GastoVeicu
     val lista = mutableListOf<GastoVeiculo>()
     val cursor = readableDatabase.rawQuery(sql, arrayOf(dataInicial, dataInicial))
     while (cursor.moveToNext()) {
-        lista.add(GastoVeiculo(cursor.getString(0), cursor.getDouble(1)))
+        lista.add(GastoVeiculo(cursor.getString(0) ?: "", cursor.getDouble(1)))
     }
     cursor.close()
     return lista
@@ -199,7 +232,9 @@ fun BancoHelper.tendenciaGastosUltimosMeses(quantidadeMeses: Int = 5): List<Gast
     val mapaValores = mutableMapOf<String, Double>()
     val cursor = readableDatabase.rawQuery(sql, arrayOf(dataCorte, dataCorte))
     while (cursor.moveToNext()) {
-        mapaValores[cursor.getString(0)] = cursor.getDouble(1)
+        cursor.getString(0)?.let { mes ->
+            mapaValores[mes] = cursor.getDouble(1)
+        }
     }
     cursor.close()
 

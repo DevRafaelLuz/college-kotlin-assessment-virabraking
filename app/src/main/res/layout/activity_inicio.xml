@@ -149,10 +149,13 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/llProximaManutencao"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="16dp"
                     android:layout_marginTop="12dp"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:background="@drawable/bg_verde_claro_arredondado_com_borda">
 
                     <LinearLayout

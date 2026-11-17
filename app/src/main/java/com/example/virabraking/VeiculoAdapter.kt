@@ -56,16 +56,25 @@ class VeiculoAdapter(
             aoFavoritar(veiculo)
         }
 
+        var fotoCarregada = false
         val arquivoFoto = veiculo.caminhoFoto?.let { java.io.File(it) }
 
         if (arquivoFoto != null && arquivoFoto.exists()) {
-            holder.ivVeiculo.clearColorFilter()
-            holder.ivVeiculo.imageTintList = null
-            holder.ivVeiculo.setPadding(0, 0, 0, 0)
-            holder.ivVeiculo.scaleType = ImageView.ScaleType.CENTER_CROP
-            holder.ivVeiculo.clipToOutline = true
-            holder.ivVeiculo.setImageURI(android.net.Uri.fromFile(arquivoFoto))
-        } else {
+            try {
+                holder.ivVeiculo.clearColorFilter()
+                holder.ivVeiculo.imageTintList = null
+                holder.ivVeiculo.setPadding(0, 0, 0, 0)
+                holder.ivVeiculo.scaleType = ImageView.ScaleType.CENTER_CROP
+                holder.ivVeiculo.clipToOutline = true
+                holder.ivVeiculo.setImageURI(android.net.Uri.fromFile(arquivoFoto))
+                fotoCarregada = true
+            } catch (_: Exception) {
+                fotoCarregada = false
+            }
+        }
+
+        if (!fotoCarregada) {
+            holder.ivVeiculo.clipToOutline = false
             val paddingPx = (16 * holder.itemView.context.resources.displayMetrics.density).toInt()
             holder.ivVeiculo.setPadding(paddingPx, paddingPx, paddingPx, paddingPx)
             holder.ivVeiculo.scaleType = ImageView.ScaleType.CENTER_INSIDE

@@ -14,6 +14,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import java.io.File
 import java.io.FileOutputStream
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 class Inicio : AppCompatActivity() {
 
@@ -122,6 +126,7 @@ class Inicio : AppCompatActivity() {
 
         atualizarQuantidadeVeiculos(banco)
         atualizarGastosMensais(banco)
+        atualizarProximaManutencao(banco)
         atualizarListaAtividades(banco)
     }
 
@@ -137,6 +142,72 @@ class Inicio : AppCompatActivity() {
         val totalGastos = banco.totalServicosDesde(inicioMes) + banco.totalCombustivelDesde(inicioMes)
 
         findViewById<TextView>(R.id.tvGastosMes).text = totalGastos.emReais()
+    }
+
+    private fun atualizarProximaManutencao(banco: BancoHelper) {
+        val formatoBanco = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+        val formatoExibicao = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        val dataHojeStr = formatoBanco.format(Date())
+
+        val proxima = banco.buscarProximaManutencao(dataHojeStr)
+
+        val tvDescricao = findViewById<TextView>(R.id.tvDescricaoManutencao)
+        val tvQuando = findViewById<TextView>(R.id.tvQuandoManutencao)
+        val container = findViewById<View>(R.id.llProximaManutencao)
+
+        if (proxima != null) {
+            tvDescricao.text = if (proxima.veiculoApelido.isNotBlank()) {
+                "${proxima.tipo} (${proxima.veiculoApelido})"
+            } else {
+                proxima.tipo
+            }
+
+            val dataHoje = formatoBanco.parse(dataHojeStr)
+            val dataManutencao = formatoBanco.parse(proxima.data)
+
+            if (dataHoje != null && dataManutencao != null) {
+                val calHoje = Calendar.getInstance().apply {
+                    time = dataHoje
+                    set(Calendar.HOUR_OF_DAY, 0)
+                    set(Calendar.MINUTE, 0)
+                    set(Calendar.SECOND, 0)
+                    set(Calendar.MILLISECOND, 0)
+                }
+                val calManut = Calendar.getInstance().apply {
+                    time = dataManutencao
+                    set(Calendar.HOUR_OF_DAY, 0)
+                    set(Calendar.MINUTE, 0)
+                    set(Calendar.SECOND, 0)
+                    set(Calendar.MILLISECOND, 0)
+                }
+                val diffDias = ((calManut.timeInMillis - calHoje.timeInMillis) / (1000 * 60 * 60 * 24)).toInt()
+                val dataFormatada = formatoExibicao.format(dataManutencao)
+
+                tvQuando.text = when {
+                    diffDias == 0 -> "Hoje ($dataFormatada)"
+                    diffDias == 1 -> "Amanhã ($dataFormatada)"
+                    diffDias > 1 -> "Em $diffDias dias ($dataFormatada)"
+                    else -> dataFormatada
+                }
+            } else {
+                tvQuando.text = proxima.data.dataParaExibicao()
+            }
+
+            container.setOnClickListener {
+                val intent = Intent(this, DetalheRegistro::class.java).apply {
+                    putExtra(Constantes.EXTRA_SERVICO_ID, proxima.servicoId)
+                    putExtra(Constantes.EXTRA_VEICULO_ID, proxima.veiculoId)
+                }
+                startActivity(intent)
+            }
+        } else {
+            tvDescricao.text = "Nenhuma pendente"
+            tvQuando.text = "Tudo em dia"
+
+            container.setOnClickListener {
+                startActivity(Intent(this, RegistrarServico::class.java))
+            }
+        }
     }
 
     private fun atualizarListaAtividades(banco: BancoHelper) {

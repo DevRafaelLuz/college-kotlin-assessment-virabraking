@@ -117,6 +117,7 @@ class Abastecimento : AppCompatActivity() {
 
         if (posicao >= 0) {
             spVeiculo.setSelection(posicao)
+            configurarAtualizacaoQuilometragem(posicao)
         } else if (veiculos.isNotEmpty()) {
             spVeiculo.setSelection(0)
             configurarAtualizacaoQuilometragem(0)

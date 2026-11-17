@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
 class BancoHelper private constructor(context: Context) :
-    SQLiteOpenHelper(context, "virabraking.db", null, 6) {
+    SQLiteOpenHelper(context, "virabraking.db", null, 7) {
 
     companion object {
         @Volatile
@@ -33,6 +33,7 @@ class BancoHelper private constructor(context: Context) :
         )
         criarTabelaServicos(db)
         criarTabelaAbastecimentos(db)
+        criarTabelaLembretes(db)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -50,6 +51,9 @@ class BancoHelper private constructor(context: Context) :
         }
         if (oldVersion < 6) {
             db.execSQL("ALTER TABLE servicos ADD COLUMN caminho_comprovante TEXT")
+        }
+        if (oldVersion < 7) {
+            criarTabelaLembretes(db)
         }
     }
 
@@ -109,8 +113,8 @@ class BancoHelper private constructor(context: Context) :
             lista.add(
                 Veiculo(
                     id = cursor.getInt(0),
-                    tipo = cursor.getString(1),
-                    apelido = cursor.getString(2),
+                    tipo = cursor.getString(1) ?: "",
+                    apelido = cursor.getString(2) ?: "",
                     marca = cursor.getString(3) ?: "",
                     modelo = cursor.getString(4) ?: "",
                     ano = cursor.getInt(5),
@@ -135,8 +139,8 @@ class BancoHelper private constructor(context: Context) :
         if (cursor.moveToFirst()) {
             veiculo = Veiculo(
                 id = cursor.getInt(0),
-                tipo = cursor.getString(1),
-                apelido = cursor.getString(2),
+                tipo = cursor.getString(1) ?: "",
+                apelido = cursor.getString(2) ?: "",
                 marca = cursor.getString(3) ?: "",
                 modelo = cursor.getString(4) ?: "",
                 ano = cursor.getInt(5),
@@ -233,5 +237,61 @@ class BancoHelper private constructor(context: Context) :
 
     fun removerServico(id: Int): Int {
         return writableDatabase.delete("servicos", "id = ?", arrayOf(id.toString()))
+    }
+
+    private fun criarTabelaLembretes(db: SQLiteDatabase) {
+        db.execSQL(
+            "CREATE TABLE lembretes (" +
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    "veiculo_id INTEGER, " +
+                    "titulo TEXT NOT NULL, " +
+                    "descricao TEXT, " +
+                    "data TEXT NOT NULL, " +
+                    "hora TEXT NOT NULL DEFAULT '12:00', " +
+                    "FOREIGN KEY (veiculo_id) REFERENCES veiculos(id))"
+        )
+    }
+
+    fun inserirLembrete(lembrete: Lembrete): Long {
+        val valores = ContentValues().apply {
+            put("veiculo_id", lembrete.veiculoId)
+            put("titulo", lembrete.titulo)
+            put("descricao", lembrete.descricao)
+            put("data", lembrete.data)
+            put("hora", lembrete.hora.ifBlank { "12:00" })
+        }
+        return writableDatabase.insert("lembretes", null, valores)
+    }
+
+    fun listarLembretes(): List<Lembrete> {
+        val sql = """
+            SELECT l.id, l.veiculo_id, l.titulo, l.descricao, l.data, l.hora, v.apelido
+            FROM lembretes l
+            LEFT JOIN veiculos v ON l.veiculo_id = v.id
+            ORDER BY l.data ASC, l.hora ASC, l.id ASC
+        """.trimIndent()
+
+        val lista = mutableListOf<Lembrete>()
+        val cursor = readableDatabase.rawQuery(sql, null)
+
+        while (cursor.moveToNext()) {
+            lista.add(
+                Lembrete(
+                    id = cursor.getInt(0),
+                    veiculoId = if (cursor.isNull(1)) null else cursor.getInt(1),
+                    titulo = cursor.getString(2) ?: "",
+                    descricao = cursor.getString(3) ?: "",
+                    data = cursor.getString(4) ?: "",
+                    hora = cursor.getString(5) ?: "12:00",
+                    veiculoApelido = cursor.getString(6)
+                )
+            )
+        }
+        cursor.close()
+        return lista
+    }
+
+    fun removerLembrete(id: Int): Int {
+        return writableDatabase.delete("lembretes", "id = ?", arrayOf(id.toString()))
     }
 }

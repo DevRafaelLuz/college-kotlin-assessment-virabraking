@@ -210,6 +210,40 @@ class RegistrarServico : AppCompatActivity() {
             return
         }
 
+        val formatoBanco = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+        val dataHojeStr = formatoBanco.format(java.util.Date())
+
+        if (data >= dataHojeStr) {
+            val veiculoSelecionado = veiculos.getOrNull(spVeiculo.selectedItemPosition)
+            val apelidoVeiculo = veiculoSelecionado?.apelido ?: ""
+            val tituloNotif = "Manutenção: ${tipoServico.descricao}"
+            val msgNotif = if (apelidoVeiculo.isNotBlank()) {
+                "Lembrete de manutenção para $apelidoVeiculo"
+            } else {
+                "Lembrete de manutenção agendado para hoje"
+            }
+
+            val lembrete = Lembrete(
+                veiculoId = servico.veiculoId,
+                titulo = tituloNotif,
+                descricao = msgNotif,
+                data = data,
+                hora = "12:00",
+                veiculoApelido = apelidoVeiculo
+            )
+
+            val idLembrete = BancoHelper.getInstance(this).inserirLembrete(lembrete)
+
+            LembreteManager.agendarNotificacao(
+                context = this,
+                id = idLembrete.toInt(),
+                titulo = tituloNotif,
+                mensagem = msgNotif,
+                dataStr = data,
+                horaStr = "12:00"
+            )
+        }
+
         exibirMensagem("Serviço salvo")
         finish()
     }

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="#ffffff">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Novo Lembrete"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#0F172A"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Título do Lembrete *"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        android:textColor="#0F172A"
+        android:layout_marginBottom="4dp" />
+
+    <EditText
+        android:id="@+id/etTituloLembrete"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:background="@drawable/bg_branco_arredondado_com_borda"
+        android:hint="Ex: Trocar pastilhas de freio"
+        android:textColorHint="#64748b"
+        android:textColor="#0F172A"
+        android:padding="10dp"
+        android:textSize="14sp"
+        android:layout_marginBottom="12dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Veículo (Opcional)"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        android:textColor="#0F172A"
+        android:layout_marginBottom="4dp" />
+
+    <Spinner
+        android:id="@+id/spVeiculoLembrete"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:background="@drawable/bg_branco_arredondado_com_borda"
+        android:layout_marginBottom="12dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@drawable/gap"
+        android:showDividers="middle"
+        android:layout_marginBottom="12dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Data *"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:textColor="#0F172A"
+                android:layout_marginBottom="4dp" />
+
+            <EditText
+                android:id="@+id/etDataLembrete"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:background="@drawable/bg_branco_arredondado_com_borda"
+                android:hint="Escolher data"
+                android:textColorHint="#64748b"
+                android:textColor="#0F172A"
+                android:padding="10dp"
+                android:textSize="14sp"
+                android:focusable="false"
+                android:clickable="true" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Horário"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:textColor="#0F172A"
+                android:layout_marginBottom="4dp" />
+
+            <EditText
+                android:id="@+id/etHoraLembrete"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:background="@drawable/bg_branco_arredondado_com_borda"
+                android:hint="12:00 (Padrão)"
+                android:textColorHint="#64748b"
+                android:textColor="#0F172A"
+                android:padding="10dp"
+                android:textSize="14sp"
+                android:focusable="false"
+                android:clickable="true" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Observações"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        android:textColor="#0F172A"
+        android:layout_marginBottom="4dp" />
+
+    <EditText
+        android:id="@+id/etDescricaoLembrete"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@drawable/bg_branco_arredondado_com_borda"
+        android:hint="Detalhes adicionais..."
+        android:textColorHint="#64748b"
+        android:textColor="#0F172A"
+        android:padding="10dp"
+        android:textSize="14sp"
+        android:gravity="top" />
+</LinearLayout>

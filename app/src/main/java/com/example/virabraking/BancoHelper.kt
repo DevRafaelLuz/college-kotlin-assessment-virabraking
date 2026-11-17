@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
 class BancoHelper private constructor(context: Context) :
-    SQLiteOpenHelper(context, "virabraking.db", null, 5) {
+    SQLiteOpenHelper(context, "virabraking.db", null, 6) {
 
     companion object {
         @Volatile
@@ -48,6 +48,9 @@ class BancoHelper private constructor(context: Context) :
         if (oldVersion < 5) {
             db.execSQL("ALTER TABLE veiculos ADD COLUMN caminho_foto TEXT")
         }
+        if (oldVersion < 6) {
+            db.execSQL("ALTER TABLE servicos ADD COLUMN caminho_comprovante TEXT")
+        }
     }
 
     private fun criarTabelaServicos(db: SQLiteDatabase) {
@@ -61,6 +64,7 @@ class BancoHelper private constructor(context: Context) :
                     "valor REAL, " +
                     "oficina TEXT, " +
                     "observacoes TEXT, " +
+                    "caminho_comprovante TEXT, " +
                     "FOREIGN KEY (veiculo_id) REFERENCES veiculos(id))"
         )
     }
@@ -174,6 +178,7 @@ class BancoHelper private constructor(context: Context) :
         valores.put("valor", servico.valor)
         valores.put("oficina", servico.oficina)
         valores.put("observacoes", servico.observacoes)
+        valores.put("caminho_comprovante", servico.caminhoComprovante)
 
         return writableDatabase.insert("servicos", null, valores)
     }
@@ -201,5 +206,32 @@ class BancoHelper private constructor(context: Context) :
         } finally {
             db.endTransaction()
         }
+    }
+
+    fun buscarServico(id: Int): Servico? {
+        val cursor = readableDatabase.rawQuery(
+            "SELECT id, veiculo_id, tipo, data, quilometragem, valor, oficina, observacoes, caminho_comprovante FROM servicos WHERE id = ?",
+            arrayOf(id.toString())
+        )
+        var servico: Servico? = null
+        if (cursor.moveToFirst()) {
+            servico = Servico(
+                id = cursor.getInt(0),
+                veiculoId = cursor.getInt(1),
+                tipo = cursor.getString(2),
+                data = cursor.getString(3),
+                quilometragem = cursor.getInt(4),
+                valor = cursor.getDouble(5),
+                oficina = cursor.getString(6) ?: "",
+                observacoes = cursor.getString(7) ?: "",
+                caminhoComprovante = cursor.getString(8)
+            )
+        }
+        cursor.close()
+        return servico
+    }
+
+    fun removerServico(id: Int): Int {
+        return writableDatabase.delete("servicos", "id = ?", arrayOf(id.toString()))
     }
 }

@@ -9,6 +9,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.Toast
@@ -29,6 +30,24 @@ class RegistrarServico : AppCompatActivity() {
     private lateinit var etObservacoes: EditText
 
     private var veiculos = listOf<Veiculo>()
+    private var caminhoComprovanteSelecionado: String? = null
+
+    private val selecionarComprovanteLauncher =
+        registerForActivityResult(androidx.activity.result.contract.ActivityResultContracts.GetContent()) { uri ->
+            if (uri != null) {
+                caminhoComprovanteSelecionado = copiarImagemParaArmazenamentoInterno(uri)
+                if (caminhoComprovanteSelecionado != null) {
+                    findViewById<LinearLayout>(R.id.llComprovante).visibility = View.GONE
+                    findViewById<ImageView>(R.id.ivComprovante).apply {
+                        visibility = View.VISIBLE
+                        setImageURI(android.net.Uri.fromFile(java.io.File(caminhoComprovanteSelecionado!!)))
+                    }
+                    exibirMensagem("Comprovante anexado")
+                } else {
+                    exibirMensagem("Erro ao anexar comprovante")
+                }
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -98,15 +117,25 @@ class RegistrarServico : AppCompatActivity() {
     }
 
     private fun configurarAtualizacaoQuilometragem() {
-        val quilometragem = veiculos[spVeiculo.selectedItemPosition].quilometragem
+        if (veiculos.isEmpty()) return
 
-        if (quilometragem > 0) {
-            etQuilometragem.hint = "$quilometragem"
-            etQuilometragem.setHintTextColor(Color.parseColor("#0F172A"))
-        } else {
-            etQuilometragem.hint = "$quilometragem"
-            etQuilometragem.setHintTextColor(Color.parseColor("#64748B"))
+        spVeiculo.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                atualizarHintQuilometragem(position)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
+
+        atualizarHintQuilometragem(spVeiculo.selectedItemPosition)
+    }
+
+    private fun atualizarHintQuilometragem(posicao: Int) {
+        val quilometragem = veiculos.getOrNull(posicao)?.quilometragem ?: 0
+        etQuilometragem.hint = "$quilometragem"
+
+        val corHint = if (quilometragem > 0) "#0F172A" else "#64748B"
+        etQuilometragem.setHintTextColor(Color.parseColor(corHint))
     }
 
     private fun configurarTiposServico() {
@@ -211,14 +240,19 @@ class RegistrarServico : AppCompatActivity() {
     }
 
     private fun criarServico(tipoServico: TipoServico, data: String): Servico {
+        val veiculoSelecionado = veiculos[spVeiculo.selectedItemPosition]
+        val kmDigitada = etQuilometragem.text.toString().toIntOrNull()
+        val kmFinal = kmDigitada ?: veiculoSelecionado.quilometragem
+
         return Servico(
-            veiculoId = veiculos[spVeiculo.selectedItemPosition].id,
+            veiculoId = veiculoSelecionado.id,
             tipo = tipoServico.descricao,
             data = data,
-            quilometragem = etQuilometragem.text.toString().toIntOrNull() ?: 0,
+            quilometragem = kmFinal,
             valor = etValor.text.toString().replace(",", ".").toDoubleOrNull() ?: 0.0,
             oficina = etOficina.text.toString().trim(),
-            observacoes = etObservacoes.text.toString().trim()
+            observacoes = etObservacoes.text.toString().trim(),
+            caminhoComprovante = caminhoComprovanteSelecionado
         )
     }
 
@@ -233,6 +267,29 @@ class RegistrarServico : AppCompatActivity() {
 
         findViewById<Button>(R.id.btnAbastecer).setOnClickListener {
             abrirAbastecimento()
+        }
+
+        findViewById<LinearLayout>(R.id.llComprovante).setOnClickListener {
+            selecionarComprovanteLauncher.launch("image/*")
+        }
+
+        findViewById<ImageView>(R.id.ivComprovante).setOnClickListener {
+            selecionarComprovanteLauncher.launch("image/*")
+        }
+    }
+
+    private fun copiarImagemParaArmazenamentoInterno(uri: android.net.Uri): String? {
+        return try {
+            val pasta = java.io.File(filesDir, "comprovantes").apply { if (!exists()) mkdirs() }
+            val arquivoDestino = java.io.File(pasta, "comp_${System.currentTimeMillis()}.jpg")
+            contentResolver.openInputStream(uri)?.use { input ->
+                arquivoDestino.outputStream().use { output ->
+                    input.copyTo(output)
+                }
+            }
+            arquivoDestino.absolutePath
+        } catch (e: Exception) {
+            null
         }
     }
 }

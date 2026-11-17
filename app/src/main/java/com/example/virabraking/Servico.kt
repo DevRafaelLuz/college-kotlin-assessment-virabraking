@@ -8,5 +8,6 @@ data class Servico(
     val quilometragem: Int,
     val valor: Double,
     val oficina: String,
-    val observacoes: String
+    val observacoes: String,
+    val caminhoComprovante: String? = null
 )

@@ -266,7 +266,7 @@ class DetalhesVeiculo : AppCompatActivity() {
     }
 
     private fun abrirDetalhesServico(atividade: Atividade) {
-        val intent = Intent(this, DetalheRegistro::class.java).apply {
+        val intent = Intent(this, DetalhesRegistro::class.java).apply {
             putExtra(Constantes.EXTRA_SERVICO_ID, atividade.id)
 
             putExtra(Constantes.EXTRA_VEICULO_ID, atividade.veiculoId)

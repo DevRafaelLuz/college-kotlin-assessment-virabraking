@@ -14,7 +14,7 @@ import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class DetalheRegistro : AppCompatActivity() {
+class DetalhesRegistro : AppCompatActivity() {
     private var servicoId = Constantes.ID_INVALIDO
     private var veiculoId = Constantes.ID_INVALIDO
 
@@ -33,7 +33,7 @@ class DetalheRegistro : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_detalhe_registro)
+        setContentView(R.layout.activity_detalhes_registro)
 
         obterIdentificadores()
 

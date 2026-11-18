@@ -89,7 +89,7 @@ class Atividades : AppCompatActivity() {
     }
 
     private fun criarIntentDetalhesServico(atividade: Atividade): Intent {
-        return Intent(this, DetalheRegistro::class.java).apply {
+        return Intent(this, DetalhesRegistro::class.java).apply {
             putExtra(Constantes.EXTRA_SERVICO_ID, atividade.id)
             putExtra(Constantes.EXTRA_VEICULO_ID, atividade.veiculoId)
         }

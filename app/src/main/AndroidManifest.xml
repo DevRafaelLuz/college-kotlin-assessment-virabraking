@@ -22,7 +22,7 @@
             android:exported="false" />
 
         <activity
-            android:name=".DetalheRegistro"
+            android:name=".DetalhesRegistro"
             android:exported="false" />
         <activity
             android:name=".Abastecimento"

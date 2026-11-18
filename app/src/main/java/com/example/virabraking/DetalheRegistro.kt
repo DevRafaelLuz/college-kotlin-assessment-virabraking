@@ -1,12 +1,15 @@
 package com.example.virabraking
 
+import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import java.io.File
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -24,15 +27,18 @@ class DetalheRegistro : AppCompatActivity() {
     private lateinit var tvOficina: TextView
     private lateinit var tvObservacoes: TextView
 
+    private val formatoMoeda: NumberFormat by lazy {
+        NumberFormat.getCurrencyInstance(LOCALE_BR)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detalhe_registro)
 
-        servicoId = intent.getIntExtra(Constantes.EXTRA_SERVICO_ID, Constantes.ID_INVALIDO)
-        veiculoId = intent.getIntExtra(Constantes.EXTRA_VEICULO_ID, Constantes.ID_INVALIDO)
+        obterIdentificadores()
 
-        if (servicoId == Constantes.ID_INVALIDO) {
-            Toast.makeText(this, "Erro: Registro não encontrado.", Toast.LENGTH_SHORT).show()
+        if (!registroValido()) {
+            exibirMensagem(MENSAGEM_REGISTRO_NAO_ENCONTRADO)
             finish()
             return
         }
@@ -41,6 +47,22 @@ class DetalheRegistro : AppCompatActivity() {
         configurarBotaoVoltar()
         carregarDados()
         configurarBotaoExcluir()
+    }
+
+    private fun obterIdentificadores() {
+        servicoId = intent.getIntExtra(
+            Constantes.EXTRA_SERVICO_ID,
+            Constantes.ID_INVALIDO
+        )
+
+        veiculoId = intent.getIntExtra(
+            Constantes.EXTRA_VEICULO_ID,
+            Constantes.ID_INVALIDO
+        )
+    }
+
+    private fun registroValido(): Boolean {
+        return servicoId != Constantes.ID_INVALIDO
     }
 
     private fun inicializarViews() {
@@ -55,11 +77,14 @@ class DetalheRegistro : AppCompatActivity() {
     }
 
     private fun configurarBotaoVoltar() {
-        val iBtnVoltar = findViewById<ImageButton>(R.id.iBtnVoltar)
-        iBtnVoltar.setOnClickListener {
-            finish()
-            overridePendingTransition(0, 0)
+        findViewById<ImageButton>(R.id.iBtnVoltar).setOnClickListener {
+            finalizarTela()
         }
+    }
+
+    private fun finalizarTela() {
+        finish()
+        overridePendingTransition(0, 0)
     }
 
     private fun carregarDados() {
@@ -67,79 +92,161 @@ class DetalheRegistro : AppCompatActivity() {
         val servico = banco.buscarServico(servicoId)
 
         if (servico == null) {
-            Toast.makeText(this, "Erro: Serviço não encontrado.", Toast.LENGTH_SHORT).show()
+            exibirMensagem(MENSAGEM_SERVICO_NAO_ENCONTRADO)
             finish()
             return
         }
 
-        val idVeiculoBusca = if (veiculoId != Constantes.ID_INVALIDO) veiculoId else servico.veiculoId
-        val veiculo = banco.buscarVeiculo(idVeiculoBusca)
+        val veiculo = buscarVeiculo(banco, servico.veiculoId)
 
-        val localeBR = Locale("pt", "BR")
-        val formatoMoeda = NumberFormat.getCurrencyInstance(localeBR)
+        exibirComprovante(servico.caminhoComprovante)
+        exibirDadosServico(servico, veiculo)
+    }
 
-        val ivComprovante = findViewById<ImageView>(R.id.ivComprovante)
-        val arquivoComprovante = servico.caminhoComprovante?.let { java.io.File(it) }
+    private fun exibirMensagem(mensagem: String) {
+        Toast.makeText(this, mensagem, Toast.LENGTH_SHORT).show()
+    }
 
-        if (arquivoComprovante != null && arquivoComprovante.exists()) {
-            ivComprovante.background = null
-            ivComprovante.setImageURI(android.net.Uri.fromFile(arquivoComprovante))
+    private fun buscarVeiculo(banco: BancoHelper, idVeiculoServico: Int) = banco.buscarVeiculo(
+        if (veiculoId != Constantes.ID_INVALIDO) {
+            veiculoId
         } else {
-            ivComprovante.setImageDrawable(null)
-            ivComprovante.setBackgroundResource(R.drawable.bg_branco_arredondado_com_borda)
+            idVeiculoServico
+        }
+    )
+
+    private fun exibirComprovante(caminhoComprovante: String?) {
+        val imagemComprovante = findViewById<ImageView>(R.id.ivComprovante)
+        val arquivoComprovante = caminhoComprovante
+            ?.let(::File)
+            ?.takeIf { it.exists() }
+
+        if (arquivoComprovante != null) {
+            imagemComprovante.background = null
+            imagemComprovante.setImageURI(Uri.fromFile(arquivoComprovante))
+        } else {
+            limparComprovante(imagemComprovante)
+        }
+    }
+
+    private fun limparComprovante(imagemComprovante: ImageView) {
+        imagemComprovante.setImageDrawable(null)
+        imagemComprovante.setBackgroundResource(R.drawable.bg_branco_arredondado_com_borda)
+    }
+
+    private fun exibirDadosServico(servico: Servico, veiculo: Veiculo?) {
+        tvTipoServico.text = servico.tipo
+
+        tvVeiculo.text = veiculo?.apelido ?: TEXTO_VEICULO_NAO_IDENTIFICADO
+
+        tvPlacaVeiculo.text = veiculo?.placa?.takeIf { it.isNotBlank() } ?.let { "($it)" } ?: ""
+
+        tvData.text = formatarDataParaExibicao(servico.data)
+
+        val quilometragem = obterQuilometragem(servico.quilometragem, veiculo?.quilometragem)
+
+        tvQuilometragem.text = String.format(LOCALE_BR, FORMATO_QUILOMETRAGEM, quilometragem)
+
+        tvValorTotal.text = formatoMoeda.format(servico.valor)
+
+        tvOficina.text = servico.oficina.ifBlank {
+            TEXTO_OFICINA_NAO_INFORMADA
         }
 
-        tvTipoServico.text = servico.tipo
-        tvVeiculo.text = veiculo?.apelido ?: "Veículo não identificado"
-        tvPlacaVeiculo.text = if (!veiculo?.placa.isNullOrBlank()) "(${veiculo?.placa})" else ""
-        tvData.text = formatarDataParaExibicao(servico.data)
-        val kmExibicao = if (servico.quilometragem > 0) servico.quilometragem else (veiculo?.quilometragem ?: 0)
-        tvQuilometragem.text = String.format(localeBR, "%,d km", kmExibicao)
-        tvValorTotal.text = formatoMoeda.format(servico.valor)
-        tvOficina.text = servico.oficina.ifBlank { "Não informada" }
-        tvObservacoes.text = servico.observacoes.ifBlank { "Nenhuma observação registrada." }
+        tvObservacoes.text = servico.observacoes.ifBlank {
+            TEXTO_SEM_OBSERVACOES
+        }
     }
 
     private fun formatarDataParaExibicao(dataBanco: String): String {
         return try {
-            val formatoBanco = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-            val formatoBr = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-            val data = formatoBanco.parse(dataBanco)
-            if (data != null) formatoBr.format(data) else dataBanco
+            val formatoBanco = SimpleDateFormat(FORMATO_DATA_BANCO, LOCALE_BR).apply {
+                isLenient = false
+            }
+
+            val formatoExibicao = SimpleDateFormat(FORMATO_DATA_EXIBICAO, LOCALE_BR)
+
+            val dataFormatada = formatoBanco.parse(dataBanco)
+
+            dataFormatada?.let(formatoExibicao::format) ?: dataBanco
         } catch (e: Exception) {
             dataBanco
         }
     }
 
+    private fun obterQuilometragem(quilometragemServico: Int, quilometragemVeiculo: Int?): Int {
+        return if (quilometragemServico > 0) {
+            quilometragemServico
+        } else {
+            quilometragemVeiculo ?: 0
+        }
+    }
+
     private fun configurarBotaoExcluir() {
         findViewById<Button>(R.id.btnExcluir).setOnClickListener {
-            androidx.appcompat.app.AlertDialog.Builder(this)
-                .setTitle("Excluir registro")
-                .setMessage("Tem certeza que deseja excluir este serviço? Essa ação não pode ser desfeita.")
-                .setPositiveButton("Excluir") { _, _ ->
-                    excluirRegistro()
-                }
-                .setNegativeButton("Cancelar", null)
-                .show()
+            exibirDialogoExclusao()
         }
+    }
+
+    private fun exibirDialogoExclusao() {
+        AlertDialog.Builder(this)
+            .setTitle(TITULO_EXCLUSAO)
+            .setMessage(MENSAGEM_CONFIRMACAO_EXCLUSAO)
+            .setPositiveButton(TEXTO_EXCLUIR) { _, _ ->
+                excluirRegistro()
+            }
+            .setNegativeButton(TEXTO_CANCELAR, null)
+            .show()
     }
 
     private fun excluirRegistro() {
         val banco = BancoHelper.getInstance(this)
         val servico = banco.buscarServico(servicoId)
 
-        servico?.caminhoComprovante?.let { caminho ->
-            val arquivo = java.io.File(caminho)
-            if (arquivo.exists()) arquivo.delete()
-        }
+        removerArquivoComprovante(servico?.caminhoComprovante)
 
         val linhasAfetadas = banco.removerServico(servicoId)
+
         if (linhasAfetadas > 0) {
-            Toast.makeText(this, "Registro excluído.", Toast.LENGTH_SHORT).show()
-            finish()
-            overridePendingTransition(0, 0)
+            exibirMensagem(MENSAGEM_REGISTRO_EXCLUIDO)
+            finalizarTela()
         } else {
-            Toast.makeText(this, "Erro ao excluir registro.", Toast.LENGTH_SHORT).show()
+            exibirMensagem(MENSAGEM_ERRO_EXCLUSAO)
         }
+    }
+
+    private fun removerArquivoComprovante(caminhoComprovante: String?) {
+        caminhoComprovante
+            ?.let(::File)
+            ?.takeIf { it.exists() }
+            ?.delete()
+    }
+
+    private companion object {
+        private val LOCALE_BR = Locale.forLanguageTag("pt-BR")
+
+        private const val FORMATO_DATA_BANCO = "yyyy-MM-dd"
+        private const val FORMATO_DATA_EXIBICAO = "dd/MM/yyyy"
+        private const val FORMATO_QUILOMETRAGEM = "%,d km"
+
+        private const val TITULO_EXCLUSAO = "Excluir registro"
+        private const val MENSAGEM_CONFIRMACAO_EXCLUSAO = "Tem certeza que deseja excluir este serviço? Essa ação não pode ser desfeita."
+
+        private const val TEXTO_EXCLUIR = "Excluir"
+        private const val TEXTO_CANCELAR = "Cancelar"
+
+        private const val MENSAGEM_REGISTRO_NAO_ENCONTRADO = "Erro: Registro não encontrado."
+
+        private const val MENSAGEM_SERVICO_NAO_ENCONTRADO = "Erro: Serviço não encontrado."
+
+        private const val MENSAGEM_REGISTRO_EXCLUIDO = "Registro excluído."
+
+        private const val MENSAGEM_ERRO_EXCLUSAO = "Erro ao excluir registro."
+
+        private const val TEXTO_VEICULO_NAO_IDENTIFICADO = "Veículo não identificado"
+
+        private const val TEXTO_OFICINA_NAO_INFORMADA = "Não informada"
+
+        private const val TEXTO_SEM_OBSERVACOES = "Nenhuma observação registrada."
     }
 }

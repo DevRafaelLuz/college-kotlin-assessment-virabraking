@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Virabraking</string>
+    <string name="confirmar_remocao_veiculo">Remover %1$s e todos os serviços dele?</string>
 </resources>

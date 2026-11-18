@@ -18,8 +18,7 @@ class Veiculos : AppCompatActivity() {
 
         inicializarDependencias()
         inicializarViews()
-        configurarNavegacao()
-        configurarListaVeiculos()
+        configurarTela()
     }
 
     override fun onResume() {
@@ -33,6 +32,11 @@ class Veiculos : AppCompatActivity() {
 
     private fun inicializarViews() {
         rvVeiculos = findViewById(R.id.rvVeiculos)
+    }
+
+    private fun configurarTela() {
+        configurarNavegacao()
+        configurarListaVeiculos()
     }
 
     private fun configurarNavegacao() {
@@ -51,11 +55,51 @@ class Veiculos : AppCompatActivity() {
 
     private fun navegarPara(destino: Class<out AppCompatActivity>) {
         startActivity(Intent(this, destino))
-        overridePendingTransition(0, 0);
+        overridePendingTransition(0, 0)
     }
 
     private fun configurarListaVeiculos() {
         rvVeiculos.layoutManager = LinearLayoutManager(this)
+    }
+
+    private fun abrirDetalhesVeiculo(veiculo: Veiculo) {
+        val intent = Intent(this, DetalhesVeiculo::class.java).apply {
+            putExtra(Constantes.EXTRA_VEICULO_ID, veiculo.id)
+        }
+
+        iniciarActivity(intent)
+    }
+
+    private fun iniciarActivity(intent: Intent) {
+        startActivity(intent)
+        aplicarTransicao()
+    }
+
+    private fun aplicarTransicao() {
+        overridePendingTransition(TRANSICAO_SEM_ANIMACAO, TRANSICAO_SEM_ANIMACAO)
+    }
+
+    private fun confirmarRemocao(veiculo: Veiculo) {
+        AlertDialog.Builder(this)
+            .setTitle(TITULO_REMOVER_VEICULO)
+            .setMessage(getString(R.string.confirmar_remocao_veiculo, veiculo.apelido))
+            .setPositiveButton(BOTAO_REMOVER) { _, _ ->
+                removerVeiculo(veiculo)
+            }
+            .setNegativeButton(BOTAO_CANCELAR, null)
+            .show()
+    }
+
+    private fun removerVeiculo(veiculo: Veiculo) {
+        bancoHelper.removerVeiculo(veiculo.id)
+        carregarVeiculos()
+    }
+
+    private fun alternarFavorito(veiculo: Veiculo) {
+        val novoEstadoFavorito = !veiculo.favorito
+
+        bancoHelper.definirFavorito(veiculo.id, novoEstadoFavorito)
+        carregarVeiculos()
     }
 
     private fun carregarVeiculos() {
@@ -69,32 +113,11 @@ class Veiculos : AppCompatActivity() {
         )
     }
 
-    private fun abrirDetalhesVeiculo(veiculo: Veiculo) {
-        val intent = Intent(this, DetalhesVeiculo::class.java).apply {
-            putExtra(Constantes.EXTRA_VEICULO_ID, veiculo.id)
-        }
+    private companion object {
+        private const val TRANSICAO_SEM_ANIMACAO = 0
 
-        startActivity(intent)
-        overridePendingTransition(0, 0);
-    }
-
-    private fun confirmarRemocao(veiculo: Veiculo) {
-        AlertDialog.Builder(this)
-            .setTitle("Remover veículo")
-            .setMessage("Remover ${veiculo.apelido} e todos os serviços dele?")
-            .setPositiveButton("Remover") { _, _ -> removerVeiculo(veiculo)}
-            .setNegativeButton("Cancelar", null)
-            .show()
-    }
-
-    private fun removerVeiculo(veiculo: Veiculo) {
-        bancoHelper.removerVeiculo(veiculo.id)
-        carregarVeiculos()
-    }
-
-    private fun alternarFavorito(veiculo: Veiculo) {
-        bancoHelper.definirFavorito(veiculo.id, !veiculo.favorito)
-
-        carregarVeiculos()
+        private const val TITULO_REMOVER_VEICULO = "Remover veículo"
+        private const val BOTAO_REMOVER = "Remover"
+        private const val BOTAO_CANCELAR = "Cancelar"
     }
 }

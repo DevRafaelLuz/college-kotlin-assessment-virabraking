@@ -3,6 +3,7 @@ package com.example.virabraking
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
@@ -13,10 +14,13 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import java.io.File
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 
 class RegistrarServico : AppCompatActivity() {
@@ -29,23 +33,16 @@ class RegistrarServico : AppCompatActivity() {
     private lateinit var etOficina: EditText
     private lateinit var etObservacoes: EditText
 
+    private lateinit var layoutComprovante: LinearLayout
+    private lateinit var imagemComprovante: ImageView
+
     private var veiculos = listOf<Veiculo>()
     private var caminhoComprovanteSelecionado: String? = null
 
     private val selecionarComprovanteLauncher =
-        registerForActivityResult(androidx.activity.result.contract.ActivityResultContracts.GetContent()) { uri ->
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             if (uri != null) {
-                caminhoComprovanteSelecionado = copiarImagemParaArmazenamentoInterno(uri)
-                if (caminhoComprovanteSelecionado != null) {
-                    findViewById<LinearLayout>(R.id.llComprovante).visibility = View.GONE
-                    findViewById<ImageView>(R.id.ivComprovante).apply {
-                        visibility = View.VISIBLE
-                        setImageURI(android.net.Uri.fromFile(java.io.File(caminhoComprovanteSelecionado!!)))
-                    }
-                    exibirMensagem("Comprovante anexado")
-                } else {
-                    exibirMensagem("Erro ao anexar comprovante")
-                }
+                processarComprovanteSelecionado(uri)
             }
         }
 
@@ -54,21 +51,29 @@ class RegistrarServico : AppCompatActivity() {
         setContentView(R.layout.activity_registrar_servico)
 
         inicializarViews()
-        configurarNavegacao()
-        carregarVeiculos()
-        configurarTiposServico()
-        configurarSeletorData()
-        configurarBotoes()
+        configurarTela()
     }
 
     private fun inicializarViews() {
         spTipoServico = findViewById(R.id.sTipoServico)
         spVeiculo = findViewById(R.id.spVeiculo)
+
         etData = findViewById(R.id.etData)
         etQuilometragem = findViewById(R.id.etQuilometragem)
         etValor = findViewById(R.id.etValor)
         etOficina = findViewById(R.id.etOficina)
         etObservacoes = findViewById(R.id.etObservacoes)
+
+        layoutComprovante = findViewById(R.id.llComprovante)
+        imagemComprovante = findViewById(R.id.ivComprovante)
+    }
+
+    private fun configurarTela() {
+        configurarNavegacao()
+        carregarVeiculos()
+        configurarTiposServico()
+        configurarSeletorData()
+        configurarBotoes()
     }
 
     private fun configurarNavegacao() {
@@ -80,16 +85,21 @@ class RegistrarServico : AppCompatActivity() {
 
     private fun configurarDestino(idView: Int, destino: Class<out AppCompatActivity>) {
         findViewById<LinearLayout>(idView).setOnClickListener {
-            startActivity(Intent(this, destino))
-            overridePendingTransition(0, 0);
+            abrirTela(destino)
         }
+    }
+
+    private fun abrirTela(destino: Class<out AppCompatActivity>) {
+        startActivity(Intent(this, destino))
+        overridePendingTransition(0, 0)
     }
 
     private fun carregarVeiculos() {
         veiculos = BancoHelper.getInstance(this).listarVeiculos()
 
-        val adapter = criarAdapter(veiculos.map { it.apelido })
-        spVeiculo.adapter = adapter
+        spVeiculo.adapter = criarAdapter(
+            veiculos.map { it.apelido }
+        )
 
         selecionarVeiculoInicial()
         configurarAtualizacaoQuilometragem()
@@ -107,8 +117,8 @@ class RegistrarServico : AppCompatActivity() {
             Constantes.ID_INVALIDO
         )
 
-        val posicaoInicial = veiculos.indexOfFirst {
-            it.id == idInicial
+        val posicaoInicial = veiculos.indexOfFirst { veiculo ->
+            veiculo.id == idInicial
         }
 
         if (posicaoInicial >= 0) {
@@ -119,21 +129,30 @@ class RegistrarServico : AppCompatActivity() {
     private fun configurarAtualizacaoQuilometragem() {
         if (veiculos.isEmpty()) return
 
-        spVeiculo.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                atualizarQuilometragemVeiculoSelecionado(position)
+        spVeiculo.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    atualizarQuilometragemVeiculoSelecionado(position)
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) = Unit
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-        }
-
-        atualizarQuilometragemVeiculoSelecionado(spVeiculo.selectedItemPosition)
+        atualizarQuilometragemVeiculoSelecionado(
+            spVeiculo.selectedItemPosition
+        )
     }
 
     private fun atualizarQuilometragemVeiculoSelecionado(posicao: Int) {
-        val veiculoSelecionado = veiculos.getOrNull(posicao) ?: return
+        val veiculo = veiculos.getOrNull(posicao) ?: return
 
-        etQuilometragem.setText("${veiculoSelecionado.quilometragem}")
+        etQuilometragem.setText(veiculo.quilometragem.toString())
         etQuilometragem.error = null
     }
 
@@ -155,15 +174,7 @@ class RegistrarServico : AppCompatActivity() {
         DatePickerDialog(
             this,
             { _, ano, mes, dia ->
-                etData.setText(
-                    String.format(
-                        Locale.getDefault(),
-                        "%02d/%02d/%04d",
-                        dia,
-                        mes + 1,
-                        ano
-                    )
-                )
+                preencherDataSelecionada(ano, mes, dia)
             },
             calendario.get(Calendar.YEAR),
             calendario.get(Calendar.MONTH),
@@ -171,121 +182,187 @@ class RegistrarServico : AppCompatActivity() {
         ).show()
     }
 
-    private fun abrirAbastecimento() {
-        val intent = Intent(this, Abastecimento::class.java)
+    private fun preencherDataSelecionada(
+        ano: Int,
+        mes: Int,
+        dia: Int
+    ) {
+        etData.setText(
+            String.format(
+                Locale.getDefault(),
+                "%02d/%02d/%04d",
+                dia,
+                mes + 1,
+                ano
+            )
+        )
+    }
 
-        veiculos.getOrNull(spVeiculo.selectedItemPosition)?.let {
-            intent.putExtra(Constantes.EXTRA_VEICULO_ID, it.id)
-        }
+    private fun configurarBotoes() {
+        findViewById<Button>(R.id.btnSalvarManutencao)
+            .setOnClickListener {
+                salvarServico()
+            }
 
-        startActivity(intent)
-        overridePendingTransition(0, 0);
+        findViewById<Button>(R.id.btnAbastecer)
+            .setOnClickListener {
+                abrirAbastecimento()
+            }
+
+        configurarSelecaoComprovante()
     }
 
     private fun salvarServico() {
-        if (veiculos.isEmpty()) {
-            exibirMensagem("Cadastre um veículo primeiro")
-            return
-        }
+        if (!validarVeiculos()) return
 
         val tipoServico = obterTipoServicoSelecionado()
+
         if (tipoServico == null) {
-            exibirMensagem("Selecione o tipo de serviço")
+            exibirMensagem(MENSAGEM_TIPO_NAO_SELECIONADO)
             return
         }
 
-        val data = converterDataParaFormatoBanco(etData.text.toString())
+        val data = converterDataParaFormatoBanco(
+            etData.text.toString()
+        )
+
         if (data == null) {
-            exibirMensagem("Selecione uma data válida para o serviço")
+            exibirMensagem(MENSAGEM_DATA_INVALIDA)
             return
         }
 
         val servico = criarServico(tipoServico, data)
+        val resultado = inserirServico(servico)
 
-        val resultado = BancoHelper.getInstance(this)
-            .inserirServico(servico)
-
-        if (resultado == -1L) {
-            exibirMensagem("Erro ao salvar o serviço", Toast.LENGTH_LONG)
+        if (resultado == RESULTADO_FALHA) {
+            exibirMensagem(MENSAGEM_ERRO_SALVAMENTO, Toast.LENGTH_LONG)
             return
         }
 
-        val formatoBanco = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-        val dataHojeStr = formatoBanco.format(java.util.Date())
+        processarLembreteSeNecessario(servico, tipoServico)
 
-        if (data >= dataHojeStr) {
-            val veiculoSelecionado = veiculos.getOrNull(spVeiculo.selectedItemPosition)
-            val apelidoVeiculo = veiculoSelecionado?.apelido ?: ""
-            val tituloNotif = "Manutenção: ${tipoServico.descricao}"
-            val msgNotif = if (apelidoVeiculo.isNotBlank()) {
-                "Lembrete de manutenção para $apelidoVeiculo"
-            } else {
-                "Lembrete de manutenção agendado para hoje"
-            }
-
-            val lembrete = Lembrete(
-                veiculoId = servico.veiculoId,
-                titulo = tituloNotif,
-                descricao = msgNotif,
-                data = data,
-                hora = "12:00",
-                veiculoApelido = apelidoVeiculo
-            )
-
-            val idLembrete = BancoHelper.getInstance(this).inserirLembrete(lembrete)
-
-            LembreteManager.agendarNotificacao(
-                context = this,
-                id = idLembrete.toInt(),
-                titulo = tituloNotif,
-                mensagem = msgNotif,
-                dataStr = data,
-                horaStr = "12:00"
-            )
-        }
-
-        exibirMensagem("Serviço salvo")
+        exibirMensagem(MENSAGEM_SERVICO_SALVO)
         finish()
+    }
+
+    private fun validarVeiculos(): Boolean {
+        if (veiculos.isNotEmpty()) return true
+
+        exibirMensagem(MENSAGEM_VEICULO_NAO_CADASTRADO)
+        return false
     }
 
     private fun obterTipoServicoSelecionado(): TipoServico? {
         val posicao = spTipoServico.selectedItemPosition
 
-        if (posicao <= 0) {
-            return null
-        }
+        if (posicao <= 0) return null
 
         return TipoServico.entries.getOrNull(posicao - 1)
     }
 
-    private fun converterDataParaFormatoBanco(dataTexto: String): String? {
-        val formatoEntrada = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).apply {
+    private fun converterDataParaFormatoBanco(dataTexto: String ): String? {
+        val formatoEntrada = SimpleDateFormat(FORMATO_DATA_EXIBICAO, Locale.getDefault()).apply {
             isLenient = false
         }
 
         return try {
             val data = formatoEntrada.parse(dataTexto) ?: return null
 
-            SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(data)
+            SimpleDateFormat(FORMATO_DATA_BANCO, Locale.getDefault()).format(data)
         } catch (e: ParseException) {
             null
         }
     }
 
     private fun criarServico(tipoServico: TipoServico, data: String): Servico {
-        val veiculoSelecionado = veiculos[spVeiculo.selectedItemPosition]
-        val kmDigitada = etQuilometragem.text.toString().toIntOrNull()
-        val kmFinal = kmDigitada ?: veiculoSelecionado.quilometragem
+        val veiculo = veiculos[spVeiculo.selectedItemPosition]
+
+        val quilometragem = etQuilometragem.text.toString()
+            .toIntOrNull()
+            ?: veiculo.quilometragem
+
+        val valor = etValor.text.toString()
+            .replace(",", ".")
+            .toDoubleOrNull()
+            ?: 0.0
 
         return Servico(
-            veiculoId = veiculoSelecionado.id,
+            veiculoId = veiculo.id,
             tipo = tipoServico.descricao,
             data = data,
-            quilometragem = kmFinal,
-            valor = etValor.text.toString().replace(",", ".").toDoubleOrNull() ?: 0.0,
+            quilometragem = quilometragem,
+            valor = valor,
             oficina = etOficina.text.toString().trim(),
             observacoes = etObservacoes.text.toString().trim(),
             caminhoComprovante = caminhoComprovanteSelecionado
+        )
+    }
+
+    private fun inserirServico(servico: Servico): Long {
+        return BancoHelper.getInstance(this).inserirServico(servico)
+    }
+
+    private fun processarLembreteSeNecessario(servico: Servico, tipoServico: TipoServico) {
+        if (!deveCriarLembrete(servico.data)) return
+
+        criarLembrete(servico, tipoServico)
+    }
+
+    private fun deveCriarLembrete(data: String): Boolean {
+        val dataHoje = SimpleDateFormat(FORMATO_DATA_BANCO, Locale.US).format(Date())
+
+        return data >= dataHoje
+    }
+
+    private fun criarLembrete(servico: Servico, tipoServico: TipoServico) {
+        val veiculo = veiculos.getOrNull(spVeiculo.selectedItemPosition)
+
+        val apelidoVeiculo = veiculo?.apelido.orEmpty()
+
+        val titulo = String.format(
+            Locale.getDefault(),
+            MENSAGEM_LEMBRETE_MANUTENCAO,
+            tipoServico.descricao
+        )
+
+        val descricao = obterDescricaoLembrete(apelidoVeiculo)
+
+        val lembrete = Lembrete(
+            veiculoId = servico.veiculoId,
+            titulo = titulo,
+            descricao = descricao,
+            data = servico.data,
+            hora = HORA_LEMBRETE,
+            veiculoApelido = apelidoVeiculo
+        )
+
+        val idLembrete = BancoHelper.getInstance(this)
+            .inserirLembrete(lembrete)
+
+        agendarNotificacao(
+            id = idLembrete.toInt(),
+            titulo = titulo,
+            mensagem = descricao,
+            data = servico.data
+        )
+    }
+
+    private fun obterDescricaoLembrete(apelidoVeiculo: String): String {
+        return if (apelidoVeiculo.isNotBlank()) {
+            String.format(Locale.getDefault(), DESCRICAO_LEMBRETE, apelidoVeiculo)
+        } else {
+            DESCRICAO_LEMBRETE_SEM_VEICULO
+        }
+    }
+
+    private fun agendarNotificacao(id: Int, titulo: String, mensagem: String, data: String) {
+        LembreteManager.agendarNotificacao(
+            context = this,
+            id = id,
+            titulo = titulo,
+            mensagem = mensagem,
+            dataStr = data,
+            horaStr = HORA_LEMBRETE
         )
     }
 
@@ -293,36 +370,128 @@ class RegistrarServico : AppCompatActivity() {
         Toast.makeText(this, mensagem, duracao).show()
     }
 
-    private fun configurarBotoes() {
-        findViewById<Button>(R.id.btnSalvarManutencao).setOnClickListener {
-            salvarServico()
+    private fun abrirAbastecimento() {
+        val intentAbastecimento = Intent(this, Abastecimento::class.java)
+
+        veiculos.getOrNull(spVeiculo.selectedItemPosition)?.let { veiculo ->
+            intentAbastecimento.putExtra(
+                Constantes.EXTRA_VEICULO_ID,
+                veiculo.id
+            )
         }
 
-        findViewById<Button>(R.id.btnAbastecer).setOnClickListener {
-            abrirAbastecimento()
+        startActivity(intentAbastecimento)
+        overridePendingTransition(0, 0)
+    }
+
+    private fun configurarSelecaoComprovante() {
+        layoutComprovante.setOnClickListener {
+            abrirSeletorComprovante()
         }
 
-        findViewById<LinearLayout>(R.id.llComprovante).setOnClickListener {
-            selecionarComprovanteLauncher.launch("image/*")
-        }
-
-        findViewById<ImageView>(R.id.ivComprovante).setOnClickListener {
-            selecionarComprovanteLauncher.launch("image/*")
+        imagemComprovante.setOnClickListener {
+            abrirSeletorComprovante()
         }
     }
 
-    private fun copiarImagemParaArmazenamentoInterno(uri: android.net.Uri): String? {
+    private fun abrirSeletorComprovante() {
+        selecionarComprovanteLauncher.launch(TIPO_IMAGEM)
+    }
+
+    private fun processarComprovanteSelecionado(uri: Uri) {
+        caminhoComprovanteSelecionado =
+            copiarImagemParaArmazenamentoInterno(uri)
+
+        if (caminhoComprovanteSelecionado != null) {
+            exibirComprovanteSelecionado()
+            exibirMensagem(MENSAGEM_COMPROVANTE_ANEXADO)
+        } else {
+            exibirMensagem(MENSAGEM_ERRO_COMPROVANTE)
+        }
+    }
+
+    private fun copiarImagemParaArmazenamentoInterno(uri: Uri): String? {
         return try {
-            val pasta = java.io.File(filesDir, "comprovantes").apply { if (!exists()) mkdirs() }
-            val arquivoDestino = java.io.File(pasta, "comp_${System.currentTimeMillis()}.jpg")
-            contentResolver.openInputStream(uri)?.use { input ->
+            val pasta = obterPastaComprovantes()
+            val arquivoDestino = criarArquivoComprovante(pasta)
+
+            val fluxoEntrada = contentResolver.openInputStream(uri)
+                ?: return null
+
+            fluxoEntrada.use { input ->
                 arquivoDestino.outputStream().use { output ->
                     input.copyTo(output)
                 }
             }
+
             arquivoDestino.absolutePath
+
         } catch (e: Exception) {
             null
         }
+    }
+
+    private fun obterPastaComprovantes(): File {
+        return File(filesDir, PASTA_COMPROVANTES).apply {
+            if (!exists()) {
+                mkdirs()
+            }
+        }
+    }
+
+    private fun criarArquivoComprovante(pasta: File): File {
+        val nomeArquivo = buildString {
+            append(PREFIXO_COMPROVANTE)
+            append(System.currentTimeMillis())
+            append(EXTENSAO_COMPROVANTE)
+        }
+
+        return File(pasta, nomeArquivo)
+    }
+
+    private fun exibirComprovanteSelecionado() {
+        val caminho = caminhoComprovanteSelecionado ?: return
+
+        layoutComprovante.visibility = View.GONE
+        imagemComprovante.visibility = View.VISIBLE
+
+        imagemComprovante.setImageURI(
+            Uri.fromFile(File(caminho))
+        )
+    }
+
+    private companion object {
+        const val RESULTADO_FALHA = -1L
+
+        private const val FORMATO_DATA_EXIBICAO = "dd/MM/yyyy"
+        private const val FORMATO_DATA_BANCO = "yyyy-MM-dd"
+
+        private const val HORA_LEMBRETE = "12:00"
+
+        private const val PASTA_COMPROVANTES = "comprovantes"
+        private const val PREFIXO_COMPROVANTE = "comp_"
+        private const val EXTENSAO_COMPROVANTE = ".jpg"
+
+        private const val TIPO_IMAGEM = "image/*"
+
+        private const val MENSAGEM_COMPROVANTE_ANEXADO = "Comprovante anexado"
+
+        private const val MENSAGEM_ERRO_COMPROVANTE = "Erro ao anexar comprovante"
+
+        private const val MENSAGEM_VEICULO_NAO_CADASTRADO = "Cadastre um veículo primeiro"
+
+        private const val MENSAGEM_TIPO_NAO_SELECIONADO = "Selecione o tipo de serviço"
+
+        private const val MENSAGEM_DATA_INVALIDA = "Selecione uma data válida para o serviço"
+
+        private const val MENSAGEM_ERRO_SALVAMENTO = "Erro ao salvar o serviço"
+
+        private const val MENSAGEM_SERVICO_SALVO = "Serviço salvo"
+
+        private const val MENSAGEM_LEMBRETE_MANUTENCAO = "Manutenção: %s"
+
+        private const val DESCRICAO_LEMBRETE = "Lembrete de manutenção para %s"
+
+        private const val DESCRICAO_LEMBRETE_SEM_VEICULO = "Lembrete de manutenção agendado para hoje"
     }
 }

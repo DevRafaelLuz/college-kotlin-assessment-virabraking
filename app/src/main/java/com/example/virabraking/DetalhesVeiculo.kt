@@ -3,6 +3,7 @@ package com.example.virabraking
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -11,6 +12,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.button.MaterialButton
+import java.io.File
 
 class DetalhesVeiculo : AppCompatActivity() {
 
@@ -45,7 +47,19 @@ class DetalhesVeiculo : AppCompatActivity() {
         private val COR_BORDA_BOTAO = Color.parseColor("#e2e8f0")
         private val COR_TEXTO_SECUNDARIO = Color.parseColor("#64748b")
         private val COR_DESTAQUE = Color.parseColor("#0d9488")
+
         private const val LIMITE_ATIVIDADES = 100
+
+        private const val MENSAGEM_ERRO_VEICULO = "Erro: Veículo não encontrado."
+        private const val TITULO_HISTORICO = "Histórico de Manutenções"
+        private const val TITULO_COMBUSTIVEL = "Abastecimentos"
+        private const val TITULO_DOCUMENTOS = "Documentos"
+        private const val MENSAGEM_HISTORICO_VAZIO = "Nenhum serviço registrado"
+        private const val MENSAGEM_COMBUSTIVEL_VAZIO = "Nenhum abastecimento registrado"
+        private const val MENSAGEM_DOCUMENTOS_VAZIO = "Nenhum documento cadastrado"
+        private const val ORIGEM_SERVICO = "servico"
+        private const val FORMATO_CONSUMO = "%.1f km/l"
+        private const val FORMATO_QUILOMETRAGEM = "%,d km"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,8 +71,7 @@ class DetalhesVeiculo : AppCompatActivity() {
         }
 
         inicializarViews()
-        configurarBotaoVoltar()
-        configurarAbas()
+        configurarTela()
     }
 
     override fun onResume() {
@@ -67,7 +80,7 @@ class DetalhesVeiculo : AppCompatActivity() {
             return
         }
 
-        preencherCabecalho()
+        atualizarInformacoesVeiculo()
         carregarLista()
     }
 
@@ -78,10 +91,14 @@ class DetalhesVeiculo : AppCompatActivity() {
             return true
         }
 
-        Toast.makeText(this, "Erro: Veículo não encontrado.", Toast.LENGTH_SHORT).show()
-
+        mostrarMensagem(MENSAGEM_ERRO_VEICULO)
         finish()
+
         return false
+    }
+
+    private fun mostrarMensagem(mensagem: String) {
+        Toast.makeText(this, mensagem, Toast.LENGTH_SHORT).show()
     }
 
     private fun inicializarViews() {
@@ -95,11 +112,20 @@ class DetalhesVeiculo : AppCompatActivity() {
         ivFotoVeiculo = findViewById(R.id.ivFotoVeiculo)
     }
 
+    private fun configurarTela() {
+        configurarBotaoVoltar()
+        configurarAbas()
+    }
+
     private fun configurarBotaoVoltar() {
         findViewById<ImageButton>(R.id.iBtnVoltar).setOnClickListener {
-            finish()
-            overridePendingTransition(0, 0);
+            finalizarTela()
         }
+    }
+
+    private fun finalizarTela() {
+        finish()
+        overridePendingTransition(0, 0)
     }
 
     private fun configurarAbas() {
@@ -121,14 +147,14 @@ class DetalhesVeiculo : AppCompatActivity() {
     private fun selecionarAba(aba: Aba) {
         abaAtual = aba
 
-        botoesAbas.forEach { (botao, abaBotao) ->
-            atualizarEstiloBotao(
-                botao = botao,
-                selecionado = abaBotao == aba
-            )
-        }
-
+        atualizarEstiloAbas()
         carregarLista()
+    }
+
+    private fun atualizarEstiloAbas() {
+        botoesAbas.forEach { (botao, aba) ->
+            atualizarEstiloBotao(botao = botao, selecionado = aba == abaAtual)
+        }
     }
 
     private fun atualizarEstiloBotao(botao: MaterialButton, selecionado: Boolean) {
@@ -175,32 +201,43 @@ class DetalhesVeiculo : AppCompatActivity() {
         val banco = BancoHelper.getInstance(this)
 
         return when (abaAtual) {
-            Aba.HISTORICO -> {
-                ConteudoAba(
-                    titulo = "Histórico de Manutenções",
-                    atividades = banco.listarAtividades(veiculoId, LIMITE_ATIVIDADES, abastecimentos = false),
-                    mensagemVazia = "Nenhum serviço registrado"
-                )
-            }
-
-            Aba.COMBUSTIVEL -> {
-                val consumoMedio = banco.consumoMedio(veiculoId)
-
-                val titulo = consumoMedio?.let { consumo ->
-                    "Abastecimentos • " + String.format(LOCALE_BR, "%.1f km/l", consumo)
-                } ?: "Abastecimentos"
-
-                ConteudoAba(
-                    titulo = titulo,
-                    atividades = banco.listarAtividades(veiculoId, LIMITE_ATIVIDADES, servicos = false),
-                    mensagemVazia = "Nenhum abastecimento registrado"
-                )
-            }
-
-            Aba.DOCUMENTOS -> {
-                ConteudoAba(titulo = "Documentos", atividades = emptyList(), mensagemVazia = "Nenhum documento cadastrado")
-            }
+            Aba.HISTORICO -> obterHistorico(banco)
+            Aba.COMBUSTIVEL -> obterAbastecimentos(banco)
+            Aba.DOCUMENTOS -> obterDocumentos()
         }
+    }
+
+    private fun obterHistorico(banco: BancoHelper): ConteudoAba {
+        return ConteudoAba(
+            titulo = TITULO_HISTORICO,
+            atividades = banco.listarAtividades(veiculoId, LIMITE_ATIVIDADES, abastecimentos = false),
+            mensagemVazia = MENSAGEM_HISTORICO_VAZIO
+        )
+    }
+
+    private fun obterAbastecimentos(banco: BancoHelper): ConteudoAba {
+        return ConteudoAba(
+            titulo = obterTituloAbastecimentos(banco),
+            atividades = banco.listarAtividades(veiculoId, LIMITE_ATIVIDADES, servicos = false),
+            mensagemVazia = MENSAGEM_COMBUSTIVEL_VAZIO
+        )
+    }
+
+    private fun obterTituloAbastecimentos(banco: BancoHelper): String {
+        val consumoMedio = banco.consumoMedio(veiculoId)
+            ?: return TITULO_COMBUSTIVEL
+
+        val consumoFormatado = String.format(LOCALE_BR, FORMATO_CONSUMO, consumoMedio)
+
+        return "$TITULO_COMBUSTIVEL • $consumoFormatado"
+    }
+
+    private fun obterDocumentos(): ConteudoAba {
+        return ConteudoAba(
+            titulo = TITULO_DOCUMENTOS,
+            atividades = emptyList(),
+            mensagemVazia = MENSAGEM_DOCUMENTOS_VAZIO
+        )
     }
 
     private fun exibirMensagemVazia(mensagem: String) {
@@ -215,45 +252,55 @@ class DetalhesVeiculo : AppCompatActivity() {
     private fun adicionarAtividade(atividade: Atividade) {
         val atividadeView = atividade.paraView(layoutInflater, llLista)
 
-        if (atividade.origem == "servico") {
-            atividadeView.setOnClickListener {
-                abrirDetalhesServico(atividade)
-            }
-        }
+        configurarCliqueAtividade(atividadeView, atividade)
 
         llLista.addView(atividadeView)
     }
 
+    private fun configurarCliqueAtividade(atividadeView: android.view.View, atividade: Atividade) {
+        if (atividade.origem == ORIGEM_SERVICO) {
+            atividadeView.setOnClickListener {
+                abrirDetalhesServico(atividade)
+            }
+        }
+    }
+
     private fun abrirDetalhesServico(atividade: Atividade) {
-        val intent = Intent(
-            this,
-            DetalheRegistro::class.java
-        ).apply {
-            putExtra(
-                Constantes.EXTRA_SERVICO_ID,
-                atividade.id
-            )
-            putExtra(
-                Constantes.EXTRA_VEICULO_ID,
-                atividade.veiculoId
-            )
+        val intent = Intent(this, DetalheRegistro::class.java).apply {
+            putExtra(Constantes.EXTRA_SERVICO_ID, atividade.id)
+
+            putExtra(Constantes.EXTRA_VEICULO_ID, atividade.veiculoId)
         }
 
         startActivity(intent)
     }
 
-    private fun preencherCabecalho() {
-        val veiculo = BancoHelper.getInstance(this).buscarVeiculo(veiculoId) ?: return
+    private fun atualizarInformacoesVeiculo() {
+        val veiculo = BancoHelper.getInstance(this)
+            .buscarVeiculo(veiculoId)
+            ?: return
 
+        preencherDadosVeiculo(veiculo)
+        carregarFotoVeiculo(veiculo.caminhoFoto)
+    }
+
+    private fun preencherDadosVeiculo(veiculo: Veiculo) {
         tvNomeVeiculo.text = veiculo.apelido
-        tvModelo.text = "${veiculo.marca} ${veiculo.modelo}".trim()
-        tvAno.text = veiculo.ano.toString()
-        tvPlaca.text = veiculo.placa
-        tvKmVeiculo.text = String.format(LOCALE_BR, "%,d km", veiculo.quilometragem)
 
-        val arquivoFoto = veiculo.caminhoFoto?.let { java.io.File(it) }
+        tvModelo.text = "${veiculo.marca} ${veiculo.modelo}".trim()
+
+        tvAno.text = veiculo.ano.toString()
+
+        tvPlaca.text = veiculo.placa
+
+        tvKmVeiculo.text = String.format(LOCALE_BR, FORMATO_QUILOMETRAGEM, veiculo.quilometragem)
+    }
+
+    private fun carregarFotoVeiculo(caminhoFoto: String?) {
+        val arquivoFoto = caminhoFoto?.let(::File)
+
         if (arquivoFoto != null && arquivoFoto.exists()) {
-            ivFotoVeiculo.setImageURI(android.net.Uri.fromFile(arquivoFoto))
+            ivFotoVeiculo.setImageURI(Uri.fromFile(arquivoFoto))
         } else {
             ivFotoVeiculo.setImageDrawable(null)
         }

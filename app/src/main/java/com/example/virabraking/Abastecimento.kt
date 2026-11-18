@@ -3,6 +3,7 @@ package com.example.virabraking
 import android.app.DatePickerDialog
 import android.graphics.Color
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -34,10 +35,10 @@ class Abastecimento : AppCompatActivity() {
     private var veiculos: List<Veiculo> = emptyList()
     private var ultimoCampoPrecoAlterado: EditText? = null
     private var atualizandoValores = false
+
     private val dataSelecionada = Calendar.getInstance()
-    private val localeBrasil = Locale.forLanguageTag("pt-BR")
-    private val formatoDataExibicao = SimpleDateFormat("dd/MM/yyyy", localeBrasil)
-    private val formatoDataBanco = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+    private val formatoDataExibicao = SimpleDateFormat(FORMATO_DATA_EXIBICAO, LOCALE_BRASIL)
+    private val formatoDataBanco = SimpleDateFormat(FORMATO_DATA_BANCO, Locale.US)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,27 +49,21 @@ class Abastecimento : AppCompatActivity() {
         }
 
         inicializarViews()
-        configurarBotaoVoltar()
-        configurarSeletorVeiculo()
-        configurarCampoData()
-        configurarCalculoValores()
-        configurarBotaoSalvar()
+        configurarEventos()
     }
 
     private fun carregarVeiculos(): Boolean {
         veiculos = BancoHelper.getInstance(this).listarVeiculos()
 
-        if (veiculos.isNotEmpty()) {
-            return true
-        }
+        if (veiculos.isNotEmpty()) return true
 
-        exibirMensagem("Cadastre um veículo primeiro")
+        exibirMensagem(MENSAGEM_CADASTRAR_VEICULO)
         finish()
         return false
     }
 
     private fun exibirMensagem(mensagem: String) {
-        Toast.makeText(this, mensagem, Toast.LENGTH_SHORT ).show()
+        Toast.makeText(this, mensagem, Toast.LENGTH_SHORT).show()
     }
 
     private fun inicializarViews() {
@@ -83,108 +78,105 @@ class Abastecimento : AppCompatActivity() {
         tvSemHistoricoConsumo = findViewById(R.id.tvSemHistoricoConsumo)
     }
 
+    private fun configurarEventos() {
+        configurarBotaoVoltar()
+        configurarSeletorVeiculo()
+        configurarCampoData()
+        configurarCalculoValores()
+        configurarBotaoSalvar()
+    }
+
     private fun configurarBotaoVoltar() {
         findViewById<ImageButton>(R.id.iBtnVoltar).setOnClickListener {
-            finish()
-            overridePendingTransition(0, 0);
+            finalizarTela()
         }
     }
-    private fun configurarSeletorVeiculo() {
-        val nomesVeiculos = veiculos.map { it.apelido }
 
-        val adapter = ArrayAdapter(this, R.layout.item_spinner_tipo_servico, nomesVeiculos)
+    private fun finalizarTela() {
+        finish()
+        overridePendingTransition(0, 0);
+    }
+
+    private fun configurarSeletorVeiculo() {
+        val nomesVeiculos = veiculos.map(Veiculo::apelido)
+        val adapter = ArrayAdapter(
+            this,
+            R.layout.item_spinner_tipo_servico,
+            nomesVeiculos
+        )
 
         adapter.setDropDownViewResource(R.layout.item_spinner_dropdown)
-
         spVeiculo.adapter = adapter
 
         spVeiculo.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                configurarAtualizacaoQuilometragem(position)
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                atualizarDadosDoVeiculo(position)
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) { }
+            override fun onNothingSelected(parent: AdapterView<*>?) = Unit
         }
+
         selecionarVeiculoInicial()
     }
 
-    private fun selecionarVeiculoInicial() {
-        val idVeiculo = intent.getIntExtra(Constantes.EXTRA_VEICULO_ID, Constantes.ID_INVALIDO)
+    private fun atualizarDadosDoVeiculo(posicao: Int) {
+        val veiculo = veiculos.getOrNull(posicao) ?: return
 
-        val posicao = veiculos.indexOfFirst {
-            it.id == idVeiculo
-        }
-
-        if (posicao >= 0) {
-            spVeiculo.setSelection(posicao)
-            configurarAtualizacaoQuilometragem(posicao)
-        } else if (veiculos.isNotEmpty()) {
-            spVeiculo.setSelection(0)
-            configurarAtualizacaoQuilometragem(0)
-        }
-    }
-
-    private fun configurarAtualizacaoQuilometragem(posicao: Int) {
-        val veiculoSelecionado = veiculos.getOrNull(posicao) ?: return
-
-        etKm.setText("${veiculoSelecionado.quilometragem}")
+        etKm.setText(veiculo.quilometragem.toString())
         etKm.error = null
-
-        atualizarGraficoConsumo(veiculoSelecionado.id)
+        atualizarGraficoConsumo(veiculo.id)
     }
 
     private fun atualizarGraficoConsumo(veiculoId: Int) {
-        val consumos = BancoHelper.getInstance(this).historicoConsumo(veiculoId, 6)
+        val consumos = BancoHelper.getInstance(this).historicoConsumo(
+            veiculoId, QUANTIDADE_MESES_HISTORICO
+        )
+
         llBarrasConsumo.removeAllViews()
 
         if (consumos.isEmpty()) {
-            tvSemHistoricoConsumo.visibility = View.VISIBLE
-            llBarrasConsumo.visibility = View.GONE
+            exibirEstadoSemHistorico()
             return
         }
 
+        exibirGraficoConsumo()
+        adicionarBarrasConsumo(consumos)
+    }
+
+    private fun exibirEstadoSemHistorico() {
+        tvSemHistoricoConsumo.visibility = View.VISIBLE
+        llBarrasConsumo.visibility = View.GONE
+    }
+
+    private fun exibirGraficoConsumo() {
         tvSemHistoricoConsumo.visibility = View.GONE
         llBarrasConsumo.visibility = View.VISIBLE
+    }
 
+    private fun adicionarBarrasConsumo(consumos: List<Double>) {
         val maiorConsumo = consumos.maxOrNull() ?: 0.0
-        val density = resources.displayMetrics.density
-        val alturaMaxPx = (44 * density).toInt()
-        val alturaMinPx = (14 * density).toInt()
-        val larguraBarraPx = (22 * density).toInt()
+        val densidade = resources.displayMetrics.density
+        val alturaMaxima = (ALTURA_MAXIMA_BARRA_DP * densidade).toInt()
+        val alturaMinima = (ALTURA_MINIMA_BARRA_DP * densidade).toInt()
+        val larguraBarra = (LARGURA_BARRA_DP * densidade).toInt()
+        val margemInferior = (MARGEM_BARRA_DP * densidade).toInt()
 
-        consumos.forEach { valor ->
-            val coluna = LinearLayout(this).apply {
-                orientation = LinearLayout.VERTICAL
-                gravity = android.view.Gravity.CENTER_HORIZONTAL or android.view.Gravity.BOTTOM
-                layoutParams = LinearLayout.LayoutParams(
-                    0,
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    1f
-                )
-            }
+        consumos.forEach { consumo ->
+            val altura = calcularAlturaBarra(
+                consumo,
+                maiorConsumo,
+                alturaMaxima,
+                alturaMinima
+            )
 
-            val alturaCalculada = if (maiorConsumo > 0.0) {
-                ((valor / maiorConsumo) * alturaMaxPx).toInt().coerceAtLeast(alturaMinPx)
-            } else {
-                alturaMinPx
-            }
-
-            val barra = View(this).apply {
-                layoutParams = LinearLayout.LayoutParams(larguraBarraPx, alturaCalculada).apply {
-                    bottomMargin = (6 * density).toInt()
-                }
-                setBackgroundResource(R.drawable.barra_mensal_arredondada)
-            }
-
-            val rotulo = TextView(this).apply {
-                layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-                )
-                text = String.format(Locale.US, "%.1f", valor)
-                textSize = 11f
-                setTextColor(Color.parseColor("#64748B"))
-            }
+            val coluna = criarColunaConsumo()
+            val barra = criarBarraConsumo(larguraBarra, altura, margemInferior)
+            val rotulo = criarRotuloConsumo(consumo)
 
             coluna.addView(barra)
             coluna.addView(rotulo)
@@ -192,12 +184,68 @@ class Abastecimento : AppCompatActivity() {
         }
     }
 
+    private fun calcularAlturaBarra(
+        consumo: Double,
+        maiorConsumo: Double,
+        alturaMaxima: Int,
+        alturaMinima: Int
+    ): Int {
+        if (maiorConsumo <= 0.0) return alturaMinima
+
+        return ((consumo / maiorConsumo) * alturaMaxima)
+            .toInt()
+            .coerceAtLeast(alturaMinima)
+    }
+
+    private fun criarColunaConsumo(): LinearLayout {
+        return LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            gravity = Gravity.CENTER_HORIZONTAL or Gravity.BOTTOM
+            layoutParams = LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                1f
+            )
+        }
+    }
+
+    private fun criarBarraConsumo(largura: Int, altura: Int, margemInferior: Int): View {
+        return View(this).apply {
+            layoutParams = LinearLayout.LayoutParams(largura, altura).apply {
+                bottomMargin = margemInferior
+            }
+            setBackgroundResource(R.drawable.barra_mensal_arredondada)
+        }
+    }
+
+    private fun criarRotuloConsumo(consumo: Double): TextView {
+        return TextView(this).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            text = String.format(Locale.US, FORMATO_ROTULO_CONSUMO, consumo)
+            textSize = TAMANHO_TEXTO_ROTULO_SP
+            setTextColor(COR_TEXTO_ROTULO)
+        }
+    }
+
+    private fun selecionarVeiculoInicial() {
+        val idVeiculo = intent.getIntExtra(
+            Constantes.EXTRA_VEICULO_ID,
+            Constantes.ID_INVALIDO
+        )
+        val posicaoVeiculo = veiculos.indexOfFirst { it.id == idVeiculo }
+            .takeIf { it >= 0 }
+            ?: POSICAO_INICIAL
+
+        spVeiculo.setSelection(posicaoVeiculo)
+        atualizarDadosDoVeiculo(posicaoVeiculo)
+    }
+
     private fun configurarCampoData() {
         atualizarDataExibida()
-
-        etData.setOnClickListener {
-            abrirCalendario()
-        }
+        etData.setOnClickListener { abrirCalendario() }
     }
 
     private fun atualizarDataExibida() {
@@ -205,10 +253,11 @@ class Abastecimento : AppCompatActivity() {
     }
 
     private fun abrirCalendario() {
-        val calendario = DatePickerDialog(this, {
-                _, ano, mes, dia -> dataSelecionada.set(ano, mes, dia, 0, 0, 0)
+        val calendario = DatePickerDialog(
+            this,
+            { _, ano, mes, dia ->
+                dataSelecionada.set(ano, mes, dia, 0, 0, 0)
                 dataSelecionada.set(Calendar.MILLISECOND, 0)
-
                 atualizarDataExibida()
             },
             dataSelecionada.get(Calendar.YEAR),
@@ -217,15 +266,12 @@ class Abastecimento : AppCompatActivity() {
         )
 
         calendario.datePicker.maxDate = System.currentTimeMillis()
-
         calendario.show()
     }
 
     private fun configurarCalculoValores() {
         etLitros.doAfterTextChanged {
-            if (!atualizandoValores) {
-                recalcularValores()
-            }
+            if (!atualizandoValores) recalcularValores()
         }
 
         etValorLitro.doAfterTextChanged {
@@ -267,42 +313,37 @@ class Abastecimento : AppCompatActivity() {
     }
 
     private fun calcularValorTotal(litros: Double?) {
-        val valorLitro = lerNumero(etValorLitro)
-
-        val total = if (
-            litros != null &&
-            valorLitro != null
-        ) {
-            litros * valorLitro
+        val valorPorLitro = lerNumero(etValorLitro)
+        val valorTotal = if (litros != null && valorPorLitro != null) {
+            litros * valorPorLitro
         } else {
             null
         }
 
-        atualizarCampoNumerico(etValorTotal, total)
-    }
-
-    private fun atualizarCampoNumerico(campo: EditText, valor: Double?) {
-        campo.setText(valor?.let { formatarNumero(it) } ?: "")
-    }
-
-    private fun formatarNumero(valor: Double): String {
-        return String.format(localeBrasil, "%.2f", valor)
+        atualizarCampoNumerico(etValorTotal, valorTotal)
     }
 
     private fun calcularValorPorLitro(litros: Double?) {
-        val total = lerNumero(etValorTotal)
-
-        val valorLitro = if (
+        val valorTotal = lerNumero(etValorTotal)
+        val valorPorLitro = if (
             litros != null &&
             litros > 0 &&
-            total != null
+            valorTotal != null
         ) {
-            total / litros
+            valorTotal / litros
         } else {
             null
         }
 
-        atualizarCampoNumerico(etValorLitro, valorLitro)
+        atualizarCampoNumerico(etValorLitro, valorPorLitro)
+    }
+
+    private fun atualizarCampoNumerico(campo: EditText, valor: Double?) {
+        campo.setText(valor?.let(::formatarNumero) ?: "")
+    }
+
+    private fun formatarNumero(valor: Double): String {
+        return String.format(LOCALE_BRASIL, FORMATO_VALOR_MONETARIO, valor)
     }
 
     private fun configurarBotaoSalvar() {
@@ -315,53 +356,93 @@ class Abastecimento : AppCompatActivity() {
         val abastecimento = validarAbastecimento() ?: return
 
         BancoHelper.getInstance(this).registrarAbastecimento(abastecimento)
-
-        exibirMensagem("Abastecimento salvo")
-        finish()
-        overridePendingTransition(0, 0);
+        exibirMensagem(MENSAGEM_ABASTECIMENTO_SALVO)
+        finalizarTela()
     }
 
     private fun validarAbastecimento(): RegistroAbastecimento? {
         val veiculo = veiculos.getOrNull(spVeiculo.selectedItemPosition) ?: return null
         val litros = lerNumero(etLitros)
-        val valorLitro = lerNumero(etValorLitro)
+        val valorPorLitro = lerNumero(etValorLitro)
         val valorTotal = lerNumero(etValorTotal)
         val quilometragem = etKm.text.toString().trim().toIntOrNull()
         val posto = etPosto.text.toString().trim()
 
-        if (litros == null || litros <= 0) {
-            etLitros.error = "Informe os litros"
-            return null
-        }
-
-        if (valorLitro == null || valorLitro <= 0) {
-            etValorLitro.error = "Informe um valor por litro válido"
-            return null
-        }
-
-        if (valorTotal == null || valorTotal <= 0) {
-            etValorTotal.error = "Informe um valor total válido"
-            return null
-        }
-
-        if (quilometragem == null || quilometragem < 0) {
-            etKm.error = "Informe um KM válido"
-            return null
-        }
-
-        if (quilometragem < veiculo.quilometragem) {
-            etKm.error = "KM menor do que no último registro: ${veiculo.quilometragem}"
-            return null
-        }
+        if (!validarLitros(litros)) return null
+        if (!validarValorPorLitro(valorPorLitro)) return null
+        if (!validarValorTotal(valorTotal)) return null
+        if (!validarQuilometragem(quilometragem, veiculo.quilometragem)) return null
 
         return RegistroAbastecimento(
             veiculoId = veiculo.id,
-            litros = litros,
-            valorLitro = valorLitro,
-            valorTotal = valorTotal,
-            quilometragem = quilometragem,
+            litros = litros!!,
+            valorLitro = valorPorLitro!!,
+            valorTotal = valorTotal!!,
+            quilometragem = quilometragem!!,
             posto = posto,
             data = formatoDataBanco.format(dataSelecionada.time)
         )
+    }
+
+    private fun validarLitros(litros: Double?): Boolean {
+        if (litros != null && litros > 0) return true
+
+        etLitros.error = MENSAGEM_LITROS_INVALIDOS
+        return false
+    }
+
+    private fun validarValorPorLitro(valor: Double?): Boolean {
+        if (valor != null && valor > 0) return true
+
+        etValorLitro.error = MENSAGEM_VALOR_LITRO_INVALIDO
+        return false
+    }
+
+    private fun validarValorTotal(valor: Double?): Boolean {
+        if (valor != null && valor > 0) return true
+
+        etValorTotal.error = MENSAGEM_VALOR_TOTAL_INVALIDO
+        return false
+    }
+
+    private fun validarQuilometragem(quilometragem: Int?, quilometragemAnterior: Int): Boolean {
+        if (quilometragem == null || quilometragem < 0) {
+            etKm.error = MENSAGEM_QUILOMETRAGEM_INVALIDA
+            return false
+        }
+
+        if (quilometragem < quilometragemAnterior) {
+            etKm.error = "$MENSAGEM_QUILOMETRAGEM_MENOR $quilometragemAnterior"
+            return false
+        }
+
+        return true
+    }
+
+    private companion object {
+        const val POSICAO_INICIAL = 0
+        const val QUANTIDADE_MESES_HISTORICO = 6
+
+        const val FORMATO_DATA_EXIBICAO = "dd/MM/yyyy"
+        const val FORMATO_DATA_BANCO = "yyyy-MM-dd"
+        const val FORMATO_VALOR_MONETARIO = "%.2f"
+        const val FORMATO_ROTULO_CONSUMO = "%.1f"
+
+        const val ALTURA_MAXIMA_BARRA_DP = 44
+        const val ALTURA_MINIMA_BARRA_DP = 14
+        const val LARGURA_BARRA_DP = 22
+        const val MARGEM_BARRA_DP = 6
+        const val TAMANHO_TEXTO_ROTULO_SP = 11f
+
+        const val MENSAGEM_CADASTRAR_VEICULO = "Cadastre um veículo primeiro"
+        const val MENSAGEM_ABASTECIMENTO_SALVO = "Abastecimento salvo"
+        const val MENSAGEM_LITROS_INVALIDOS = "Informe os litros"
+        const val MENSAGEM_VALOR_LITRO_INVALIDO = "Informe um valor por litro válido"
+        const val MENSAGEM_VALOR_TOTAL_INVALIDO = "Informe um valor total válido"
+        const val MENSAGEM_QUILOMETRAGEM_INVALIDA = "Informe um KM válido"
+        const val MENSAGEM_QUILOMETRAGEM_MENOR = "KM menor do que no último registro:"
+
+        val LOCALE_BRASIL: Locale = Locale.forLanguageTag("pt-BR")
+        val COR_TEXTO_ROTULO: Int = Color.parseColor("#64748B")
     }
 }

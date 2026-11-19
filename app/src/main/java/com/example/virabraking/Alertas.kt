@@ -68,24 +68,31 @@ class Alertas : AppCompatActivity() {
         configurarSpinnerVeiculos(campos.spinnerVeiculo, veiculos)
 
         val calendario = Calendar.getInstance()
-        val horaSelecionada = criarCampoHora(campos.campoHora)
+        criarCampoHora(campos.campoHora)
 
         configurarSeletorData(campos.campoData, calendario)
         configurarSeletorHora(campos.campoHora)
 
         val dialog = AlertDialog.Builder(this)
             .setView(dialogView)
-            .setPositiveButton(BOTAO_SALVAR) { _, _ ->
-                salvarNovoLembrete(
-                    campos,
-                    veiculos,
-                    banco,
-                    calendario,
-                    horaSelecionada
-                )
-            }
-            .setNegativeButton(BOTAO_CANCELAR, null)
             .create()
+
+        dialogView.findViewById<View>(R.id.btnCancelarLembrete).setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialogView.findViewById<View>(R.id.btnCriarLembrete).setOnClickListener {
+            val salvou = salvarNovoLembrete(
+                campos,
+                veiculos,
+                banco,
+                calendario,
+            )
+
+            if (salvou) {
+                dialog.dismiss()
+            }
+        }
 
         dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
         dialog.show()
@@ -182,13 +189,17 @@ class Alertas : AppCompatActivity() {
         veiculos: List<Veiculo>,
         banco: BancoHelper,
         calendario: Calendar,
-        horaSelecionada: String
-    ) {
+    ): Boolean {
         val titulo = campos.campoTitulo.text.toString().trim()
 
         if (!validarTitulo(titulo)) {
             exibirMensagem(TEXTO_TITULO_OBRIGATORIO)
-            return
+            return false
+        }
+
+        if (!horarioValido(calendario, campos.campoHora.text.toString())) {
+            exibirMensagem(TEXTO_HORARIO_INVALIDO)
+            return false
         }
 
         val lembrete = criarLembrete(
@@ -202,7 +213,7 @@ class Alertas : AppCompatActivity() {
 
         if (idSalvo == ID_INVALIDO) {
             exibirMensagem(TEXTO_ERRO_CRIAR)
-            return
+            return false
         }
 
         agendarNotificacao(
@@ -210,15 +221,34 @@ class Alertas : AppCompatActivity() {
             titulo = titulo,
             descricao = lembrete.descricao,
             data = lembrete.data,
-            hora = horaSelecionada
+            hora = lembrete.hora
         )
 
         exibirMensagem(TEXTO_SUCESSO_CRIAR)
         carregarLembretes()
+        return true
     }
 
     private fun validarTitulo(titulo: String): Boolean {
         return titulo.isNotBlank()
+    }
+
+    private fun horarioEscolhidoMillis(calendario: Calendar, hora: String): Long? {
+        val partes = hora.split(":")
+        val h = partes.getOrNull(0)?.trim()?.toIntOrNull() ?: return null
+        val m = partes.getOrNull(1)?.trim()?.toIntOrNull() ?: return null
+
+        return (calendario.clone() as Calendar).apply {
+            set(Calendar.HOUR_OF_DAY, h)
+            set(Calendar.MINUTE, m)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }.timeInMillis
+    }
+
+    private fun horarioValido(calendario: Calendar, hora: String): Boolean {
+        val escolhido = horarioEscolhidoMillis(calendario, hora) ?: return false
+        return escolhido >= System.currentTimeMillis() + INTERVALO_MINIMO_MS
     }
 
     private fun criarLembrete(
@@ -419,13 +449,15 @@ class Alertas : AppCompatActivity() {
         private const val TITULO_DIALOG_EXCLUSAO = "Remover Lembrete"
         private const val BOTAO_REMOVER = "Remover"
         private const val BOTAO_CANCELAR = "Cancelar"
-        private const val BOTAO_SALVAR = "Salvar"
 
         private const val TEXTO_TITULO_OBRIGATORIO = "Informe o título do lembrete"
+        private const val TEXTO_HORARIO_INVALIDO = "Escolha um horário com pelo menos 1 minuto de antecedência"
 
         private const val TEXTO_SUCESSO_CRIAR = "Lembrete criado com sucesso!"
 
         private const val TEXTO_ERRO_CRIAR = "Erro ao criar lembrete"
+
+        private const val INTERVALO_MINIMO_MS = 60_000L
 
         private const val ID_INVALIDO = -1L
     }

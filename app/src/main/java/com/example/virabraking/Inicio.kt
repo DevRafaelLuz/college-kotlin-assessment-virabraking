@@ -9,7 +9,6 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -339,7 +338,7 @@ class Inicio : AppCompatActivity() {
     }
 
     private fun mostrarMensagem(mensagem: String) {
-        Toast.makeText(this, mensagem, Toast.LENGTH_SHORT).show()
+        DialogUtils.exibirToastCustomizado(this, mensagem)
     }
 
     private companion object {

@@ -12,7 +12,6 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -168,10 +167,17 @@ class AdicionarVeiculo : AppCompatActivity() {
     private fun salvarVeiculo() {
         if (!validarDadosObrigatorios()) return
 
+        val banco = BancoHelper.getInstance(this)
+        if (banco.contarVeiculos() >= Constantes.LIMITE_MAXIMO_VEICULOS) {
+            exibirMensagem(MENSAGEM_LIMITE_ATINGIDO)
+            finalizarTela()
+            return
+        }
+
         val caminhoFoto = uriImagemSelecionada?.let(::salvarImagemNoArmazenamentoInterno)
         val veiculo = criarVeiculo(caminhoFoto)
 
-        BancoHelper.getInstance(this).inserirVeiculo(veiculo)
+        banco.inserirVeiculo(veiculo)
 
         exibirMensagem(MENSAGEM_VEICULO_SALVO)
         finalizarTela()
@@ -237,7 +243,8 @@ class AdicionarVeiculo : AppCompatActivity() {
     }
 
     private fun exibirMensagem(mensagem: String) {
-        Toast.makeText(this, mensagem, Toast.LENGTH_SHORT).show()
+        val sucesso = !mensagem.contains("atingido", ignoreCase = true) && !mensagem.contains("obrigatório", ignoreCase = true)
+        DialogUtils.exibirToastCustomizado(this, mensagem, sucesso)
     }
 
     private fun finalizarTela() {
@@ -257,6 +264,7 @@ class AdicionarVeiculo : AppCompatActivity() {
 
         const val MENSAGEM_TIPO_E_APELIDO_OBRIGATORIOS = "Selecione o tipo e informe o nome"
         const val MENSAGEM_VEICULO_SALVO = "Veículo salvo"
+        val MENSAGEM_LIMITE_ATINGIDO = "Limite máximo de ${Constantes.LIMITE_MAXIMO_VEICULOS} veículos atingido"
 
         val COR_TIPO_SELECIONADO: Int = Color.parseColor("#0d9488")
         val COR_TIPO_NAO_SELECIONADO: Int = Color.parseColor("#64748b")

@@ -2,7 +2,6 @@ package com.example.virabraking
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -43,8 +42,24 @@ class Veiculos : AppCompatActivity() {
         configurarClique(R.id.llInicio, Inicio::class.java)
         configurarClique(R.id.llAlertas, Alertas::class.java)
         configurarClique(R.id.llRelatorios, Relatorios::class.java)
-        configurarClique(R.id.iBtnAdicionar, AdicionarVeiculo::class.java)
         configurarClique(R.id.llAdicionar, RegistrarServico::class.java)
+
+        findViewById<android.view.View>(R.id.iBtnAdicionar).setOnClickListener {
+            if (bancoHelper.contarVeiculos() >= Constantes.LIMITE_MAXIMO_VEICULOS) {
+                exibirAlertaLimiteVeiculos()
+            } else {
+                navegarPara(AdicionarVeiculo::class.java)
+            }
+        }
+    }
+
+    private fun exibirAlertaLimiteVeiculos() {
+        DialogUtils.exibirDialogoAlerta(
+            activity = this,
+            titulo = TITULO_LIMITE_VEICULOS,
+            mensagem = MENSAGEM_LIMITE_VEICULOS,
+            textoBotao = BOTAO_OK
+        )
     }
 
     private fun configurarClique(viewId: Int, destino: Class<out AppCompatActivity>) {
@@ -80,14 +95,15 @@ class Veiculos : AppCompatActivity() {
     }
 
     private fun confirmarRemocao(veiculo: Veiculo) {
-        AlertDialog.Builder(this)
-            .setTitle(TITULO_REMOVER_VEICULO)
-            .setMessage(getString(R.string.confirmar_remocao_veiculo, veiculo.apelido))
-            .setPositiveButton(BOTAO_REMOVER) { _, _ ->
-                removerVeiculo(veiculo)
-            }
-            .setNegativeButton(BOTAO_CANCELAR, null)
-            .show()
+        DialogUtils.exibirDialogoConfirmacao(
+            activity = this,
+            titulo = TITULO_REMOVER_VEICULO,
+            mensagem = getString(R.string.confirmar_remocao_veiculo, veiculo.apelido),
+            textoConfirmar = BOTAO_REMOVER,
+            textoCancelar = BOTAO_CANCELAR,
+            tipo = DialogUtils.TipoDialog.DESTRUICAO,
+            onConfirmar = { removerVeiculo(veiculo) }
+        )
     }
 
     private fun removerVeiculo(veiculo: Veiculo) {
@@ -119,5 +135,9 @@ class Veiculos : AppCompatActivity() {
         private const val TITULO_REMOVER_VEICULO = "Remover veículo"
         private const val BOTAO_REMOVER = "Remover"
         private const val BOTAO_CANCELAR = "Cancelar"
+
+        private const val TITULO_LIMITE_VEICULOS = "Limite de veículos"
+        private const val MENSAGEM_LIMITE_VEICULOS = "Você atingiu o limite máximo de ${Constantes.LIMITE_MAXIMO_VEICULOS} veículos. Remova um veículo existente para poder cadastrar outro."
+        private const val BOTAO_OK = "OK"
     }
 }

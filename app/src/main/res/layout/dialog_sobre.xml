@@ -1,32 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#f8fafc"
+    android:background="@drawable/bg_branco_arredondado"
     android:orientation="vertical"
     android:padding="24dp">
+
+    <ImageView
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="12dp"
+        android:src="@drawable/ic_pistoes_v" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sobre o Virabraking"
-        android:textColor="#0f172a"
-        android:textSize="20sp"
+        android:layout_gravity="center_horizontal"
+        android:text="Virabraking"
+        android:textColor="#0F172A"
+        android:textSize="22sp"
         android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tvVersaoSobre"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="4dp"
-        android:textColor="#64748b"
-        android:textSize="13sp" />
+        android:textColor="#0D9488"
+        android:textSize="13sp"
+        android:textStyle="bold" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:layout_marginBottom="24dp"
+        android:gravity="center"
         android:text="O Virabraking ajuda você a acompanhar manutenções, abastecimentos e gastos dos seus veículos na palma da sua mão."
-        android:textColor="#0f172a"
+        android:textColor="#64748B"
         android:textSize="14sp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnFecharSobre"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:backgroundTint="#0D9488"
+        android:text="Fechar"
+        android:textColor="#FFFFFF"
+        app:cornerRadius="12dp" />
 </LinearLayout>

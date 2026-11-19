@@ -1,6 +1,5 @@
 package com.example.virabraking
 
-import android.app.DatePickerDialog
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
@@ -13,7 +12,6 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
 import java.text.SimpleDateFormat
@@ -63,7 +61,7 @@ class Abastecimento : AppCompatActivity() {
     }
 
     private fun exibirMensagem(mensagem: String) {
-        Toast.makeText(this, mensagem, Toast.LENGTH_SHORT).show()
+        DialogUtils.exibirToastCustomizado(this, mensagem)
     }
 
     private fun inicializarViews() {
@@ -253,20 +251,18 @@ class Abastecimento : AppCompatActivity() {
     }
 
     private fun abrirCalendario() {
-        val calendario = DatePickerDialog(
-            this,
-            { _, ano, mes, dia ->
-                dataSelecionada.set(ano, mes, dia, 0, 0, 0)
+        DialogUtils.exibirSeletorData(
+            activity = this,
+            titulo = "Data do abastecimento",
+            dataAtualMillis = dataSelecionada.timeInMillis
+        ) { dataFormatada ->
+            val partes = dataFormatada.split("-")
+            if (partes.size == 3) {
+                dataSelecionada.set(partes[0].toInt(), partes[1].toInt() - 1, partes[2].toInt(), 0, 0, 0)
                 dataSelecionada.set(Calendar.MILLISECOND, 0)
-                atualizarDataExibida()
-            },
-            dataSelecionada.get(Calendar.YEAR),
-            dataSelecionada.get(Calendar.MONTH),
-            dataSelecionada.get(Calendar.DAY_OF_MONTH)
-        )
-
-        calendario.datePicker.maxDate = System.currentTimeMillis()
-        calendario.show()
+            }
+            atualizarDataExibida()
+        }
     }
 
     private fun configurarCalculoValores() {

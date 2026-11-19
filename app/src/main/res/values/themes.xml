@@ -3,7 +3,28 @@
     <style name="Base.Theme.Virabraking" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <item name="colorPrimary">#0d9488</item>
+        <item name="colorOnPrimary">#ffffff</item>
+        <item name="colorSecondary">#0f172a</item>
+        <item name="colorOnSecondary">#ffffff</item>
+        <item name="android:colorBackground">#ffffff</item>
+        <item name="colorSurface">#ffffff</item>
+        <item name="colorOnSurface">#0f172a</item>
+        <item name="materialCalendarTheme">@style/ThemeOverlay.Virabraking.DatePicker</item>
     </style>
 
     <style name="Theme.Virabraking" parent="Base.Theme.Virabraking" />
+
+    <style name="ThemeOverlay.Virabraking.DatePicker" parent="ThemeOverlay.Material3.MaterialCalendar">
+        <item name="colorPrimary">#0d9488</item>
+        <item name="colorOnPrimary">#ffffff</item>
+        <item name="colorSurface">#ffffff</item>
+        <item name="colorOnSurface">#0f172a</item>
+    </style>
+
+    <style name="ThemeOverlay.Virabraking.TimePicker" parent="ThemeOverlay.Material3.MaterialTimePicker">
+        <item name="colorPrimary">#0d9488</item>
+        <item name="colorOnPrimary">#ffffff</item>
+        <item name="colorSurface">#ffffff</item>
+        <item name="colorOnSurface">#0f172a</item>
+    </style>
 </resources>

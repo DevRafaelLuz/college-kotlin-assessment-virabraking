@@ -1,6 +1,5 @@
 package com.example.virabraking
 
-import android.app.DatePickerDialog
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
@@ -13,7 +12,6 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Spinner
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import java.io.File
@@ -169,17 +167,15 @@ class RegistrarServico : AppCompatActivity() {
     }
 
     private fun exibirSeletorData() {
-        val calendario = Calendar.getInstance()
-
-        DatePickerDialog(
-            this,
-            { _, ano, mes, dia ->
-                preencherDataSelecionada(ano, mes, dia)
-            },
-            calendario.get(Calendar.YEAR),
-            calendario.get(Calendar.MONTH),
-            calendario.get(Calendar.DAY_OF_MONTH)
-        ).show()
+        DialogUtils.exibirSeletorData(
+            activity = this,
+            titulo = "Data da manutenção"
+        ) { dataFormatada ->
+            val partes = dataFormatada.split("-")
+            if (partes.size == 3) {
+                preencherDataSelecionada(partes[0].toInt(), partes[1].toInt() - 1, partes[2].toInt())
+            }
+        }
     }
 
     private fun preencherDataSelecionada(
@@ -235,7 +231,7 @@ class RegistrarServico : AppCompatActivity() {
         val resultado = inserirServico(servico)
 
         if (resultado == RESULTADO_FALHA) {
-            exibirMensagem(MENSAGEM_ERRO_SALVAMENTO, Toast.LENGTH_LONG)
+            exibirMensagem(MENSAGEM_ERRO_SALVAMENTO)
             return
         }
 
@@ -366,8 +362,9 @@ class RegistrarServico : AppCompatActivity() {
         )
     }
 
-    private fun exibirMensagem(mensagem: String, duracao: Int = Toast.LENGTH_SHORT) {
-        Toast.makeText(this, mensagem, duracao).show()
+    private fun exibirMensagem(mensagem: String) {
+        val sucesso = !mensagem.contains("Erro", ignoreCase = true)
+        DialogUtils.exibirToastCustomizado(this, mensagem, sucesso)
     }
 
     private fun abrirAbastecimento() {

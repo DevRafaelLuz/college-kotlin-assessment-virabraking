@@ -6,8 +6,6 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import java.io.File
 import java.text.NumberFormat
@@ -103,8 +101,8 @@ class DetalhesRegistro : AppCompatActivity() {
         exibirDadosServico(servico, veiculo)
     }
 
-    private fun exibirMensagem(mensagem: String) {
-        Toast.makeText(this, mensagem, Toast.LENGTH_SHORT).show()
+    private fun exibirMensagem(mensagem: String, sucesso: Boolean = true) {
+        DialogUtils.exibirToastCustomizado(this, mensagem, sucesso)
     }
 
     private fun buscarVeiculo(banco: BancoHelper, idVeiculoServico: Int) = banco.buscarVeiculo(
@@ -189,14 +187,15 @@ class DetalhesRegistro : AppCompatActivity() {
     }
 
     private fun exibirDialogoExclusao() {
-        AlertDialog.Builder(this)
-            .setTitle(TITULO_EXCLUSAO)
-            .setMessage(MENSAGEM_CONFIRMACAO_EXCLUSAO)
-            .setPositiveButton(TEXTO_EXCLUIR) { _, _ ->
-                excluirRegistro()
-            }
-            .setNegativeButton(TEXTO_CANCELAR, null)
-            .show()
+        DialogUtils.exibirDialogoConfirmacao(
+            activity = this,
+            titulo = TITULO_EXCLUSAO,
+            mensagem = MENSAGEM_CONFIRMACAO_EXCLUSAO,
+            textoConfirmar = TEXTO_EXCLUIR,
+            textoCancelar = TEXTO_CANCELAR,
+            tipo = DialogUtils.TipoDialog.DESTRUICAO,
+            onConfirmar = { excluirRegistro() }
+        )
     }
 
     private fun excluirRegistro() {

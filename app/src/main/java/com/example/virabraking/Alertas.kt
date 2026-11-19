@@ -1,8 +1,6 @@
 package com.example.virabraking
 
 import android.Manifest
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -14,7 +12,6 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -76,7 +73,7 @@ class Alertas : AppCompatActivity() {
         configurarSeletorData(campos.campoData, calendario)
         configurarSeletorHora(campos.campoHora)
 
-        AlertDialog.Builder(this)
+        val dialog = AlertDialog.Builder(this)
             .setView(dialogView)
             .setPositiveButton(BOTAO_SALVAR) { _, _ ->
                 salvarNovoLembrete(
@@ -88,7 +85,10 @@ class Alertas : AppCompatActivity() {
                 )
             }
             .setNegativeButton(BOTAO_CANCELAR, null)
-            .show()
+            .create()
+
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+        dialog.show()
     }
 
     private data class CamposLembrete(
@@ -144,16 +144,17 @@ class Alertas : AppCompatActivity() {
     }
 
     private fun exibirSeletorData(campoData: EditText, calendario: Calendar) {
-        DatePickerDialog(
-            this,
-            { _, ano, mes, dia ->
-                calendario.set(ano, mes, dia)
-                campoData.setText(formatarDataExibicao(calendario))
-            },
-            calendario.get(Calendar.YEAR),
-            calendario.get(Calendar.MONTH),
-            calendario.get(Calendar.DAY_OF_MONTH)
-        ).show()
+        DialogUtils.exibirSeletorData(
+            activity = this,
+            titulo = "Data do lembrete",
+            dataAtualMillis = calendario.timeInMillis
+        ) { dataFormatada ->
+            val partes = dataFormatada.split("-")
+            if (partes.size == 3) {
+                calendario.set(partes[0].toInt(), partes[1].toInt() - 1, partes[2].toInt())
+            }
+            campoData.setText(formatarDataExibicao(calendario))
+        }
     }
 
     private fun configurarSeletorHora(campoHora: EditText) {
@@ -167,22 +168,13 @@ class Alertas : AppCompatActivity() {
         val horaAtual = partesHora.getOrNull(0)?.toIntOrNull() ?: 12
         val minutoAtual = partesHora.getOrNull(1)?.toIntOrNull() ?: 0
 
-        TimePickerDialog(
-            this,
-            { _, hora, minuto ->
-                val novaHora = String.format(
-                    Locale.US,
-                    "%02d:%02d",
-                    hora,
-                    minuto
-                )
-
-                campoHora.setText(novaHora)
-            },
-            horaAtual,
-            minutoAtual,
-            true
-        ).show()
+        DialogUtils.exibirSeletorHora(
+            activity = this,
+            horaInicial = horaAtual,
+            minutoInicial = minutoAtual
+        ) { horaFormatada ->
+            campoHora.setText(horaFormatada)
+        }
     }
 
     private fun salvarNovoLembrete(
@@ -284,7 +276,7 @@ class Alertas : AppCompatActivity() {
     }
 
     private fun exibirMensagem(mensagem: String) {
-        Toast.makeText(this, mensagem, Toast.LENGTH_SHORT).show()
+        DialogUtils.exibirToastCustomizado(this, mensagem)
     }
 
     private fun exibirMensagemSemLembretes() {
@@ -349,14 +341,15 @@ class Alertas : AppCompatActivity() {
     }
 
     private fun confirmarExclusaoLembrete(lembrete: Lembrete) {
-        AlertDialog.Builder(this)
-            .setTitle(TITULO_DIALOG_EXCLUSAO)
-            .setMessage("Deseja remover o lembrete \"${lembrete.titulo}\"?")
-            .setPositiveButton(BOTAO_REMOVER) { _, _ ->
-                excluirLembrete(lembrete)
-            }
-            .setNegativeButton(BOTAO_CANCELAR, null)
-            .show()
+        DialogUtils.exibirDialogoConfirmacao(
+            activity = this,
+            titulo = TITULO_DIALOG_EXCLUSAO,
+            mensagem = "Deseja remover o lembrete \"${lembrete.titulo}\"?",
+            textoConfirmar = BOTAO_REMOVER,
+            textoCancelar = BOTAO_CANCELAR,
+            tipo = DialogUtils.TipoDialog.DESTRUICAO,
+            onConfirmar = { excluirLembrete(lembrete) }
+        )
     }
 
     private fun excluirLembrete(lembrete: Lembrete) {
